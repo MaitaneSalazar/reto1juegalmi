@@ -1,0 +1,35 @@
+# ==========================================================
+# ionic/.gitignore — App híbrida Ionic + Angular + Capacitor
+# ==========================================================
+
+# ---- Dependencias (se instalan con: npm install) ----
+node_modules/
+
+# ---- Compilación (se regenera con: ionic build) ----
+/www/
+/dist/
+/.angular/
+.sass-cache/
+
+# ---- Capacitor iOS: solo se ignoran los archivos generados ----
+# La carpeta ios/ SÍ se sube (es el proyecto nativo)
+/ios/App/Pods/
+/ios/App/App/public/
+/ios/App/build/
+/ios/DerivedData/
+xcuserdata/
+
+# ---- Capacitor Android (por si lo añadís para probar) ----
+/android/.gradle/
+/android/app/build/
+/android/build/
+/android/local.properties
+/android/app/src/main/assets/public/
+
+# ---- Variables de entorno locales ----
+.env
+.env.local
+
+# ---- Logs ----
+npm-debug.log*
+yarn-error.log*
