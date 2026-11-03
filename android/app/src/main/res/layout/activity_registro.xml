@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_fondo"
+    android:orientation="vertical"
+    tools:context=".RegistroActivity">
+
+    <!-- Barra superior -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp">
+
+        <TextView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:background="@drawable/bg_logo"
+            android:gravity="center"
+            android:text="J"
+            android:textColor="@color/color_sobre_marca"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:letterSpacing="-0.03"
+            android:text="@string/marca"
+            android:textColor="@color/color_texto"
+            android:textSize="21sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvRegistroTengoCuenta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:fontFamily="sans-serif-medium"
+            android:padding="8dp"
+            android:text="@string/ya_tengo_cuenta"
+            android:textColor="@color/color_marca_texto"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="-0.05"
+                android:text="@string/registro_titulo"
+                android:textColor="@color/color_texto"
+                android:textSize="44sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="28dp"
+                android:text="@string/registro_subtitulo"
+                android:textColor="@color/color_texto_suave"
+                android:textSize="15sp" />
+
+            <TextView
+                style="@style/Etiqueta"
+                android:labelFor="@id/etRegistroNombre"
+                android:text="@string/nombre" />
+
+            <EditText
+                android:id="@+id/etRegistroNombre"
+                style="@style/Campo"
+                android:autofillHints="name"
+                android:inputType="textPersonName|textCapWords" />
+
+            <!-- 1er apellido | 2º apellido -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Etiqueta"
+                        android:labelFor="@id/etRegistroApellido1"
+                        android:text="@string/apellido1" />
+
+                    <EditText
+                        android:id="@+id/etRegistroApellido1"
+                        style="@style/Campo"
+                        android:autofillHints="familyName"
+                        android:inputType="textPersonName|textCapWords" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Etiqueta"
+                        android:labelFor="@id/etRegistroApellido2"
+                        android:text="@string/apellido2" />
+
+                    <EditText
+                        android:id="@+id/etRegistroApellido2"
+                        style="@style/Campo"
+                        android:importantForAutofill="no"
+                        android:inputType="textPersonName|textCapWords" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- DNI | Teléfono -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Etiqueta"
+                        android:labelFor="@id/etRegistroDni"
+                        android:text="@string/dni" />
+
+                    <EditText
+                        android:id="@+id/etRegistroDni"
+                        style="@style/Campo"
+                        android:hint="@string/dni_ejemplo"
+                        android:importantForAutofill="no"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="9" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Etiqueta"
+                        android:labelFor="@id/etRegistroTelefono"
+                        android:text="@string/telefono" />
+
+                    <EditText
+                        android:id="@+id/etRegistroTelefono"
+                        style="@style/Campo"
+                        android:autofillHints="phone"
+                        android:inputType="phone"
+                        android:maxLength="9" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                style="@style/Etiqueta"
+                android:layout_marginTop="16dp"
+                android:labelFor="@id/etRegistroEmail"
+                android:text="@string/email" />
+
+            <EditText
+                android:id="@+id/etRegistroEmail"
+                style="@style/Campo"
+                android:autofillHints="emailAddress"
+                android:inputType="textEmailAddress" />
+
+            <TextView
+                style="@style/Etiqueta"
+                android:layout_marginTop="16dp"
+                android:labelFor="@id/etRegistroPassword"
+                android:text="@string/password" />
+
+            <EditText
+                android:id="@+id/etRegistroPassword"
+                style="@style/Campo"
+                android:autofillHints="newPassword"
+                android:inputType="textPassword" />
+
+            <TextView
+                android:id="@+id/tvRegistroError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_error"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="8dp"
+                android:textColor="@color/color_alerta_texto"
+                android:textSize="13sp"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRegistrarme"
+                style="@style/BotonPrincipal"
+                android:layout_marginTop="28dp"
+                android:text="@string/registrarme" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:gravity="center"
+                android:text="@string/pie"
+                android:textColor="@color/color_texto_tenue"
+                android:textSize="11sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

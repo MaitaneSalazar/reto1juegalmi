@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tarjeta "Lo reparamos.": calamina, más clara arriba a la izquierda y más intensa abajo a la derecha -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:angle="315"
+        android:centerColor="@color/color_marca"
+        android:endColor="@color/color_marca_intenso"
+        android:startColor="@color/color_marca_claro" />
+    <corners android:radius="28dp" />
+</shape>
