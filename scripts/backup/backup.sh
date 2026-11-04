@@ -4,7 +4,7 @@
 # Las credenciales de MySQL se leen de ~/.my.cnf (no están en este archivo).
 set -euo pipefail
 
-PROYECTO="$(cd "$(dirname "$0")/.." && pwd)"     # carpeta backend/
+PROYECTO="$(cd "$(dirname "$0")/../../backend" && pwd)"   # carpeta backend/
 DESTINO="${BACKUP_DIR:-$HOME/backups/juegalmi}"  # dónde se guardan las copias
 BD="${BACKUP_DB:-juegalmi}"                      # nombre de la base de datos
 MANTENER=7
