@@ -1,0 +1,7 @@
+[
+  { "id": 1, "nombre": "Ane", "apellido1": "Etxeberria", "apellido2": "Ruiz", "dni": "12345678Z", "telefono": "600111222", "email": "demo@juegalmi.es", "rol": "CLIENTE",
+    "direccion": { "calle": "Gran Vía 12, 3ºB", "cp": "48001", "ciudad": "Bilbao", "provincia": "Bizkaia" } },
+  { "id": 2, "nombre": "Iker", "apellido1": "Goikoetxea", "dni": "87654321X", "telefono": "600333444", "email": "tecnico@juegalmi.es", "rol": "TECNICO" },
+  { "id": 3, "nombre": "Jon", "apellido1": "Martínez", "dni": "11223344B", "telefono": "600555666", "email": "jon@correo.es", "rol": "CLIENTE" },
+  { "id": 4, "nombre": "Leire", "apellido1": "Arana", "dni": "44332211C", "telefono": "600777888", "email": "leire@correo.es", "rol": "CLIENTE" }
+]

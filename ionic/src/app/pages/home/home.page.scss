@@ -1,0 +1,77 @@
+// Tarjeta turquesa "Lo reparamos."
+.taller {
+  position: relative; overflow: hidden;
+  padding: 26px 26px 28px; border-radius: 30px;
+  background: linear-gradient(135deg, #8ad6d8 0%, #6fc4c7 100%);
+  color: #1f2329;
+
+  .fondo { position: absolute; right: -24px; top: 10px; font-size: 190px; opacity: .14; transform: rotate(-12deg); }
+  .cats { position: relative; display: flex; gap: 6px; }
+  .cats span {
+    padding: 6px 11px; border-radius: 999px;
+    background: rgba(255, 255, 255, .55); font-size: 12px; font-weight: 600;
+  }
+  h2 { position: relative; margin: 64px 0 18px; font-size: 44px; font-weight: 800; letter-spacing: -0.055em; }
+}
+.boton-oscuro {
+  position: relative; display: inline-flex; align-items: center; gap: 10px;
+  height: 50px; padding: 0 22px; border-radius: 999px;
+  background: #1f2329; color: var(--jg-acento);
+  font-size: 16px; font-weight: 600; text-decoration: none;
+}
+
+// Comprar (oscura) / Alquilar (gris)
+.accesos { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+.acceso {
+  display: flex; flex-direction: column; justify-content: space-between;
+  height: 156px; padding: 22px; border-radius: 26px; text-decoration: none;
+  ion-icon { font-size: 26px; }
+  strong { font-size: 25px; font-weight: 700; letter-spacing: -0.04em; }
+  &.comprar { background: var(--jg-inverso); color: var(--jg-inverso-texto); }
+  &.alquilar { background: var(--jg-gris); color: var(--ion-text-color); }
+}
+
+// Filas: reparación y alquiler
+.fila {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 20px; margin-bottom: 14px;
+  color: var(--ion-text-color); text-decoration: none;
+
+  .texto { flex-grow: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  strong { font-size: 17px; font-weight: 600; }
+  small { color: var(--jg-texto-sec); font-size: 15px; }
+  > ion-icon { color: var(--jg-texto-sec); }
+}
+
+// Círculo de progreso 3/5
+.progreso {
+  position: relative; width: 62px; height: 62px; flex-shrink: 0;
+  svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  circle { fill: none; stroke-width: 5; }
+  .pista { stroke: var(--jg-acento-suave); }
+  .valor { stroke: #4fb2b6; stroke-linecap: round; transition: stroke-dashoffset .6s ease; }
+  b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+}
+
+.portada { --tam: 64px; --radio: 12px; }
+.dias { color: var(--jg-texto-sec); font-size: 15px; white-space: nowrap; b { color: var(--ion-text-color); font-size: 34px; font-weight: 700; } }
+
+.esqueleto { height: 92px; border-radius: 24px; margin-bottom: 14px; }
+
+// Novedades en carrusel
+.novedades {
+  display: flex; gap: 14px;
+  overflow-x: auto; scrollbar-width: none;
+  margin: 0 -22px; padding: 0 22px 8px;
+  &::-webkit-scrollbar { display: none; }
+}
+.novedad {
+  position: relative; flex: 0 0 168px;
+  display: flex; flex-direction: column; gap: 8px;
+  color: var(--ion-text-color); text-decoration: none;
+
+  app-miniatura-producto { --tam: 168px; --radio: 22px; --fondo: var(--jg-tarjeta); --icono: 48px; }
+  .etiqueta-mini { position: absolute; top: 10px; left: 10px; }
+  strong { font-size: 15px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  app-precio { font-size: 22px; }
+}

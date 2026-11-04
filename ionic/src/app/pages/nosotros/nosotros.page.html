@@ -1,0 +1,80 @@
+<ion-header class="ion-no-border">
+  <app-cabecera></app-cabecera>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <h1 class="titulo">Sobre nosotros</h1>
+
+  <ion-segment [value]="vista()" (ionChange)="cambiarVista($event.detail.value)">
+    <ion-segment-button value="ubicacion"><ion-label>Ubicación</ion-label></ion-segment-button>
+    <ion-segment-button value="historia"><ion-label>Historia</ion-label></ion-segment-button>
+    <ion-segment-button value="galeria"><ion-label>Galería</ion-label></ion-segment-button>
+  </ion-segment>
+
+  <!-- ============ UBICACIÓN ============ -->
+  <div [hidden]="vista() !== 'ubicacion'">
+    <div #mapa class="mapa" role="img" aria-label="Mapa con la ubicación de la tienda"></div>
+
+    @if (tienda(); as t) {
+      <div class="tarjeta direccion">
+        <strong>{{ t.direccion }}</strong>
+        <span>{{ t.cp }} {{ t.ciudad }}</span>
+        @if (distancia() !== null) { <small>{{ textoDistancia() }}</small> }
+        @else if (sinGps()) { <small>Activa la ubicación para ver a qué distancia estás.</small> }
+      </div>
+
+      <div class="dos">
+        <div class="tarjeta horario">
+          <ion-icon name="time-outline"></ion-icon>
+          @for (h of t.horario; track h.dias) {
+            @if (h.horas !== 'Cerrado') { <div><b>{{ h.horas }}</b><span>{{ h.dias }}</span></div> }
+          }
+        </div>
+        <a class="telefono pulsable" [href]="telefonoEnlace(t)">
+          <ion-icon name="call-outline"></ion-icon>
+          <b>{{ t.telefono }}</b>
+        </a>
+      </div>
+
+      <ion-button expand="block" (click)="comoLlegar()">
+        <ion-icon slot="start" name="navigate-outline"></ion-icon>
+        Cómo llegar
+      </ion-button>
+    }
+  </div>
+
+  <!-- ============ HISTORIA ============ -->
+  @if (vista() === 'historia' && tienda(); as t) {
+    <p class="historia">{{ t.historia }}</p>
+    <ol class="hitos cascada">
+      @for (h of t.hitos; track h.anio; let i = $index) {
+        <li>
+          <span class="punto"></span>
+          <div class="tarjeta">
+            <span class="icono"><ion-icon [name]="iconosHito[i % iconosHito.length]"></ion-icon></span>
+            <b>{{ h.anio }}</b>
+            <strong>{{ h.titulo }}</strong>
+            <p>{{ h.texto }}</p>
+          </div>
+        </li>
+      }
+    </ol>
+  }
+
+  <!-- ============ GALERÍA (imagen provisional si no hay foto) ============ -->
+  @if (vista() === 'galeria' && tienda(); as t) {
+    <div class="galeria cascada">
+      @for (f of t.fotos; track f.titulo; let i = $index) {
+        <figure [class.grande]="i % 3 === 0">
+          <ion-icon name="image-outline"></ion-icon>
+          @if (f.url) { <img [src]="f.url" [alt]="f.titulo" loading="lazy" onerror="this.remove()"> }
+          <figcaption>{{ f.titulo }}</figcaption>
+        </figure>
+      }
+    </div>
+  }
+
+  @if (!tienda()) {
+    <ion-skeleton-text [animated]="true" style="height: 256px; border-radius: 28px"></ion-skeleton-text>
+  }
+</ion-content>

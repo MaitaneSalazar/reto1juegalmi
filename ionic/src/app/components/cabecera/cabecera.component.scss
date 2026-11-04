@@ -1,0 +1,27 @@
+:host { display: block; }
+
+ion-toolbar {
+  --background: transparent;
+  --border-width: 0;
+  --min-height: 64px;
+  padding: 0 10px 0 6px;
+}
+ion-menu-button { --color: var(--ion-text-color); font-size: 26px; }
+
+.marca {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 24px; font-weight: 700; letter-spacing: -0.04em;
+}
+
+ion-buttons[slot="end"] { gap: 8px; }
+
+// Micrófono: turquesa y latiendo mientras escucha
+.microfono.activo {
+  background: var(--jg-acento);
+  color: #1f2329;
+  animation: latido 1s ease-in-out infinite;
+}
+@keyframes latido {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(120, 205, 208, .6); }
+  50%      { box-shadow: 0 0 0 10px rgba(120, 205, 208, 0); }
+}

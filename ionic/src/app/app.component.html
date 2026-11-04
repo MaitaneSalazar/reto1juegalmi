@@ -1,0 +1,42 @@
+<ion-app>
+  <ion-menu contentId="contenido-principal" type="overlay" (ionWillOpen)="resumen.refrescar()">
+    <ion-content>
+      <div class="marca"><span class="logo">J</span>JuegAlmi</div>
+
+      <!-- Usuario -->
+      <ion-menu-toggle [autoHide]="false">
+        <a class="usuario" routerLink="/cuenta" routerDirection="root">
+          <span class="avatar">{{ sesion.iniciales() }}</span>
+          <span>
+            <strong>{{ sesion.usuario()?.nombre }} {{ sesion.usuario()?.apellido1 }}</strong>
+            <small>{{ sesion.usuario()?.email }}</small>
+          </span>
+        </a>
+      </ion-menu-toggle>
+
+      <!-- Tres bloques de opciones -->
+      @for (grupo of grupos(); track $index) {
+        <nav class="grupo">
+          @for (op of grupo; track op.titulo) {
+            <ion-menu-toggle [autoHide]="false">
+              <a class="opcion" [routerLink]="op.url" [queryParams]="op.query" routerDirection="root">
+                <ion-icon [name]="op.icono"></ion-icon>
+                <span>{{ op.titulo }}</span>
+                @if (op.contador !== undefined) { <b class="contador">{{ op.contador }}</b> }
+              </a>
+            </ion-menu-toggle>
+          }
+          @if ($last) {
+            <ion-menu-toggle [autoHide]="false">
+              <button type="button" class="opcion" (click)="cerrarSesion()">
+                <ion-icon name="log-out-outline"></ion-icon><span>Cerrar sesión</span>
+              </button>
+            </ion-menu-toggle>
+          }
+        </nav>
+      }
+    </ion-content>
+  </ion-menu>
+
+  <ion-router-outlet id="contenido-principal"></ion-router-outlet>
+</ion-app>
