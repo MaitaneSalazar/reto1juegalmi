@@ -4,7 +4,7 @@
     <ion-back-button class="redondo volver" defaultHref="/tienda" text=""></ion-back-button>
     @if (producto(); as p) {
       <span class="plataforma">{{ etiqueta() }}</span>
-      <app-miniatura-producto [producto]="p"></app-miniatura-producto>
+      <app-miniatura-producto [producto]="p" [grande]="true"></app-miniatura-producto>
     }
   </div>
 
@@ -16,9 +16,9 @@
       </div>
       <p class="descripcion">{{ p.descripcion }}</p>
 
-      @if (p.alquilable) {
+      @if (alquilable()) {
         <ion-segment [value]="modo()" (ionChange)="cambiarModo($event.detail.value)">
-          <ion-segment-button value="comprar"><ion-label>Comprar · {{ p.precio | euros }}</ion-label></ion-segment-button>
+          <ion-segment-button value="comprar"><ion-label>Comprar · {{ p.precio_venta | euros }}</ion-label></ion-segment-button>
           <ion-segment-button value="alquilar"><ion-label>Alquilar</ion-label></ion-segment-button>
         </ion-segment>
       }
@@ -32,7 +32,7 @@
             </button>
           }
         </div>
-        <p class="nota">{{ p.precioAlquilerDia | euros }} por día · devolución antes del {{ devolucion() }}</p>
+        <p class="nota">{{ p.precio_alquiler_dia | euros }} por día · {{ p.copias_disponibles ?? 0 }} libres · devolución antes del {{ devolucion() }}</p>
       } @else {
         <p class="nota">{{ p.stock > 0 ? p.stock + ' disponibles · envío gratis' : 'Sin unidades ahora mismo' }}</p>
       }
@@ -48,13 +48,13 @@
   <ion-footer class="ion-no-border">
     <div class="compra">
       <div class="importe">
-        <app-precio [valor]="modo() === 'alquilar' ? totalAlquiler() : p.precio"></app-precio>
+        <app-precio [valor]="modo() === 'alquilar' ? totalAlquiler() : p.precio_venta"></app-precio>
         <small>{{ modo() === 'alquilar' ? dias() + (dias() === 1 ? ' día' : ' días') : 'IVA incluido' }}</small>
       </div>
-      <ion-button (click)="confirmar()" [disabled]="enviando() || (modo() === 'alquilar' && sinStock())">
+      <ion-button (click)="confirmar()" [disabled]="enviando() || (modo() === 'alquilar' ? sinCopias() : sinStock())">
         @if (enviando()) { <ion-spinner name="crescent"></ion-spinner> }
-        @else if (modo() === 'alquilar') { {{ sinStock() ? 'Alquilado' : 'Alquilar' }} }
-        @else { Añadir a la cesta }
+        @else if (modo() === 'alquilar') { {{ sinCopias() ? 'Alquilado' : 'Alquilar' }} }
+        @else { {{ sinStock() ? 'Sin stock' : 'Añadir a la cesta' }} }
       </ion-button>
     </div>
   </ion-footer>

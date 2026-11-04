@@ -1,44 +1,48 @@
-// Pasos del seguimiento (mockup 09), en orden
-export type EstadoReparacion = 'RECIBIDA' | 'DIAGNOSTICO' | 'EN_REPARACION' | 'LISTA' | 'ENTREGADA';
-
-// Tipos de dispositivo (mockup 08)
-export type TipoDispositivo = 'CONSOLA' | 'MOVIL' | 'TABLET' | 'ORDENADOR' | 'MANDO' | 'AURICULARES' | 'RELOJ' | 'OTRO';
-
-// Los dos departamentos que pide el enunciado
-export type Departamento = 'TELEFONIA' | 'CONSOLAS';
+// Reparación tal como la devuelve la API
+export type TipoDispositivo = 'consola' | 'movil' | 'tablet' | 'ordenador' | 'mando' | 'auriculares' | 'reloj' | 'otro';
+export type EstadoReparacion = 'recibida' | 'diagnostico' | 'en_reparacion' | 'lista_para_recoger' | 'entregada' | 'cancelada';
 
 export interface PasoReparacion {
   estado: EstadoReparacion;
-  fecha: string;                 // AAAA-MM-DD en que se alcanzó el paso
+  texto: string;                 // "En reparación"
+  hecho: boolean;
+  actual: boolean;
+  fecha: string | null;
+  descripcion: string | null;
 }
 
 export interface Reparacion {
   id: number;
-  usuarioId: number;
-  clienteNombre: string;         // "Ane E." (lo ve el técnico)
-  tipoDispositivo: TipoDispositivo;
-  departamento: Departamento;
-  marcaModelo: string;           // "Sony DualSense"
-  componente: string;            // "Joystick", "Batería"...
-  descripcion: string;
-  fotos: string[];               // URLs de las fotos hechas con la cámara
+  numero: string;                // "Nº 0001"
+  tipo_dispositivo: TipoDispositivo;
+  marca: string;
+  modelo: string;
   estado: EstadoReparacion;
-  presupuesto?: number;          // lo pone el técnico
-  tecnico?: string;              // técnico asignado ("Iker Goikoetxea")
-  fechaEntrada: string;
-  historial: PasoReparacion[];   // pasos ya alcanzados
+  estado_texto: string;
+  paso: number;                  // 3 → "3/5"
+  total_pasos: number;
+  fecha: string;                 // entrada (ISO 8601)
+  se_puede_cancelar: boolean;
+  // Solo en el detalle (GET /api/reparaciones/{id})
+  componente?: string | null;
+  descripcion_averia?: string;
+  presupuesto?: number | null;
+  pasos?: PasoReparacion[];
+  trabajador?: { nombre_completo: string; cargo: string; telefono: string; departamento: string } | null;
+  fotos?: { id: number; url: string; miniatura_url?: string | null; fecha_subida: string }[];
 }
 
-// Textos de cada paso para la línea de tiempo
-export const PASOS_REPARACION: { estado: EstadoReparacion; titulo: string; texto: string }[] = [
-  { estado: 'RECIBIDA',      titulo: 'Recibida',         texto: 'Tenemos tu dispositivo en el taller.' },
-  { estado: 'DIAGNOSTICO',   titulo: 'Diagnóstico',      texto: 'Un técnico está localizando la avería.' },
-  { estado: 'EN_REPARACION', titulo: 'En reparación',    texto: 'Estamos sustituyendo o reparando las piezas.' },
-  { estado: 'LISTA',         titulo: 'Lista para recoger', texto: 'Ya puedes pasar por la tienda.' },
-  { estado: 'ENTREGADA',     titulo: 'Entregada',        texto: 'Reparación finalizada.' },
-];
-
-// Teléfonos, tablets y accesorios de audio → Telefonía; el resto → Consolas
-export function departamentoDe(tipo: TipoDispositivo): Departamento {
-  return ['MOVIL', 'TABLET', 'RELOJ', 'AURICULARES'].includes(tipo) ? 'TELEFONIA' : 'CONSOLAS';
+// Datos del formulario (POST /api/reparaciones)
+export interface NuevaReparacion {
+  tipo_dispositivo: TipoDispositivo;
+  marca: string;
+  modelo: string;
+  componente?: string;
+  descripcion_averia: string;
 }
+
+// "mando" → "Mando"
+export const NOMBRE_DISPOSITIVO: Record<TipoDispositivo, string> = {
+  consola: 'Consola', movil: 'Móvil', tablet: 'Tablet', ordenador: 'Ordenador',
+  mando: 'Mando', auriculares: 'Auriculares', reloj: 'Reloj', otro: 'Otro',
+};

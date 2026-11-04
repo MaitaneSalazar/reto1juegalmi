@@ -47,8 +47,7 @@ export class LoginPage {
       next: usuario => {
         this.cargando.set(false);
         this.form.reset();
-        // El técnico va a su panel; el cliente, a Inicio
-        this.router.navigateByUrl(usuario.rol === 'TECNICO' ? '/panel' : '/inicio', { replaceUrl: true });
+        this.router.navigateByUrl('/inicio', { replaceUrl: true });
       },
       error: (e: Error) => {
         this.cargando.set(false);

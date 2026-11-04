@@ -28,3 +28,4 @@ ion-button { margin-top: 12px; }
   &::before, &::after { content: ''; flex: 1; height: 1px; background: var(--jg-borde); }
 }
 .pie { margin: 40px 0 0; text-align: center; color: var(--jg-texto-sec); font-size: 13px; }
+.campo label small { color: var(--jg-texto-sec); font-weight: 400; margin-left: 4px; font-size: 14px; }

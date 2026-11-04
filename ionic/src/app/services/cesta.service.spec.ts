@@ -4,8 +4,8 @@ import { CestaService } from './cesta.service';
 import { Producto } from '../models/producto.model';
 
 // Productos de prueba (solo los campos que usa la cesta)
-const zelda = { id: 1, nombre: 'Zelda', precio: 59.99, stock: 2 } as Producto;
-const ps5 = { id: 8, nombre: 'PS5 Slim', precio: 499.99, stock: 5 } as Producto;
+const zelda = { id: 1, tipo: 'videojuego', nombre: 'Zelda', precio_venta: 59.99, stock: 2 } as Producto;
+const ps5 = { id: 4, tipo: 'consola', nombre: 'PS5 Slim', precio_venta: 499.99, stock: 5 } as Producto;
 
 describe('CestaService', () => {
   let cesta: CestaService;
@@ -45,7 +45,7 @@ describe('CestaService', () => {
   it('guarda la cesta en localStorage (sobrevive al cerrar la app)', () => {
     cesta.anadir(ps5);
     const guardada = JSON.parse(localStorage.getItem('juegalmi_cesta') ?? '[]');
-    expect(guardada[0].producto.id).toBe(8);
+    expect(guardada[0].producto.id).toBe(4);
   });
 
   it('vaciar deja la cesta a 0', () => {

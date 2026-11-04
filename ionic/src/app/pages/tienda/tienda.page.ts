@@ -8,7 +8,7 @@ import { searchOutline, closeOutline } from 'ionicons/icons';
 import { CabeceraComponent } from '../../components/cabecera/cabecera.component';
 import { MiniaturaProductoComponent } from '../../components/miniatura-producto/miniatura-producto.component';
 import { PrecioComponent } from '../../components/precio/precio.component';
-import { FiltroProductos, ProductoService } from '../../services/producto.service';
+import { ProductoService } from '../../services/producto.service';
 import { Producto, TipoProducto } from '../../models/producto.model';
 
 type Modo = 'comprar' | 'alquilar';
@@ -42,24 +42,23 @@ export class TiendaPage {
 
   filtrosComprar: Filtro[] = [
     { etiqueta: 'Todo', valor: '' },
-    { etiqueta: 'Videojuegos', valor: 'VIDEOJUEGO' },
-    { etiqueta: 'Consolas', valor: 'CONSOLA' },
-    { etiqueta: 'Móviles', valor: 'MOVIL' },
-    { etiqueta: 'Tablets', valor: 'TABLET' },
+    { etiqueta: 'Videojuegos', valor: 'videojuego' },
+    { etiqueta: 'Consolas', valor: 'consola' },
+    { etiqueta: 'Móviles', valor: 'movil' },
+    { etiqueta: 'Tablets', valor: 'tablet' },
   ];
-  filtrosAlquilar: Filtro[] = [
-    { etiqueta: 'Todas', valor: '' },
-    { etiqueta: 'Switch', valor: 'Switch' },
-    { etiqueta: 'PS5', valor: 'PS5' },
-    { etiqueta: 'Xbox', valor: 'Xbox' },
-    { etiqueta: 'Multi', valor: 'Multi' },
-  ];
+  // Plataformas de alquiler: se piden a la API (GET /api/videojuegos/plataformas)
+  filtrosAlquilar: Filtro[] = [{ etiqueta: 'Todas', valor: '' }];
 
   private pagina = 1;
   private peticion = 0;   // descarta respuestas antiguas
 
   constructor() {
     addIcons({ searchOutline, closeOutline });
+    this.servicio.plataformas().subscribe({
+      next: lista => this.filtrosAlquilar = [{ etiqueta: 'Todas', valor: '' }, ...lista.map(p => ({ etiqueta: p, valor: p }))],
+      error: () => { /* sin conexión: solo "Todas" */ },
+    });
     // ?modo=alquilar (desde la tarjeta "Alquilar" de Inicio)
     inject(ActivatedRoute).queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
       this.modo.set(params.get('modo') === 'alquilar' ? 'alquilar' : 'comprar');
@@ -109,21 +108,23 @@ export class TiendaPage {
       this.hayMas.set(true);
     }
     const id = ++this.peticion;
-
-    const filtros: FiltroProductos = this.modo() === 'alquilar'
-      ? { alquilable: true, plataforma: this.filtro() || undefined }
-      : { tipo: (this.filtro() || undefined) as TipoProducto | undefined };
-
     const texto = this.texto().trim();
-    const peticion$ = texto
-      ? this.servicio.buscar(texto, filtros)
-      : this.servicio.listar({ ...filtros, page: this.pagina, limit: POR_PAGINA });
+
+    // Comprar: GET /api/productos (con q= para buscar) · Alquilar: GET /api/videojuegos/alquiler
+    const peticion$ = this.modo() === 'alquilar'
+      ? this.servicio.alquiler({ plataforma: this.filtro() || undefined, page: this.pagina, limit: POR_PAGINA })
+      : this.servicio.listar({ tipo: (this.filtro() || undefined) as TipoProducto | undefined, q: texto || undefined,
+                               page: this.pagina, limit: POR_PAGINA });
 
     peticion$.subscribe({
-      next: lista => {
-        if (id !== this.peticion) return;
+      next: r => {
+        if (id !== this.peticion) return;                         // llegó tarde: se ignora
+        // En alquiler la API no tiene búsqueda: se filtra lo recibido por el nombre
+        const lista = this.modo() === 'alquilar' && texto
+          ? r.datos.filter(p => p.nombre.toLowerCase().includes(texto.toLowerCase()))
+          : r.datos;
         this.productos.update(actual => reiniciar ? lista : [...actual, ...lista]);
-        this.hayMas.set(!texto && lista.length === POR_PAGINA);
+        this.hayMas.set(r.paginacion.pagina < r.paginacion.paginas);   // quedan más páginas
         this.pagina++;
         this.cargando.set(false);
         evento?.target.complete();

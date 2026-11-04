@@ -35,7 +35,7 @@
         @if (invalido('dni')) { <p class="error">{{ mensajes.dni }}</p> }
       </div>
       <div class="campo">
-        <label>Teléfono</label>
+        <label>Teléfono <small>(opcional)</small></label>
         <ion-input formControlName="telefono" type="tel" inputmode="tel" autocomplete="tel" aria-label="Teléfono" [class.mal]="invalido('telefono')"></ion-input>
         @if (invalido('telefono')) { <p class="error">{{ mensajes.telefono }}</p> }
       </div>

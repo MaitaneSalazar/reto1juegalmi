@@ -17,8 +17,8 @@
 
     @if (tienda(); as t) {
       <div class="tarjeta direccion">
-        <strong>{{ t.direccion }}</strong>
-        <span>{{ t.cp }} {{ t.ciudad }}</span>
+        <strong>{{ t.direccion_linea1 }}</strong>
+        <span>{{ t.direccion_linea2 }}</span>
         @if (distancia() !== null) { <small>{{ textoDistancia() }}</small> }
         @else if (sinGps()) { <small>Activa la ubicación para ver a qué distancia estás.</small> }
       </div>
@@ -26,9 +26,7 @@
       <div class="dos">
         <div class="tarjeta horario">
           <ion-icon name="time-outline"></ion-icon>
-          @for (h of t.horario; track h.dias) {
-            @if (h.horas !== 'Cerrado') { <div><b>{{ h.horas }}</b><span>{{ h.dias }}</span></div> }
-          }
+          @for (h of horario; track h.dias) { <div><b>{{ h.horas }}</b><span>{{ h.dias }}</span></div> }
         </div>
         <a class="telefono pulsable" [href]="telefonoEnlace(t)">
           <ion-icon name="call-outline"></ion-icon>
@@ -44,14 +42,14 @@
   </div>
 
   <!-- ============ HISTORIA ============ -->
-  @if (vista() === 'historia' && tienda(); as t) {
-    <p class="historia">{{ t.historia }}</p>
+  @if (vista() === 'historia') {
+    <p class="historia">{{ historia }}</p>
     <ol class="hitos cascada">
-      @for (h of t.hitos; track h.anio; let i = $index) {
+      @for (h of hitos; track h.anio) {
         <li>
           <span class="punto"></span>
           <div class="tarjeta">
-            <span class="icono"><ion-icon [name]="iconosHito[i % iconosHito.length]"></ion-icon></span>
+            <span class="icono"><ion-icon [name]="h.icono"></ion-icon></span>
             <b>{{ h.anio }}</b>
             <strong>{{ h.titulo }}</strong>
             <p>{{ h.texto }}</p>
@@ -62,9 +60,9 @@
   }
 
   <!-- ============ GALERÍA (imagen provisional si no hay foto) ============ -->
-  @if (vista() === 'galeria' && tienda(); as t) {
+  @if (vista() === 'galeria') {
     <div class="galeria cascada">
-      @for (f of t.fotos; track f.titulo; let i = $index) {
+      @for (f of fotos(); track f.id; let i = $index) {
         <figure [class.grande]="i % 3 === 0">
           <ion-icon name="image-outline"></ion-icon>
           @if (f.url) { <img [src]="f.url" [alt]="f.titulo" loading="lazy" onerror="this.remove()"> }
@@ -74,7 +72,7 @@
     </div>
   }
 
-  @if (!tienda()) {
+  @if (!tienda() && vista() === 'ubicacion') {
     <ion-skeleton-text [animated]="true" style="height: 256px; border-radius: 28px"></ion-skeleton-text>
   }
 </ion-content>

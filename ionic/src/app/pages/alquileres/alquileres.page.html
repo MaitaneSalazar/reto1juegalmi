@@ -1,35 +1,51 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-buttons slot="start"><ion-back-button defaultHref="/cuenta" text=""></ion-back-button></ion-buttons>
-    <ion-title>Mis alquileres</ion-title>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/inicio" text=""></ion-back-button></ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-segment [value]="filtro()" (ionChange)="cambiarFiltro($event.detail.value)">
-    <ion-segment-button value="activos"><ion-label>Activos</ion-label></ion-segment-button>
-    <ion-segment-button value="historial"><ion-label>Historial</ion-label></ion-segment-button>
-  </ion-segment>
+  <h1 class="titulo">Mis alquileres</h1>
 
   @if (cargando()) {
-    <ion-skeleton-text [animated]="true" style="height: 92px; border-radius: 16px; margin-top: 16px"></ion-skeleton-text>
+    <ion-skeleton-text [animated]="true" style="height: 260px; border-radius: 24px"></ion-skeleton-text>
   } @else {
-    @for (a of visibles(); track a.id) {
-      <div class="tarjeta alquiler">
-        <div class="cab">
-          <strong>{{ a.producto.nombre }}</strong>
-          <span class="chip-estado" [class.verde]="a.estado === 'ACTIVO'" [class.rojo]="a.estado === 'VENCIDO'">{{ a.estado }}</span>
+    <!-- Alquileres en curso -->
+    @for (a of activos(); track a.id) {
+      <div class="tarjeta activo">
+        <div class="arriba">
+          @if (a.lineas[0]; as l) { <app-miniatura-producto [producto]="l.videojuego"></app-miniatura-producto> }
+          <div>
+            <strong>{{ titulo(a) }}</strong>
+            @if (a.dias_restantes >= 0) {
+              <p class="dias"><b>{{ a.dias_restantes }}</b> {{ a.dias_restantes === 1 ? 'día' : 'días' }}</p>
+            } @else {
+              <p class="vencido">Retrasado {{ -a.dias_restantes }} {{ a.dias_restantes === -1 ? 'día' : 'días' }}</p>
+            }
+          </div>
         </div>
-        <span class="fechas">{{ a.producto.plataforma }} · del {{ a.fechaInicio }} al {{ a.fechaFin }}</span>
-        <div class="pie">
-          <b>{{ a.dias }} días · {{ a.precioTotal | euros }}</b>
-          @if (a.estado !== 'DEVUELTO') {
-            <ion-button size="small" fill="outline" (click)="devolver(a)">Devolver</ion-button>
-          }
-        </div>
+        <div class="barra"><i [style.width.%]="progreso(a) * 100"></i></div>
+        <div class="fechas"><span>{{ a.fecha_inicio | fechaCorta }}</span><span>Devolver antes del {{ a.fecha_fin_prevista | fechaCorta }}</span></div>
+        <button type="button" class="devolver pulsable" (click)="devolver(a)">
+          <ion-icon name="arrow-undo-outline"></ion-icon> Devolver
+        </button>
       </div>
     } @empty {
-      <p class="vacio">{{ filtro() === 'activos' ? 'No tienes alquileres activos.' : 'Aún no has devuelto ningún alquiler.' }}</p>
+      <p class="vacio">No tienes ningún alquiler en curso.</p>
+    }
+
+    <!-- Devueltos -->
+    @if (devueltos().length) {
+      <h2>Devueltos</h2>
+      <div class="cascada">
+        @for (a of devueltos(); track a.id) {
+          <div class="tarjeta fila">
+            @if (a.lineas[0]; as l) { <app-miniatura-producto [producto]="l.videojuego"></app-miniatura-producto> }
+            <div class="textos"><strong>{{ titulo(a) }}</strong><small>Devuelto el {{ devueltoEl(a) | fechaCorta }}</small></div>
+            <app-precio [valor]="a.importe"></app-precio>
+          </div>
+        }
+      </div>
     }
   }
 </ion-content>

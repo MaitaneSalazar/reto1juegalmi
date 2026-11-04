@@ -36,12 +36,12 @@
       <button type="button" class="destacado pulsable" (click)="abrir(p)">
         <span class="escaparate">
           <app-miniatura-producto [producto]="p"></app-miniatura-producto>
-          @if (modo() === 'alquilar' && p.stock <= 0) { <span class="etiqueta-mini">Alquilado</span> }
+          @if (p.alquilado) { <span class="etiqueta-mini">Alquilado</span> }
         </span>
         <span class="pie">
           <span class="nombre">{{ p.nombre }}</span>
-          @if (modo() === 'alquilar') { <app-precio [valor]="p.precioAlquilerDia ?? 0" sufijo="/ día"></app-precio> }
-          @else { <app-precio [valor]="p.precio"></app-precio> }
+          @if (modo() === 'alquilar') { <app-precio [valor]="p.precio_alquiler_dia ?? 0" sufijo="/ día"></app-precio> }
+          @else { <app-precio [valor]="p.precio_venta"></app-precio> }
         </span>
       </button>
     }
@@ -52,11 +52,11 @@
         <button type="button" class="producto pulsable" (click)="abrir(p)">
           <span class="foto">
             <app-miniatura-producto [producto]="p"></app-miniatura-producto>
-            @if (modo() === 'alquilar' && p.stock <= 0) { <span class="etiqueta-mini">Alquilado</span> }
+            @if (p.alquilado) { <span class="etiqueta-mini">Alquilado</span> }
           </span>
           <span class="nombre">{{ p.nombre }}</span>
-          @if (modo() === 'alquilar') { <app-precio [valor]="p.precioAlquilerDia ?? 0" sufijo="/ día"></app-precio> }
-          @else { <app-precio [valor]="p.precio"></app-precio> }
+          @if (modo() === 'alquilar') { <app-precio [valor]="p.precio_alquiler_dia ?? 0" sufijo="/ día"></app-precio> }
+          @else { <app-precio [valor]="p.precio_venta"></app-precio> }
         </button>
       }
     </div>

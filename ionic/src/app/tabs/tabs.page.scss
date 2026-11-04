@@ -1,6 +1,6 @@
 // Barra flotante redondeada
 ion-tab-bar {
-  --background: var(--jg-barra);
+  --background: #1f2329;                // barra oscura (mockup final)
   --border: 0;
   height: 64px;
   margin: 0 14px calc(12px + var(--ion-safe-area-bottom, 0px));
@@ -11,7 +11,7 @@ ion-tab-bar {
 
 // Pestañas inactivas: solo icono
 ion-tab-button {
-  --color: var(--ion-text-color);
+  --color: rgba(255, 255, 255, 0.78);   // iconos claros sobre la barra oscura
   --color-selected: #1f2329;
   --ripple-color: transparent;
   flex: 1 1 0;
@@ -43,6 +43,17 @@ ion-tab-button.tab-selected {
   width: 11px; height: 11px;
   border-radius: 50%;
   background: var(--ion-color-danger);
-  border: 2px solid var(--jg-barra);
+  border: 2px solid #1f2329;
 }
 ion-tab-button.tab-selected .punto { top: 2px; right: 2px; }
+
+// Sin cambio de color al pasar el ratón ni al enfocar (Ionic usaba el color "seleccionado", que es oscuro)
+ion-tab-button:not(.tab-selected) {
+  --color-selected: rgba(255, 255, 255, 0.78);   // hover: mismo color que en reposo
+  --color-focused: rgba(255, 255, 255, 0.78);    // foco con teclado: igual
+}
+ion-tab-button {
+  --background-focused: transparent;             // sin fondo al enfocar
+  --background-focused-opacity: 0;
+}
+ion-tab-button.tab-selected { --color-focused: #1f2329; }

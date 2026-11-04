@@ -29,7 +29,7 @@ export class RegistroPage {
     apellido1: ['', [Validators.required, Validators.minLength(2)]],
     apellido2: [''],                                               // opcional
     dni: ['', [Validators.required, dniValido]],
-    telefono: ['', [Validators.required, telefonoValido]],
+    telefono: ['', telefonoValido],                               // opcional
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
@@ -39,7 +39,7 @@ export class RegistroPage {
     nombre: 'Escribe tu nombre.',
     apellido1: 'Escribe tu primer apellido.',
     apellido2: '',
-    dni: 'DNI no válido (8 números y la letra correcta).',
+    dni: 'DNI o NIE no válido (12345678Z o X1234567L).',
     telefono: 'Teléfono no válido (9 cifras).',
     email: 'Introduce un email válido.',
     password: 'Mínimo 6 caracteres.',
@@ -79,7 +79,8 @@ export class RegistroPage {
       ...v,
       email: v.email.trim().toLowerCase(),
       dni: v.dni.trim().toUpperCase(),
-      telefono: v.telefono.replace(/\s/g, ''),
+      telefono: v.telefono.replace(/\s/g, '') || undefined,      // opcional
+      apellido2: v.apellido2.trim() || undefined,
     }).subscribe({
       next: () => {
         this.cargando.set(false);

@@ -12,7 +12,7 @@ import { SesionService } from '../../services/sesion.service';
 import { AlquilerService } from '../../services/alquiler.service';
 import { ReparacionService } from '../../services/reparacion.service';
 import { ProductoService } from '../../services/producto.service';
-import { PASOS_REPARACION, Reparacion } from '../../models/reparacion.model';
+import { NOMBRE_DISPOSITIVO, Reparacion } from '../../models/reparacion.model';
 import { Alquiler } from '../../models/alquiler.model';
 import { Producto } from '../../models/producto.model';
 
@@ -38,6 +38,7 @@ export class HomePage {
 
   categorias = ['Consolas', 'Móviles', 'Mandos', 'Tablets'];
   vuelta = VUELTA;
+  dispositivo = NOMBRE_DISPOSITIVO;
 
   constructor() {
     addIcons({ storefrontOutline, timeOutline, chevronForward, arrowForward, buildOutline });
@@ -50,20 +51,17 @@ export class HomePage {
   }
 
   private cargar(alTerminar?: () => void): void {
-    const id = this.sesion.usuario()?.id;
-    if (!id) return;
-
-    // Todo a la vez (no bloquea la interfaz)
+    // Las tres peticiones a la vez (no bloquea la interfaz)
     forkJoin({
-      alquileres: this.alquileres.activos(id),
-      reparaciones: this.reparaciones.delUsuario(id),
+      alquileres: this.alquileres.listar('activo', 1, 1),
+      reparaciones: this.reparaciones.listar(1, 20),
       novedades: this.productos.listar({ page: 1, limit: 6 }),
     }).subscribe({
       next: ({ alquileres, reparaciones, novedades }) => {
-        const enCurso = reparaciones.filter(r => r.estado !== 'ENTREGADA');
-        this.reparacion.set(enCurso[enCurso.length - 1] ?? null);
-        this.alquiler.set(alquileres[0] ?? null);
-        this.novedades.set(novedades);
+        // La más reciente que siga en el taller (la API las da de la más nueva a la más antigua)
+        this.reparacion.set(reparaciones.datos.find(r => r.estado !== 'entregada' && r.estado !== 'cancelada') ?? null);
+        this.alquiler.set(alquileres.datos[0] ?? null);
+        this.novedades.set(novedades.datos);
         this.cargando.set(false);
         alTerminar?.();
       },
@@ -71,23 +69,8 @@ export class HomePage {
     });
   }
 
-  // ----- Ayudas para la plantilla
-  paso(r: Reparacion): number {
-    return PASOS_REPARACION.findIndex(p => p.estado === r.estado) + 1;   // 1..5
-  }
-  // Trazo del círculo: cuánto queda sin pintar
+  // Trazo del círculo que queda sin pintar
   hueco(r: Reparacion): number {
-    return VUELTA * (1 - this.paso(r) / PASOS_REPARACION.length);
-  }
-  estado(r: Reparacion): string {
-    return PASOS_REPARACION.find(p => p.estado === r.estado)?.titulo ?? r.estado;
-  }
-  tipo(r: Reparacion): string {
-    return r.tipoDispositivo.charAt(0) + r.tipoDispositivo.slice(1).toLowerCase();
-  }
-  // Días que faltan para devolver (0 si vence hoy)
-  diasRestantes(a: Alquiler): number {
-    const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
-    return Math.max(0, Math.round((new Date(a.fechaFin + 'T00:00:00').getTime() - hoy.getTime()) / 86400000));
+    return VUELTA * (1 - r.paso / r.total_pasos);
   }
 }

@@ -10,7 +10,7 @@ export class CestaService {
   readonly lineas = signal<LineaCesta[]>(this.leer());
 
   readonly unidades = computed(() => this.lineas().reduce((s, l) => s + l.cantidad, 0));               // badge
-  readonly total = computed(() => +this.lineas().reduce((s, l) => s + l.producto.precio * l.cantidad, 0).toFixed(2));
+  readonly total = computed(() => +this.lineas().reduce((s, l) => s + l.producto.precio_venta * l.cantidad, 0).toFixed(2));
 
   // Añade un producto (si ya está, suma cantidad)
   anadir(producto: Producto, cantidad = 1): void {
