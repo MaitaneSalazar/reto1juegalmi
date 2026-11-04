@@ -1,0 +1,183 @@
+// Fuente Inter local (funciona sin internet)
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+@import "@fontsource/inter/800.css";
+
+// CSS base de Ionic
+@import "@ionic/angular/css/core.css";
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+// Colores DESPUÉS del CSS de Ionic (si no, Ionic los pisa)
+@import "./theme/variables.scss";
+
+// Mapa (Leaflet)
+@import "leaflet/dist/leaflet.css";
+
+body { background: var(--ion-background-color); }
+ion-content { --padding-start: 22px; --padding-end: 22px; --padding-bottom: 110px; }  // hueco para la barra flotante
+
+// Títulos grandes y apretados ("Hola, Ane", "Tienda", "Cesta")
+.titulo {
+  margin: 6px 0 22px;
+  font-size: 46px;
+  line-height: 1.02;
+  font-weight: 800;
+  letter-spacing: -0.055em;
+}
+h1, h2, h3 { letter-spacing: -0.03em; }
+
+// Tarjeta base
+.tarjeta {
+  background: var(--jg-tarjeta);
+  border-radius: var(--jg-radio);
+}
+
+// Cabecera de sección: "Novedades ...... Ver todo"
+.seccion {
+  display: flex; align-items: center; justify-content: space-between;
+  margin: 26px 0 12px;
+  h2 { margin: 0; font-size: 20px; font-weight: 700; }
+  a { color: var(--jg-texto-sec); font-size: 15px; text-decoration: none; }
+}
+
+// Botones en píldora
+ion-button {
+  --border-radius: 999px;
+  --box-shadow: none;
+  min-height: 54px;
+  text-transform: none;
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: 0;
+}
+
+// Botón redondo (volver, buscar)
+.redondo {
+  width: 46px; height: 46px; border: 0; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--jg-tarjeta); color: var(--ion-text-color);
+  font-size: 22px; box-shadow: var(--jg-sombra);
+  ion-icon { font-size: 22px; }
+}
+ion-toolbar .redondo { box-shadow: none; }
+ion-back-button.redondo {
+  --color: var(--ion-text-color);
+  --icon-font-size: 22px;
+  --border-radius: 50%;
+  --padding-start: 0; --padding-end: 0;
+}
+
+// Segmentos en píldora (Comprar/Alquilar, Ubicación/Historia/Galería)
+ion-segment {
+  --background: var(--jg-segmento);
+  border-radius: 999px;
+  padding: 5px;
+  margin-bottom: 16px;
+}
+ion-segment-button {
+  --color: var(--jg-texto-sec);
+  --color-checked: var(--ion-text-color);
+  --indicator-color: transparent;
+  --border-radius: 999px;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  min-height: 42px;
+  border-radius: 999px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 15px;
+  font-weight: 500;
+}
+ion-segment-button.segment-button-checked {
+  background: var(--jg-segmento-activo);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+// Chips de filtro (fila con scroll horizontal)
+.chips {
+  display: flex; gap: 8px;
+  overflow-x: auto; scrollbar-width: none;
+  margin: 0 -22px 18px; padding: 0 22px;
+  &::-webkit-scrollbar { display: none; }
+  &.envolver { flex-wrap: wrap; overflow: visible; margin: 0 0 18px; padding: 0; }
+}
+ion-chip.filtro {
+  --background: var(--jg-tarjeta);
+  --color: var(--ion-text-color);
+  flex-shrink: 0;
+  height: 40px; margin: 0; padding: 0 16px;
+  border-radius: 999px;
+  font-size: 15px;
+}
+ion-chip.filtro.activo {
+  --background: var(--jg-inverso);
+  --color: var(--jg-inverso-texto);
+  font-weight: 600;
+}
+
+// Etiquetas pequeñas (Aventura, PEGI 12, Últimas unidades...)
+.etiqueta-mini {
+  display: inline-flex; align-items: center;
+  height: 26px; padding: 0 12px; border-radius: 999px;
+  background: var(--jg-tarjeta); color: var(--ion-text-color);
+  font-size: 12px; font-weight: 600;
+  &.roja { background: var(--ion-color-danger); color: #ffffff; }
+}
+
+// Cajas de texto (formularios)
+app-login ion-input, app-registro ion-input, app-taller ion-input, app-taller ion-textarea,
+app-datos-personales ion-input, app-direcciones ion-input {
+  // !important: Ionic pone sus valores con una clase que pesa más que este selector
+  --background: var(--jg-tarjeta) !important;
+  --padding-start: 16px !important;
+  --padding-end: 16px !important;
+  --highlight-color-focused: var(--jg-acento);
+  min-height: 52px;
+  border: 1px solid var(--jg-borde);
+  border-radius: 16px;
+  overflow: hidden;
+  font-size: 17px;
+  &.has-focus { border-color: var(--jg-acento); }
+  &.mal { border-color: var(--ion-color-danger); }
+}
+.error { margin: 6px 0 0; color: var(--ion-color-danger); font-size: 13px; }
+.vacio { text-align: center; color: var(--jg-texto-sec); margin: 40px 0; }
+
+// Avisos (toast) redondeados por encima de la barra
+ion-toast { --border-radius: 18px; --start: 16px; --end: 16px; transform: translateY(-80px); }
+
+// ===================== ANIMACIONES =====================
+@keyframes jg-aparecer {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+.cascada > * { animation: jg-aparecer .35s ease-out both; }
+@for $i from 2 through 10 {
+  .cascada > *:nth-child(#{$i}) { animation-delay: #{($i - 1) * 45}ms; }
+}
+
+// Respuesta táctil al pulsar
+.pulsable { transition: transform .12s ease; cursor: pointer; }
+.pulsable:active { transform: scale(.97); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+// Cuadrado turquesa con la "J"
+.logo {
+  width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0;
+  background: var(--jg-acento); color: #1f2329;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 800; letter-spacing: 0;
+}

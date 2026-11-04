@@ -1,0 +1,109 @@
+[
+  {
+    "id": 1,
+    "usuarioId": 1,
+    "clienteNombre": "Ane E.",
+    "tipoDispositivo": "MANDO",
+    "departamento": "CONSOLAS",
+    "marcaModelo": "Sony DualSense",
+    "componente": "Joystick",
+    "descripcion": "Drift en el joystick izquierdo.",
+    "fotos": [
+      "foto-1",
+      "foto-2"
+    ],
+    "estado": "EN_REPARACION",
+    "presupuesto": 35,
+    "fechaEntrada": "2026-10-24",
+    "historial": [
+      {
+        "estado": "RECIBIDA",
+        "fecha": "2026-10-24"
+      },
+      {
+        "estado": "DIAGNOSTICO",
+        "fecha": "2026-10-26"
+      },
+      {
+        "estado": "EN_REPARACION",
+        "fecha": "2026-10-28"
+      }
+    ],
+    "tecnico": "Iker Goikoetxea"
+  },
+  {
+    "id": 2,
+    "usuarioId": 3,
+    "clienteNombre": "Jon M.",
+    "tipoDispositivo": "ORDENADOR",
+    "departamento": "CONSOLAS",
+    "marcaModelo": "Lenovo IdeaPad 5",
+    "componente": "Ventilador",
+    "descripcion": "Ventilador ruidoso.",
+    "fotos": [
+      "foto-1",
+      "foto-2",
+      "foto-3"
+    ],
+    "estado": "DIAGNOSTICO",
+    "presupuesto": 60,
+    "fechaEntrada": "2026-10-27",
+    "historial": [
+      {
+        "estado": "RECIBIDA",
+        "fecha": "2026-10-27"
+      },
+      {
+        "estado": "DIAGNOSTICO",
+        "fecha": "2026-10-28"
+      }
+    ],
+    "tecnico": "Iker Goikoetxea"
+  },
+  {
+    "id": 3,
+    "usuarioId": 4,
+    "clienteNombre": "Leire A.",
+    "tipoDispositivo": "AURICULARES",
+    "departamento": "TELEFONIA",
+    "marcaModelo": "Sony WH-1000XM4",
+    "componente": "Batería",
+    "descripcion": "La batería no carga.",
+    "fotos": [
+      "foto-1"
+    ],
+    "estado": "DIAGNOSTICO",
+    "presupuesto": 45,
+    "fechaEntrada": "2026-10-28",
+    "historial": [
+      {
+        "estado": "RECIBIDA",
+        "fecha": "2026-10-28"
+      },
+      {
+        "estado": "DIAGNOSTICO",
+        "fecha": "2026-10-29"
+      }
+    ],
+    "tecnico": "Iker Goikoetxea"
+  },
+  {
+    "id": 4,
+    "usuarioId": 3,
+    "clienteNombre": "Jon M.",
+    "tipoDispositivo": "MOVIL",
+    "departamento": "TELEFONIA",
+    "marcaModelo": "Samsung Galaxy S23",
+    "componente": "Pantalla",
+    "descripcion": "Pantalla rota tras una caída.",
+    "fotos": [],
+    "estado": "RECIBIDA",
+    "fechaEntrada": "2026-10-30",
+    "historial": [
+      {
+        "estado": "RECIBIDA",
+        "fecha": "2026-10-30"
+      }
+    ]
+  }
+]

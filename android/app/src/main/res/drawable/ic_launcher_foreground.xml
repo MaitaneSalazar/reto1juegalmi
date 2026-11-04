@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Letra "J" de JuegAlmi, igual que el logo del mockup -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:pathData="M60,36 L60,61 Q60,73 49,73 Q41,73 38,66"
+        android:strokeWidth="9"
+        android:strokeColor="@color/juegalmi_tinta"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

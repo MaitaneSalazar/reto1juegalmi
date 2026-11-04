@@ -1,0 +1,67 @@
+ion-toolbar { --background: var(--ion-background-color); --min-height: 64px; padding: 0 12px; }
+
+// Tarjeta turquesa con el estado
+.estado {
+  padding: 24px 22px; border-radius: 30px;
+  background: linear-gradient(135deg, #8ad6d8 0%, #6fc4c7 100%); color: #1f2329;
+  span { font-size: 15px; opacity: .8; }
+  h1 { margin: 22px 0 18px; font-size: 44px; line-height: 1; font-weight: 800; letter-spacing: -0.055em; }
+}
+.tramos {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+  i { height: 6px; border-radius: 3px; background: rgba(31, 35, 41, .15); }
+  i.hecho { background: #1f2329; }
+}
+
+// Avería / Presupuesto
+.datos {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0;
+  .tarjeta { display: flex; flex-direction: column; gap: 8px; padding: 18px; }
+  span { color: var(--jg-texto-sec); font-size: 15px; }
+  strong { font-size: 17px; font-weight: 600; line-height: 1.4; }
+  app-precio { font-size: 34px; }
+}
+
+// Línea de tiempo
+.linea-tiempo {
+  list-style: none; margin: 0 0 14px; padding: 20px 20px 4px;
+
+  li { position: relative; display: flex; gap: 16px; padding-bottom: 24px; color: var(--jg-texto-sec); }
+  li:not(:last-child)::before {               // línea vertical
+    content: ''; position: absolute; left: 6px; top: 16px; bottom: -2px;
+    width: 2px; background: var(--jg-borde);
+  }
+  li.hecho:not(:last-child)::before { background: var(--ion-text-color); }
+  .punto { width: 14px; height: 14px; margin-top: 3px; border-radius: 50%; flex-shrink: 0; background: var(--jg-borde); z-index: 1; }
+  li.hecho { color: var(--ion-text-color); .punto { background: var(--ion-text-color); } }
+  li.actual .punto { background: var(--jg-tarjeta); border: 3px solid var(--jg-acento); }
+  .crece { flex-grow: 1; }
+  strong { font-size: 17px; font-weight: 500; }
+  p { margin: 6px 0 0; color: var(--jg-texto-sec); font-size: 15px; line-height: 1.45; }
+  small { font-size: 13px; color: var(--jg-texto-sec); letter-spacing: .05em; padding-top: 3px; white-space: nowrap; }
+}
+
+// Técnico + botón turquesa de llamar
+.contacto { display: flex; gap: 14px; }
+.tecnico {
+  flex-grow: 1; display: flex; align-items: center; gap: 14px; padding: 18px;
+  .inicial {
+    width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    background: var(--jg-acento-suave); font-weight: 600;
+  }
+  strong { display: block; font-size: 17px; font-weight: 600; }
+  small { color: var(--jg-texto-sec); font-size: 15px; }
+}
+.llamar {
+  width: 86px; border-radius: 24px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--jg-acento); color: #1f2329; font-size: 26px;
+}
+
+.fotos { display: flex; gap: 10px; }
+.foto {
+  width: 96px; height: 96px; border-radius: 18px; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--jg-tarjeta); color: var(--jg-texto-sec); font-size: 30px;
+  img { width: 100%; height: 100%; object-fit: cover; }
+}

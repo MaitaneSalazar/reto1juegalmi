@@ -1,0 +1,59 @@
+// Panel redondeado separado del borde
+ion-menu { --width: 330px; --background: transparent; }
+ion-menu::part(container) {
+  margin: 10px 0 10px 10px;
+  height: calc(100% - 20px);
+  border-radius: 30px;
+  box-shadow: var(--jg-sombra);
+}
+ion-menu ion-content { --background: var(--ion-background-color); --padding-start: 16px; --padding-end: 16px; --padding-bottom: 16px; }
+
+ion-menu-toggle { display: block; }
+
+.marca {
+  display: flex; align-items: center; gap: 10px;
+  padding: calc(18px + var(--ion-safe-area-top, 0px)) 8px 18px;
+  font-size: 24px; font-weight: 700; letter-spacing: -0.04em;
+}
+
+// Tarjeta turquesa del usuario
+.usuario {
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px; margin-bottom: 14px;
+  border-radius: 24px;
+  background: var(--jg-acento); color: #1f2329; text-decoration: none;
+
+  .avatar {
+    width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: #1f2329; color: var(--jg-acento);
+    font-size: 18px; font-weight: 700;
+  }
+  strong { display: block; font-size: 17px; font-weight: 600; }
+  small { font-size: 14px; opacity: .8; }
+}
+
+// Bloques blancos
+.grupo {
+  padding: 6px 0; margin-bottom: 14px;
+  border-radius: 24px;
+  background: var(--jg-tarjeta);
+}
+
+.opcion {
+  display: flex; align-items: center; gap: 14px;
+  width: 100%; min-height: 54px; padding: 0 18px;
+  border: 0; background: none; font: inherit; text-align: left;
+  color: var(--ion-text-color); text-decoration: none; font-size: 17px;
+
+  ion-icon { font-size: 21px; color: var(--jg-texto-sec); flex-shrink: 0; }
+  span { flex-grow: 1; }
+  &:active { opacity: .6; }
+}
+
+// Contador redondo (4, 1, 1)
+.contador {
+  min-width: 26px; height: 26px; padding: 0 7px; border-radius: 13px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--jg-acento-suave); font-size: 13px; font-weight: 600;
+}

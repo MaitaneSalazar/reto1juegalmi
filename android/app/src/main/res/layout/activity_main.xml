@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Contenedor de la app: cada pestaña (Inicio, Tienda, Taller...) es un Fragment que se carga aquí, con la barra inferior flotando encima -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_fondo"
+    tools:context=".MainActivity">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fcvMain"
+        android:name="com.example.retoindividual_1.InicioFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Barra inferior flotante -->
+    <LinearLayout
+        android:id="@+id/llNav"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_nav"
+        android:elevation="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="6dp">
+
+        <LinearLayout
+            android:id="@+id/llNavInicio"
+            style="@style/PestanaNav"
+            android:contentDescription="@string/nav_inicio">
+
+            <ImageView
+                android:id="@+id/ivNavInicio"
+                style="@style/PestanaNavIcono"
+                android:src="@drawable/ic_home" />
+
+            <TextView
+                android:id="@+id/tvNavInicio"
+                style="@style/PestanaNavTexto"
+                android:text="@string/nav_inicio" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llNavTienda"
+            style="@style/PestanaNav"
+            android:contentDescription="@string/nav_tienda">
+
+            <ImageView
+                android:id="@+id/ivNavTienda"
+                style="@style/PestanaNavIcono"
+                android:src="@drawable/ic_storefront" />
+
+            <TextView
+                android:id="@+id/tvNavTienda"
+                style="@style/PestanaNavTexto"
+                android:text="@string/nav_tienda" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llNavTaller"
+            style="@style/PestanaNav"
+            android:contentDescription="@string/nav_taller">
+
+            <ImageView
+                android:id="@+id/ivNavTaller"
+                style="@style/PestanaNavIcono"
+                android:src="@drawable/ic_handyman" />
+
+            <TextView
+                android:id="@+id/tvNavTaller"
+                style="@style/PestanaNavTexto"
+                android:text="@string/nav_taller" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llNavCesta"
+            style="@style/PestanaNav"
+            android:contentDescription="@string/nav_cesta">
+
+            <ImageView
+                android:id="@+id/ivNavCesta"
+                style="@style/PestanaNavIcono"
+                android:src="@drawable/ic_shopping_bag" />
+
+            <TextView
+                android:id="@+id/tvNavCesta"
+                style="@style/PestanaNavTexto"
+                android:text="@string/nav_cesta" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llNavNosotros"
+            style="@style/PestanaNav"
+            android:contentDescription="@string/nav_nosotros">
+
+            <ImageView
+                android:id="@+id/ivNavNosotros"
+                style="@style/PestanaNavIcono"
+                android:src="@drawable/ic_info" />
+
+            <TextView
+                android:id="@+id/tvNavNosotros"
+                style="@style/PestanaNavTexto"
+                android:text="@string/nav_nosotros" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llNavCuenta"
+            style="@style/PestanaNav"
+            android:contentDescription="@string/nav_cuenta">
+
+            <ImageView
+                android:id="@+id/ivNavCuenta"
+                style="@style/PestanaNavIcono"
+                android:src="@drawable/ic_person" />
+
+            <TextView
+                android:id="@+id/tvNavCuenta"
+                style="@style/PestanaNavTexto"
+                android:text="@string/nav_cuenta" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

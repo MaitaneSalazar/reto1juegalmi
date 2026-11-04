@@ -1,0 +1,12 @@
+# ==========================================================
+# scripts/backup/.gitignore — Scripts de copias de seguridad
+# Se suben los scripts (.sh y .ps1), NUNCA las copias.
+# ==========================================================
+
+# ---- Copias generadas (por si se guardan aquí) ----
+*.sql
+*.sql.gz
+backups/
+
+# ---- Registro de ejecuciones ----
+*.log

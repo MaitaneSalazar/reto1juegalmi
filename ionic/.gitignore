@@ -1,0 +1,91 @@
+
+# ==========================================================
+*~
+$RECYCLE.BIN/
+/android/app/build/
+/android/app/src/main/assets/public/
+/android/build/
+/android/.gradle/
+/android/local.properties
+/.angular
+/.angular/
+/.angular/cache
+*.apk
+/bazel-out
+/blob-report/
+.c9/
+# ---- Capacitor Android (por si lo añadís para probar) ----
+# ---- Capacitor iOS: solo se ignoran los archivos generados ----
+.classpath
+# ---- Compilación (se regenera con: ionic build) ----
+# Compiled output
+/connect.lock
+/coverage
+# ---- Dependencias (se instalan con: npm install) ----
+/dist
+/dist/
+.DS_Store
+.env
+.env.local
+.history/*
+# http://git-scm.com/docs/gitignore
+.idea/
+# IDEs and editors
+/.ionic
+# Ionic
+# ionic/.gitignore — App híbrida Ionic + Angular + Capacitor
+/ios/App/App/public/
+/ios/App/build/
+/ios/App/Pods/
+/ios/DerivedData/
+# La carpeta ios/ SÍ se sube (es el proyecto nativo)
+*.launch
+/libpeerconnection.log
+*.log
+# ---- Logs ----
+log.txt
+# Miscellaneous
+# Node
+/node_modules
+node_modules/
+npm-debug.log
+npm-debug.log*
+/.nx
+/.nx/cache
+/out-tsc
+/platforms
+# Playwright
+/playwright/.cache/
+/playwright-report/
+/plugins
+.project
+.sass-cache/
+.settings/
+/.sourcemaps
+# Specifies intentionally untracked files to ignore when using Git
+*.sublime-project
+*.sublime-workspace
+*.sw[mnpcod]
+# System files
+testem.log
+/test-results/
+Thumbs.db
+.tmp
+*.tmp
+*.tmp.*
+/tmp
+/typings
+UserInterfaceState.xcuserstate
+# ---- Variables de entorno locales ----
+/.versions
+# Visual Studio Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
+/www
+/www/
+xcuserdata/
+yarn-error.log
+yarn-error.log*

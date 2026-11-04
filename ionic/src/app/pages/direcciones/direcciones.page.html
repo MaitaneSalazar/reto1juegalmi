@@ -1,0 +1,37 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/cuenta" text=""></ion-back-button></ion-buttons>
+    <ion-title>Dirección de envío</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+    <div class="campo">
+      <label>Calle, número y piso</label>
+      <ion-input formControlName="calle" autocomplete="street-address" placeholder="Gran Vía 12, 3ºB" aria-label="Calle" [class.mal]="invalido('calle')"></ion-input>
+      @if (invalido('calle')) { <p class="error">Escribe la dirección.</p> }
+    </div>
+    <div class="fila2">
+      <div class="campo">
+        <label>Código postal</label>
+        <ion-input formControlName="cp" inputmode="numeric" maxlength="5" aria-label="Código postal" [class.mal]="invalido('cp')"></ion-input>
+        @if (invalido('cp')) { <p class="error">5 cifras.</p> }
+      </div>
+      <div class="campo">
+        <label>Ciudad</label>
+        <ion-input formControlName="ciudad" aria-label="Ciudad" [class.mal]="invalido('ciudad')"></ion-input>
+        @if (invalido('ciudad')) { <p class="error">Obligatorio.</p> }
+      </div>
+    </div>
+    <div class="campo">
+      <label>Provincia</label>
+      <ion-input formControlName="provincia" aria-label="Provincia" [class.mal]="invalido('provincia')"></ion-input>
+      @if (invalido('provincia')) { <p class="error">Obligatorio.</p> }
+    </div>
+
+    <ion-button type="submit" expand="block" [disabled]="guardando()">
+      @if (guardando()) { <ion-spinner name="crescent"></ion-spinner> } @else { Guardar dirección }
+    </ion-button>
+  </form>
+</ion-content>

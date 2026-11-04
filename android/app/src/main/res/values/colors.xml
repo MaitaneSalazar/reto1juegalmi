@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="blanco_tenue">#8CFFFFFF</color>
+    <color name="blanco_cristal">#47FFFFFF</color>
+    <color name="blanco_cristal_borde">#66FFFFFF</color>
+
+    <!-- =====================================================================
+         PALETA JUEGALMI "Calamina" (Sanzo Wada, combinacion n 261)
+         Cada color tiene su NOMBRE. Los layouts NO los usan directamente:
+         usan los ALIAS de abajo.
+         ===================================================================== -->
+
+    <!-- Azul calamina: la marca -->
+    <color name="juegalmi_calamina">#FF78CDD0</color>
+    <color name="juegalmi_calamina_oscuro">#FF375E60</color>
+    <color name="juegalmi_calamina_medio">#FF5EA0A2</color>
+    <color name="juegalmi_calamina_suave">#FFEFF9F9</color>
+    <color name="juegalmi_calamina_claro">#FFB5E3E5</color>
+    <color name="juegalmi_tinta">#FF162525</color>
+
+    <!-- Gris calido: alquiler -->
+    <color name="juegalmi_gris_calido">#FFA1A39A</color>
+
+    <!-- Rojo carmin: SOLO avisos -->
+    <color name="juegalmi_carmin">#FFA72144</color>
+    <color name="juegalmi_carmin_suave">#FFF4E4E9</color>
+
+    <!-- Agua y carbon -->
+    <color name="juegalmi_agua">#FFECF2F1</color>
+    <color name="juegalmi_agua_pozo">#FFDEEEED</color>
+    <color name="juegalmi_carbon">#FF1F2329</color>
+    <color name="juegalmi_pizarra">#FF5C616C</color>
+    <color name="juegalmi_niebla">#FF9398A3</color>
+    <color name="juegalmi_borde">#1A181A20</color>
+    <color name="juegalmi_borde_fuerte">#29181A20</color>
+
+    <!-- =====================================================================
+         ALIAS (para que sirve cada color). Esto es lo que usan los layouts.
+         ===================================================================== -->
+    <color name="color_fondo">@color/juegalmi_agua</color>
+    <color name="color_hoja">@color/white</color>
+    <color name="color_pozo">@color/juegalmi_agua_pozo</color>
+    <color name="color_texto">@color/juegalmi_carbon</color>
+    <color name="color_texto_suave">@color/juegalmi_pizarra</color>
+    <color name="color_texto_tenue">@color/juegalmi_niebla</color>
+    <color name="color_borde">@color/juegalmi_borde</color>
+    <color name="color_borde_fuerte">@color/juegalmi_borde_fuerte</color>
+
+    <color name="color_marca">@color/juegalmi_calamina</color>
+    <color name="color_marca_texto">@color/juegalmi_calamina_oscuro</color>
+    <color name="color_marca_intenso">@color/juegalmi_calamina_medio</color>
+    <color name="color_marca_suave">@color/juegalmi_calamina_suave</color>
+    <color name="color_marca_claro">@color/juegalmi_calamina_claro</color>
+    <color name="color_sobre_marca">@color/juegalmi_tinta</color>
+    <color name="color_oscuro">@color/juegalmi_carbon</color>
+
+    <color name="color_alquiler">@color/juegalmi_gris_calido</color>
+    <color name="color_alerta">@color/juegalmi_carmin</color>
+    <color name="color_alerta_texto">@color/juegalmi_carmin</color>
+    <color name="color_alerta_suave">@color/juegalmi_carmin_suave</color>
+</resources>
