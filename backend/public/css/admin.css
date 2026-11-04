@@ -1,0 +1,59 @@
+/* JuegAlmi · Web de trabajadores — colores de los mockups */
+:root {
+    --juegalmi-turquesa: #78cdcf;
+    --juegalmi-turquesa-oscuro: #3e9ea1;
+    --juegalmi-menu: #1f242b;
+    --juegalmi-fondo: #eaf1f1;
+    --juegalmi-texto: #1d2125;
+    --juegalmi-rojo: #b3203e;
+
+    /* Variables de EasyAdmin */
+    --body-bg: var(--juegalmi-fondo);
+    --sidebar-bg: var(--juegalmi-menu);
+    --link-color: var(--juegalmi-turquesa-oscuro);
+    --button-primary-bg: var(--juegalmi-turquesa);
+    --button-primary-color: var(--juegalmi-texto);
+    --button-primary-border-color: var(--juegalmi-turquesa);
+}
+
+body { background: var(--juegalmi-fondo); color: var(--juegalmi-texto); }
+
+/* Menú lateral oscuro con la opción activa en turquesa */
+.sidebar, .sidebar-wrapper, .main-sidebar { background: var(--juegalmi-menu) !important; }
+.sidebar a, .sidebar .menu-item-label, .sidebar .menu-icon { color: #c9d1d6 !important; }
+.sidebar .menu-item.active > a,
+.sidebar .menu-item.active .menu-item-contents {
+    background: var(--juegalmi-turquesa) !important;
+    color: var(--juegalmi-texto) !important;
+    border-radius: 999px;
+}
+.sidebar .menu-item.active .menu-item-label,
+.sidebar .menu-item.active .menu-icon { color: var(--juegalmi-texto) !important; }
+
+/* Logo «J» */
+.logo-j {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 1.6em; height: 1.6em; margin-right: .3em;
+    background: var(--juegalmi-turquesa); color: var(--juegalmi-texto);
+    border-radius: .4em; font-weight: 800;
+}
+
+/* Títulos grandes y compactos, como en los mockups */
+.saludo, .content-header-title h1, .title {
+    font-weight: 800; letter-spacing: -0.03em; color: var(--juegalmi-texto);
+}
+.saludo { font-size: 3rem; margin: .5rem 0 1rem; }
+
+/* Botones redondeados en turquesa */
+.btn-primary {
+    background: var(--juegalmi-turquesa) !important;
+    border-color: var(--juegalmi-turquesa) !important;
+    color: var(--juegalmi-texto) !important;
+    border-radius: 999px;
+}
+
+/* Tarjetas y tablas blancas con esquinas redondeadas */
+.content-panel, .card, .datagrid { border-radius: 1.25rem; }
+
+/* Avisos en rojo (vencidos, stock bajo) */
+.badge-danger, .text-danger { background-color: var(--juegalmi-rojo); }

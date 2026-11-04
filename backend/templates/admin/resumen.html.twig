@@ -1,0 +1,11 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Resumen{% endblock %}
+
+{% block main %}
+    <h1 class="saludo">
+        {% set hora = 'now'|date('G') %}
+        {{ hora < 14 ? 'Buenos días' : (hora < 21 ? 'Buenas tardes' : 'Buenas noches') }}, {{ app.user.nombre }}
+    </h1>
+    <p class="text-muted">El resumen con las reparaciones, los alquileres, los pedidos y el stock llega en el B9.5.</p>
+{% endblock %}
