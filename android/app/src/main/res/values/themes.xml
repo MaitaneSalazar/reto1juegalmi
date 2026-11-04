@@ -101,4 +101,58 @@
         <item name="android:textSize">13sp</item>
         <item name="android:visibility">gone</item>
     </style>
+
+    <!-- Grupo de opciones del menú lateral: tarjeta blanca -->
+    <style name="GrupoMenu">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/bg_tarjeta_hoja</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
+    </style>
+
+    <!-- Opción del menú lateral: icono a la izquierda y texto -->
+    <style name="ItemMenu">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:drawablePadding">14dp</item>
+        <item name="android:drawableTint">@color/color_texto_suave</item>
+        <item name="android:textColor">@color/color_texto</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <!-- Título grande de las páginas secundarias -->
+    <style name="TituloPagina">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:letterSpacing">-0.05</item>
+        <item name="android:textColor">@color/color_texto</item>
+        <item name="android:textSize">40sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SubtituloPagina">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:textColor">@color/color_texto_suave</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- Aviso de página sin terminar (se quitará al hacer cada página) -->
+    <style name="TextoPendiente">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:textColor">@color/color_texto_tenue</item>
+        <item name="android:textSize">15sp</item>
+    </style>
 </resources>
