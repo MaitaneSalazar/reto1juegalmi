@@ -1,0 +1,53 @@
+// Guía de estilo JuegAlmi · mockup turquesa (siempre en claro)
+:root {
+  color-scheme: light;                              // la app siempre en claro
+  // Primario: turquesa de la marca (botones, pestaña activa, tarjeta "Lo reparamos")
+  --ion-color-primary: #78cdd0;
+  --ion-color-primary-rgb: 120, 205, 208;
+  --ion-color-primary-contrast: #1f2329;            // texto oscuro sobre turquesa
+  --ion-color-primary-contrast-rgb: 31, 35, 41;
+  --ion-color-primary-shade: #6ab4b7;
+  --ion-color-primary-tint: #86d2d5;
+
+  // Dark: avisos (toast) y textos fuertes
+  --ion-color-dark: #1f2329;
+  --ion-color-dark-rgb: 31, 35, 41;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #1b1f24;
+  --ion-color-dark-tint: #35393e;
+
+  // Danger: errores y punto rojo de la cesta
+  --ion-color-danger: #a72144;
+  --ion-color-danger-rgb: 167, 33, 68;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #931d3c;
+  --ion-color-danger-tint: #b03757;
+
+  // Generales
+  --ion-font-family: 'Inter', system-ui, sans-serif;
+  --ion-background-color: #ecf2f1;                  // fondo verde grisáceo
+  --ion-background-color-rgb: 236, 242, 241;
+  --ion-text-color: #1f2329;
+  --ion-text-color-rgb: 31, 35, 41;
+  --ion-toolbar-background: var(--ion-background-color);
+  --ion-item-background: var(--jg-tarjeta);
+
+  // Propias del proyecto
+  --jg-tarjeta: #ffffff;                            // tarjetas
+  --jg-texto-sec: #5c616c;                          // textos secundarios
+  --jg-gris: #e9ebea;                               // tarjeta "Alquilar", huecos de imagen
+  --jg-segmento: #deeeed;                           // fondo de los segmentos
+  --jg-segmento-activo: #ffffff;                    // opción activa del segmento
+  --jg-inverso: #1f2329;                            // tarjetas oscuras y chips activos
+  --jg-inverso-texto: #ffffff;
+  --jg-acento: #78cdd0;
+  --jg-acento-suave: rgba(120, 205, 208, 0.22);     // fondos turquesa suaves
+  --jg-borde: rgba(31, 35, 41, 0.08);
+  --jg-barra: #ffffff;                              // barra inferior flotante
+  --jg-sombra: 0 10px 30px rgba(31, 35, 41, 0.10);
+  --jg-radio: 24px;
+  --jg-relleno: var(--jg-gris);                     // nombre antiguo (lo usan páginas anteriores)
+}
+

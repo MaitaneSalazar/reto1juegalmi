@@ -1,0 +1,6 @@
+[
+  { "id": 1, "usuarioId": 1, "fecha": "2026-09-14", "lineas": [ { "productoId": 6, "nombre": "Super Mario Bros. Wonder", "precioUnitario": 54.99, "cantidad": 1 } ], "total": 54.99, "direccion": "Gran Vía 12, 3ºB · 48001 Bilbao", "estado": "ENTREGADO" },
+  { "id": 2, "usuarioId": 1, "fecha": "2026-09-28", "lineas": [ { "productoId": 9, "nombre": "Nintendo Switch OLED", "precioUnitario": 329.99, "cantidad": 1 } ], "total": 329.99, "direccion": "Gran Vía 12, 3ºB · 48001 Bilbao", "estado": "ENTREGADO" },
+  { "id": 3, "usuarioId": 1, "fecha": "2026-10-10", "lineas": [ { "productoId": 3, "nombre": "Minecraft", "precioUnitario": 29.99, "cantidad": 2 } ], "total": 59.98, "direccion": "Gran Vía 12, 3ºB · 48001 Bilbao", "estado": "ENVIADO" },
+  { "id": 4, "usuarioId": 1, "fecha": "2026-10-26", "lineas": [ { "productoId": 12, "nombre": "Redmi Note 14 Pro", "precioUnitario": 349.99, "cantidad": 1 } ], "total": 349.99, "direccion": "Gran Vía 12, 3ºB · 48001 Bilbao", "estado": "PAGADO" }
+]

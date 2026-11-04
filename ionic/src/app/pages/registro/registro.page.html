@@ -1,0 +1,66 @@
+<ion-content class="ion-padding">
+  <header class="cabecera-acceso">
+    <div class="marca"><span class="logo">J</span><span>JuegAlmi</span></div>
+    <a routerLink="/login" routerDirection="back">Ya tengo cuenta</a>
+  </header>
+
+  <h1>Crear cuenta</h1>
+  <p class="subtitulo">Solo te llevará un minuto.</p>
+
+  <form [formGroup]="form" (ngSubmit)="registrar()" novalidate>
+    <div class="campo">
+      <label>Nombre</label>
+      <ion-input formControlName="nombre" autocomplete="given-name" aria-label="Nombre" [class.mal]="invalido('nombre')"></ion-input>
+      @if (invalido('nombre')) { <p class="error">{{ mensajes.nombre }}</p> }
+    </div>
+
+    <!-- Dos columnas: apellidos -->
+    <div class="fila">
+      <div class="campo">
+        <label>1er apellido</label>
+        <ion-input formControlName="apellido1" autocomplete="family-name" aria-label="Primer apellido" [class.mal]="invalido('apellido1')"></ion-input>
+        @if (invalido('apellido1')) { <p class="error">{{ mensajes.apellido1 }}</p> }
+      </div>
+      <div class="campo">
+        <label>2º apellido</label>
+        <ion-input formControlName="apellido2" aria-label="Segundo apellido"></ion-input>
+      </div>
+    </div>
+
+    <!-- Dos columnas: DNI y teléfono -->
+    <div class="fila">
+      <div class="campo">
+        <label>DNI</label>
+        <ion-input formControlName="dni" placeholder="12345678Z" maxlength="9" aria-label="DNI" [class.mal]="invalido('dni')"></ion-input>
+        @if (invalido('dni')) { <p class="error">{{ mensajes.dni }}</p> }
+      </div>
+      <div class="campo">
+        <label>Teléfono</label>
+        <ion-input formControlName="telefono" type="tel" inputmode="tel" autocomplete="tel" aria-label="Teléfono" [class.mal]="invalido('telefono')"></ion-input>
+        @if (invalido('telefono')) { <p class="error">{{ mensajes.telefono }}</p> }
+      </div>
+    </div>
+
+    <div class="campo">
+      <label>Email</label>
+      <ion-input formControlName="email" type="email" inputmode="email" autocomplete="email" aria-label="Email" [class.mal]="invalido('email')"></ion-input>
+      @if (invalido('email')) { <p class="error">{{ mensajes.email }}</p> }
+    </div>
+
+    <div class="campo">
+      <label>Contraseña</label>
+      <ion-input formControlName="password" type="password" autocomplete="new-password" aria-label="Contraseña" [class.mal]="invalido('password')"></ion-input>
+      @if (invalido('password')) { <p class="error">{{ mensajes.password }}</p> }
+    </div>
+
+    @if (error()) {
+      <p class="error-general" role="alert">{{ error() }}</p>
+    }
+
+    <ion-button type="submit" expand="block" [disabled]="cargando()">
+      @if (cargando()) { <ion-spinner name="crescent"></ion-spinner> } @else { Registrarme }
+    </ion-button>
+  </form>
+
+  <p class="pie">JuegAlmi · Bilbao</p>
+</ion-content>

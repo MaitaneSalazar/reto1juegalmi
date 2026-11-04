@@ -1,0 +1,52 @@
+<ion-header class="ion-no-border">
+  <app-cabecera></app-cabecera>
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (sesion.usuario(); as u) {
+    <!-- Perfil -->
+    <div class="perfil">
+      <div class="avatar">{{ sesion.iniciales() }}</div>
+      <h1>{{ u.nombre }} {{ u.apellido1 }}</h1>
+      <span>{{ u.email }}</span>
+    </div>
+
+    <div class="cascada">
+      <!-- Contadores -->
+      <div class="contadores">
+        <a class="tarjeta pulsable" routerLink="/cuenta/pedidos">
+          <ion-icon name="receipt-outline"></ion-icon><b>{{ resumen.pedidos() }}</b><span>Pedidos</span>
+        </a>
+        <a class="tarjeta pulsable" routerLink="/cuenta/alquileres">
+          <ion-icon name="time-outline"></ion-icon><b>{{ resumen.alquileresActivos() }}</b>
+          <span>{{ resumen.alquileresActivos() === 1 ? 'Alquiler' : 'Alquileres' }}</span>
+        </a>
+        <a class="tarjeta pulsable" routerLink="/taller" [queryParams]="{ vista: 'mis' }">
+          <ion-icon name="build-outline"></ion-icon><b>{{ resumen.reparacionesEnCurso() }}</b>
+          <span>{{ resumen.reparacionesEnCurso() === 1 ? 'Reparación' : 'Reparaciones' }}</span>
+        </a>
+      </div>
+
+      <!-- Alquiler activo -->
+      @if (resumen.alquilerActivo(); as a) {
+        <div class="tarjeta alquiler">
+          <app-miniatura-producto [producto]="a.producto"></app-miniatura-producto>
+          <span class="crece"><strong>{{ a.producto.nombre }}</strong><small>Hasta {{ a.fechaFin }}</small></span>
+          <button type="button" class="devolver pulsable" (click)="devolver(a)">Devolver</button>
+        </div>
+      }
+
+      <!-- Mis datos -->
+      <nav class="tarjeta lista">
+        <a routerLink="/cuenta/datos-personales"><ion-icon name="person-outline"></ion-icon><span>Datos personales</span><ion-icon name="chevron-forward"></ion-icon></a>
+        <a routerLink="/cuenta/direcciones"><ion-icon name="location-outline"></ion-icon><span>Direcciones</span>
+          <small>{{ u.direccion?.ciudad ?? 'Añadir' }}</small><ion-icon name="chevron-forward"></ion-icon></a>
+        <a routerLink="/cuenta/ajustes"><ion-icon name="settings-outline"></ion-icon><span>Ajustes</span><ion-icon name="chevron-forward"></ion-icon></a>
+      </nav>
+
+      <button type="button" class="salir" (click)="cerrarSesion()">
+        <ion-icon name="log-out-outline"></ion-icon> Cerrar sesión
+      </button>
+    </div>
+  }
+</ion-content>
