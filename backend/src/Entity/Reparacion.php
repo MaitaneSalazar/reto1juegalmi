@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'reparacion')]
 class Reparacion
 {
-    public const TIPOS_DISPOSITIVO = ['movil', 'tablet', 'consola'];
+    public const TIPOS_DISPOSITIVO = ['consola', 'movil', 'tablet', 'ordenador', 'mando', 'auriculares', 'reloj', 'otro'];
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,7 +21,7 @@ class Reparacion
 
     #[ORM\Column(name: 'tipo_dispositivo', length: 20)]
     #[Assert\NotBlank(message: 'El tipo de dispositivo es obligatorio')]
-    #[Assert\Choice(choices: self::TIPOS_DISPOSITIVO, message: 'El tipo de dispositivo tiene que ser movil, tablet o consola')]
+    #[Assert\Choice(choices: self::TIPOS_DISPOSITIVO, message: 'El tipo de dispositivo no es válido')]
     private ?string $tipoDispositivo = null;
 
     #[ORM\Column(length: 50)]
