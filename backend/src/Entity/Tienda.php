@@ -40,9 +40,6 @@ class Tienda
     #[Assert\Range(min: -180, max: 180, notInRangeMessage: 'La longitud tiene que estar entre -180 y 180')]
     private ?string $longitud = null;
 
-    // Añadido respecto al relacional: texto de la opción «Historia» de las apps y la web
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $historia = null;
 
     // TIENDA N — situada en — 1 DIRECCION
     #[ORM\ManyToOne(targetEntity: Direccion::class)]
@@ -68,8 +65,6 @@ class Tienda
     public function getLongitud(): ?float { return $this->longitud === null ? null : (float) $this->longitud; }
     public function setLongitud(float $longitud): static { $this->longitud = (string) $longitud; return $this; }
 
-    public function getHistoria(): ?string { return $this->historia; }
-    public function setHistoria(?string $historia): static { $this->historia = $historia; return $this; }
 
     public function getDireccion(): ?Direccion { return $this->direccion; }
     public function setDireccion(Direccion $direccion): static { $this->direccion = $direccion; return $this; }

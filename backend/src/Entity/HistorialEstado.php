@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'historial_estado')]
 class HistorialEstado
 {
-    public const ESTADOS = ['recibida', 'en_diagnostico', 'presupuestada', 'en_reparacion', 'reparada', 'entregada', 'cancelada'];
+    public const ESTADOS = ['recibida', 'diagnostico', 'en_reparacion', 'lista_para_recoger', 'entregada', 'cancelada'];
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
