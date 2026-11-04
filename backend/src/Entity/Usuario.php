@@ -14,8 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'tipo', type: 'string', length: 20)]
 #[ORM\DiscriminatorMap(['cliente' => Cliente::class, 'trabajador' => Trabajador::class])]
-#[UniqueEntity(fields: ['email'], message: 'Ya existe un usuario con este email')]
-#[UniqueEntity(fields: ['dni'], message: 'Ya existe un usuario con este DNI')]
+#[UniqueEntity(entityClass: Usuario::class, fields: ['email'], message: 'Ya existe un usuario con este email')]
+#[UniqueEntity(entityClass: Usuario::class, fields: ['dni'], message: 'Ya existe un usuario con este DNI')]
 abstract class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
