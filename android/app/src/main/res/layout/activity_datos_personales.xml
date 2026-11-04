@@ -26,5 +26,17 @@
         <TextView
             style="@style/TextoPendiente"
             android:text="@string/pagina_en_construccion" />
+
+        <!-- Hueco que empuja el botón al final de la pantalla -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEditarDatos"
+            style="@style/BotonPrincipal"
+            android:layout_marginBottom="16dp"
+            android:text="@string/boton_editar_datos" />
     </LinearLayout>
 </LinearLayout>

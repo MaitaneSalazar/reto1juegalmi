@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SEGUIMIENTO DE REPARACIÓN (09 del mockup). Se abre dentro de la pestaña Taller, con la barra inferior visible.
+     De momento vacía: solo botón de volver y título -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    tools:context=".SeguimientoReparacionFragment">
+
+    <include layout="@layout/barra_volver" />
+
+    <TextView
+        style="@style/TituloPagina"
+        android:text="@string/titulo_seguimiento" />
+
+    <TextView
+        style="@style/TextoPendiente"
+        android:text="@string/pagina_en_construccion" />
+</LinearLayout>

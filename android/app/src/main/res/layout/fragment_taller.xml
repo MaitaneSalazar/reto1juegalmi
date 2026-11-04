@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- TALLER (08/09 del mockup). Vacía por ahora -->
+<!-- TALLER (08/14 del mockup). De momento: barra superior y botón de prueba -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".TallerFragment" />
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    tools:context=".TallerFragment">
+
+    <include layout="@layout/barra_superior" />
+
+    <!-- PRUEBA: quitar cuando esté la lista de "Mis reparaciones" -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPruebaSeguimiento"
+        style="@style/BotonPrincipal"
+        android:layout_marginTop="24dp"
+        android:text="@string/prueba_ver_seguimiento" />
+</LinearLayout>

@@ -41,7 +41,6 @@
     <string name="nav_taller">Taller</string>
     <string name="nav_cesta">Cesta</string>
     <string name="nav_nosotros">Nosotros</string>
-    <string name="nav_cuenta">Cuenta</string>
 
     <string name="menu_mi_cuenta">Mi cuenta</string>
     <string name="menu_mis_pedidos">Mis pedidos</string>
@@ -54,4 +53,18 @@
     <string name="volver">Volver</string>
     <string name="direcciones_subtitulo">Donde te enviamos los pedidos.</string>
     <string name="pagina_en_construccion">Esta página está en construcción.</string>
+
+    <!-- Páginas que faltaban -->
+    <string name="titulo_ficha">Ficha de producto</string>
+    <string name="ficha_alquiler_pendiente">Opciones de alquiler (solo videojuegos)</string>
+    <string name="titulo_seguimiento">Seguimiento</string>
+    <string name="titulo_editar_datos">Editar datos</string>
+    <string name="titulo_nueva_direccion">Nueva dirección</string>
+    <string name="boton_editar_datos">Editar datos</string>
+    <string name="boton_anadir_direccion">Añadir dirección</string>
+
+    <!-- Botones de prueba: se quitarán cuando estén las listas -->
+    <string name="prueba_ver_ficha_juego">Ficha de un videojuego (prueba)</string>
+    <string name="prueba_ver_ficha_producto">Ficha de una consola (prueba)</string>
+    <string name="prueba_ver_seguimiento">Ver seguimiento (prueba)</string>
 </resources>

@@ -31,7 +31,7 @@ import com.example.retoindividual_1.network.SessionManager;
  *  La barra inferior marca la pestaña activa abriéndola en píldora con su nombre.
  *
  *  Inicio -> InicioFragment      Tienda   -> TiendaFragment     Taller -> TallerFragment
- *  Cesta  -> CestaFragment       Nosotros -> NosotrosFragment   Cuenta -> CuentaFragment
+ *  Cesta  -> CestaFragment       Nosotros -> NosotrosFragment
  * =====================================================================================
  */
 
@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int TALLER = 2;
     private static final int CESTA = 3;
     private static final int NOSOTROS = 4;
-    private static final int CUENTA = 5;
 
     private LinearLayout[] llPestanas;
     private ImageView[] ivPestanas;
@@ -66,11 +65,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Mismo orden que en la barra: Inicio, Tienda, Taller, Cesta, Nosotros, Cuenta
         llPestanas = new LinearLayout[]{findViewById(R.id.llNavInicio), findViewById(R.id.llNavTienda), findViewById(R.id.llNavTaller),
-                findViewById(R.id.llNavCesta), findViewById(R.id.llNavNosotros), findViewById(R.id.llNavCuenta)};
+                findViewById(R.id.llNavCesta), findViewById(R.id.llNavNosotros)};
         ivPestanas = new ImageView[]{findViewById(R.id.ivNavInicio), findViewById(R.id.ivNavTienda), findViewById(R.id.ivNavTaller),
-                findViewById(R.id.ivNavCesta), findViewById(R.id.ivNavNosotros), findViewById(R.id.ivNavCuenta)};
+                findViewById(R.id.ivNavCesta), findViewById(R.id.ivNavNosotros)};
         tvPestanas = new TextView[]{findViewById(R.id.tvNavInicio), findViewById(R.id.tvNavTienda), findViewById(R.id.tvNavTaller),
-                findViewById(R.id.tvNavCesta), findViewById(R.id.tvNavNosotros), findViewById(R.id.tvNavCuenta)};
+                findViewById(R.id.tvNavCesta), findViewById(R.id.tvNavNosotros)};
 
         // Cada pestaña abre su Fragment
         for (int i = 0; i < llPestanas.length; i++) {
@@ -98,10 +97,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void abrir(int pestana) {
-        if (pestana == pestanaActual) {
+        FragmentManager fm = getSupportFragmentManager();
+        boolean hayPaginaEncima = fm.getBackStackEntryCount() > 0;
+        if (pestana == pestanaActual && !hayPaginaEncima) {
             return;
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.fcvMain, crearFragment(pestana)).commit();
+        // Si había una página abierta dentro de la pestaña (por ejemplo, el seguimiento), se cierra.
+        // Si no, al pulsar atrás en otra pestaña volvería a salir el seguimiento
+        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        fm.beginTransaction().replace(R.id.fcvMain, crearFragment(pestana)).commit();
         marcar(pestana);
     }
 
@@ -115,11 +119,18 @@ public class MainActivity extends AppCompatActivity {
                 return new CestaFragment();
             case NOSOTROS:
                 return new NosotrosFragment();
-            case CUENTA:
-                return new CuentaFragment();
             default:
                 return new InicioFragment();
         }
+    }
+
+    // Abre el seguimiento DENTRO de la pestaña Taller, sin tapar la barra inferior.
+    // addToBackStack hace que la flecha y el botón atrás vuelvan al Taller
+    public void abrirSeguimiento() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fcvMain, new SeguimientoReparacionFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
     // ============================ MENÚ LATERAL ============================
