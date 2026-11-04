@@ -1,0 +1,18 @@
+framework:
+    messenger:
+        # Mensajes que fallan 3 veces: se guardan aquí para revisarlos
+        failure_transport: failed
+
+        transports:
+            # Cola principal, guardada en MySQL (tabla messenger_messages)
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 3
+                    delay: 1000
+                    multiplier: 2
+            failed: 'doctrine://default?queue_name=failed'
+
+        routing:
+            # Las miniaturas se hacen en segundo plano, en el worker
+            App\Message\CrearMiniatura: async

@@ -8,6 +8,8 @@ use App\Entity\Producto;
 use App\Entity\Tablet;
 use App\Entity\Videojuego;
 use Symfony\Component\HttpFoundation\RequestStack;
+use App\Message\CrearMiniatura;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Datos de un producto que devuelve la API.
@@ -15,8 +17,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class ProductoPresenter
 {
-    public function __construct(private RequestStack $requestStack)
-    {
+    public function __construct(
+        private RequestStack $requestStack,
+        #[Autowire('%kernel.project_dir%')] private string $directorioProyecto,
+    ) {
     }
 
     public function resumen(Producto $producto): array
@@ -30,6 +34,7 @@ class ProductoPresenter
             'stock' => $producto->getStock(),
             'disponible' => $producto->getStock() > 0,
             'imagen_url' => $this->url($producto->getImagen()),
+            'miniatura_url' => $this->miniatura($producto->getImagen()),
         ];
 
         if ($producto instanceof Videojuego) {
@@ -90,5 +95,16 @@ class ProductoPresenter
         $request = $this->requestStack->getCurrentRequest();
 
         return $request ? $request->getSchemeAndHttpHost() . $ruta : $ruta;
+    }
+    /** Miniatura hecha por el worker; si aún no existe, la foto original */
+    public function miniatura(?string $ruta): ?string
+    {
+        if ($ruta === null || $ruta === '' || str_starts_with($ruta, 'http')) {
+            return $this->url($ruta);
+        }
+
+        $mini = CrearMiniatura::rutaMiniatura($ruta);
+
+        return $this->url(is_file($this->directorioProyecto . '/public' . $mini) ? $mini : $ruta);
     }
 }

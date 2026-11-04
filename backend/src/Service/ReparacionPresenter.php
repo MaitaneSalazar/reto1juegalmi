@@ -91,6 +91,7 @@ class ReparacionPresenter
             'fotos' => array_map(fn (FotoReparacion $f) => [
                 'id' => $f->getId(),
                 'url' => $this->productos->url($f->getRuta()),
+                'miniatura_url' => $this->productos->miniatura($f->getRuta()),
                 'fecha_subida' => $f->getFechaSubida()->format(DATE_ATOM),
             ], $reparacion->getFotos()->toArray()),
         ];
