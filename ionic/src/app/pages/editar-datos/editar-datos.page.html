@@ -1,0 +1,64 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/cuenta/datos-personales" text=""></ion-back-button></ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <h1 class="titulo">Editar datos</h1>
+
+  <!-- Avatar con botón de cámara -->
+  <div class="foto">
+    <button type="button" class="avatar" (click)="cambiarFoto()" aria-label="Cambiar foto">
+      @if (foto(); as f) { <img [src]="f" alt="Foto de perfil"> } @else { {{ sesion.iniciales() }} }
+      <span class="camara"><ion-icon name="camera-outline"></ion-icon></span>
+    </button>
+    <span>Cambiar foto</span>
+  </div>
+
+  @if (sesion.usuario(); as u) {
+    <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+      <div class="campo">
+        <label>Nombre</label>
+        <ion-input formControlName="nombre" autocomplete="given-name" aria-label="Nombre" [class.mal]="invalido('nombre')"></ion-input>
+        @if (invalido('nombre')) { <p class="error">Escribe tu nombre.</p> }
+      </div>
+
+      <div class="fila2">
+        <div class="campo">
+          <label>Primer apellido</label>
+          <ion-input formControlName="apellido1" aria-label="Primer apellido" [class.mal]="invalido('apellido1')"></ion-input>
+          @if (invalido('apellido1')) { <p class="error">Escribe el apellido.</p> }
+        </div>
+        <div class="campo">
+          <label>Segundo <small>(opcional)</small></label>
+          <ion-input formControlName="apellido2" aria-label="Segundo apellido"></ion-input>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Teléfono <small>(opcional)</small></label>
+        <ion-input formControlName="telefono" type="tel" inputmode="tel" aria-label="Teléfono" [class.mal]="invalido('telefono')"></ion-input>
+        @if (invalido('telefono')) { <p class="error">Teléfono de 9 cifras (empieza por 6, 7, 8 o 9).</p> }
+      </div>
+
+      <!-- DNI y email no se pueden cambiar -->
+      <div class="campo">
+        <label>DNI</label>
+        <div class="fijo">{{ u.dni }} <ion-icon name="lock-closed-outline"></ion-icon></div>
+      </div>
+      <div class="campo">
+        <label>Email</label>
+        <div class="fijo">{{ u.email }} <ion-icon name="lock-closed-outline"></ion-icon></div>
+      </div>
+    </form>
+  }
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <div class="pie-boton">
+    <ion-button expand="block" (click)="guardar()" [disabled]="guardando()">
+      @if (guardando()) { <ion-spinner name="crescent"></ion-spinner> } @else { Guardar cambios }
+    </ion-button>
+  </div>
+</ion-footer>

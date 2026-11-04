@@ -15,7 +15,11 @@ if os.path.exists(manifest):
         nuevos += ('    <queries>\n        <intent>\n'
                    '            <action android:name="android.speech.action.RECOGNIZE_SPEECH" />\n'
                    '        </intent>\n    </queries>\n')
-    if nuevos:
+    # La API de desarrollo va por http (VM de Aketza): se quita cuando la API tenga HTTPS
+    http = 'usesCleartextTraffic' not in xml
+    if http:
+        xml = xml.replace('<application', '<application\n        android:usesCleartextTraffic="true"', 1)
+    if nuevos or http:
         xml = xml.replace('</manifest>', nuevos + '</manifest>')
         open(manifest, 'w', encoding='utf-8').write(xml)
     print('✔ Permisos de Android revisados')

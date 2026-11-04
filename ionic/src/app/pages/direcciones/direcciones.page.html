@@ -1,37 +1,39 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-buttons slot="start"><ion-back-button defaultHref="/cuenta" text=""></ion-back-button></ion-buttons>
-    <ion-title>Dirección de envío</ion-title>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/inicio" text=""></ion-back-button></ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
-    <div class="campo">
-      <label>Calle, número y piso</label>
-      <ion-input formControlName="calle" autocomplete="street-address" placeholder="Gran Vía 12, 3ºB" aria-label="Calle" [class.mal]="invalido('calle')"></ion-input>
-      @if (invalido('calle')) { <p class="error">Escribe la dirección.</p> }
-    </div>
-    <div class="fila2">
-      <div class="campo">
-        <label>Código postal</label>
-        <ion-input formControlName="cp" inputmode="numeric" maxlength="5" aria-label="Código postal" [class.mal]="invalido('cp')"></ion-input>
-        @if (invalido('cp')) { <p class="error">5 cifras.</p> }
-      </div>
-      <div class="campo">
-        <label>Ciudad</label>
-        <ion-input formControlName="ciudad" aria-label="Ciudad" [class.mal]="invalido('ciudad')"></ion-input>
-        @if (invalido('ciudad')) { <p class="error">Obligatorio.</p> }
-      </div>
-    </div>
-    <div class="campo">
-      <label>Provincia</label>
-      <ion-input formControlName="provincia" aria-label="Provincia" [class.mal]="invalido('provincia')"></ion-input>
-      @if (invalido('provincia')) { <p class="error">Obligatorio.</p> }
-    </div>
+  <h1 class="titulo">Direcciones</h1>
+  <p class="subtitulo">Toca una para enviar ahí tus pedidos.</p>
 
-    <ion-button type="submit" expand="block" [disabled]="guardando()">
-      @if (guardando()) { <ion-spinner name="crescent"></ion-spinner> } @else { Guardar dirección }
-    </ion-button>
-  </form>
+  @if (cargando()) {
+    <ion-skeleton-text [animated]="true" style="height: 90px; border-radius: 24px"></ion-skeleton-text>
+  } @else {
+    <div class="cascada">
+      @for (d of domicilios.lista(); track d.id) {
+        <div class="tarjeta direccion pulsable" [class.elegida]="esElegido(d)" (click)="elegir(d)">
+          <span class="icono"><ion-icon [name]="esElegido(d) ? 'checkmark-circle' : 'location-outline'"></ion-icon></span>
+          <div class="textos">
+            <strong>{{ d.direccion.calle }} {{ d.direccion.numero }}@if (d.direccion.piso) {, {{ d.direccion.piso }}}</strong>
+            <small>{{ d.direccion.codigo_postal }} {{ d.direccion.ciudad }} · {{ d.direccion.provincia }}</small>
+          </div>
+          <button type="button" (click)="editar(d, $event)" aria-label="Editar dirección"><ion-icon name="pencil-outline"></ion-icon></button>
+          <button type="button" (click)="borrar(d, $event)" aria-label="Borrar dirección"><ion-icon name="trash-outline"></ion-icon></button>
+        </div>
+      } @empty {
+        <p class="vacio">Todavía no tienes ninguna dirección.</p>
+      }
+    </div>
+  }
 </ion-content>
+
+<ion-footer class="ion-no-border">
+  <div class="pie-boton">
+    <ion-button expand="block" routerLink="/cuenta/direcciones/nueva">
+      <ion-icon slot="start" name="add"></ion-icon>
+      Añadir dirección
+    </ion-button>
+  </div>
+</ion-footer>

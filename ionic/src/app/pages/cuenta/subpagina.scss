@@ -1,14 +1,29 @@
-ion-toolbar { --background: var(--ion-background-color); --min-height: 64px; padding: 0 12px; }
-ion-title { text-align: center; padding-inline-end: 60px; font-size: 18px; font-weight: 700; letter-spacing: -0.03em; }
+// Cabecera: solo el botón redondo de volver
+ion-toolbar { --background: var(--ion-background-color); --min-height: 70px; padding: 0 14px; }
 ion-back-button {
   --color: var(--ion-text-color); --border-radius: 50%; --icon-font-size: 22px;
-  width: 46px; height: 46px; border-radius: 50%; background: var(--jg-tarjeta);
+  width: 48px; height: 48px; border-radius: 50%; background: var(--jg-tarjeta);
 }
+ion-title { text-align: center; padding-inline-end: 60px; font-size: 18px; font-weight: 700; }
+ion-content { --padding-bottom: 130px; }
 
-h2 { margin: 24px 0 10px; font-size: 20px; font-weight: 700; }
+.subtitulo { margin: -12px 0 22px; color: var(--jg-texto-sec); font-size: 17px; }
+h2 { margin: 30px 0 14px; font-size: 24px; font-weight: 700; letter-spacing: -0.04em; }
 .vacio { text-align: center; color: var(--jg-texto-sec); margin-top: 40px; }
 
-// Lista dentro de tarjeta
+// Tarjeta tipo fila: miniatura · textos · precio
+.fila {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 18px 14px 14px; margin-bottom: 14px;
+  color: var(--ion-text-color); text-decoration: none;
+  app-miniatura-producto { --tam: 72px; --radio: 14px; --fondo: #ffffff; --ajuste: contain; height: 84px; }
+  .textos { flex-grow: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  strong { font-size: 17px; font-weight: 600; }
+  small { color: var(--jg-texto-sec); font-size: 15px; }
+  app-precio { font-size: 22px; }
+}
+
+// Lista de datos dentro de tarjeta
 .lista { display: flex; flex-direction: column; overflow: hidden; padding: 4px 0; }
 .item {
   display: flex; align-items: center; gap: 14px;
@@ -21,12 +36,25 @@ h2 { margin: 24px 0 10px; font-size: 20px; font-weight: 700; }
 }
 
 // Formularios
-.campo { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; label { font-size: 16px; font-weight: 500; } }
-.fijo { padding: 15px 16px; border-radius: 16px; background: var(--jg-gris); color: var(--jg-texto-sec); font-size: 16px; }
-.fila2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-form ion-button { margin-top: 26px; }
+form { display: flex; flex-direction: column; gap: 18px; }
+.campo { display: flex; flex-direction: column; gap: 10px; min-width: 0; label { font-size: 16px; font-weight: 500; } }
+.campo label small { color: var(--jg-texto-sec); font-weight: 400; margin-left: 6px; }
+.fila2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.fijo {
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: 52px; padding: 0 16px; border-radius: 16px;
+  background: rgba(255, 255, 255, .55); color: var(--jg-texto-sec); font-size: 17px;
+}
+.error { margin: 0; color: var(--ion-color-danger); font-size: 13px; }
 
-// Etiqueta de estado
+// Botón fijo abajo dentro de una tarjeta blanca flotante
+ion-footer { padding: 0 14px calc(14px + var(--ion-safe-area-bottom, 0px)); background: transparent; }
+.pie-boton {
+  padding: 12px; border-radius: 30px; background: var(--jg-tarjeta); box-shadow: var(--jg-sombra);
+  ion-button { margin: 0; min-height: 56px; }
+}
+
+// Etiqueta de estado (pantallas antiguas: ajustes, panel...)
 .chip-estado {
   height: 26px; padding: 0 12px; border-radius: 999px; font-size: 12px; font-weight: 700;
   display: inline-flex; align-items: center; background: var(--jg-gris); color: var(--jg-texto-sec);

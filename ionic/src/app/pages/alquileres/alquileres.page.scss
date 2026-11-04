@@ -1,8 +1,18 @@
-ion-segment { margin-top: 8px; }
-.alquiler {
-  margin-top: 12px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px;
-  .cab { display: flex; justify-content: space-between; align-items: center; gap: 8px; strong { font-size: 16px; font-weight: 600; } }
-  .fechas { color: var(--jg-texto-sec); font-size: 14px; }
-  .pie { display: flex; justify-content: space-between; align-items: center; b { font-size: 15px; font-weight: 600; } }
-  ion-button { min-height: 36px; margin: 0; }
+.activo { padding: 22px; margin-bottom: 14px; }
+.arriba {
+  display: flex; gap: 24px;
+  app-miniatura-producto { --tam: 112px; --radio: 16px; height: 150px; }
+  strong { font-size: 19px; font-weight: 600; }
+}
+.dias { margin: 34px 0 0; color: var(--jg-texto-sec); font-size: 15px; b { color: var(--ion-text-color); font-size: 56px; font-weight: 700; line-height: 1; letter-spacing: -0.04em; } }
+.vencido { margin: 34px 0 0; color: var(--ion-color-danger); font-size: 22px; font-weight: 700; }
+.barra { height: 8px; margin-top: 22px; border-radius: 4px; background: var(--jg-segmento); overflow: hidden;
+  i { display: block; height: 100%; border-radius: 4px; background: var(--jg-acento); } }
+.fechas { display: flex; justify-content: space-between; margin-top: 10px; color: var(--jg-texto-sec); font-size: 14px; }
+.devolver {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; height: 56px; margin-top: 22px; border-radius: 999px;
+  border: 1px solid var(--jg-borde); background: var(--jg-tarjeta);
+  color: var(--ion-text-color); font: inherit; font-size: 17px; font-weight: 500;
+  ion-icon { font-size: 20px; }
 }

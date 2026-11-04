@@ -25,6 +25,14 @@ describe('Validador de DNI', () => {
   it('no da error si está vacío (eso lo comprueba "required")', () => {
     expect(validar(dniValido, '')).toBeNull();
   });
+
+  it('acepta un NIE válido (la API admite X1234567L)', () => {
+    expect(validar(dniValido, 'X1234567L')).toBeNull();
+  });
+
+  it('rechaza un NIE con letra incorrecta', () => {
+    expect(validar(dniValido, 'X1234567A')).toEqual({ dni: true });
+  });
 });
 
 describe('Validador de teléfono', () => {

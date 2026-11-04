@@ -5,7 +5,6 @@ import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
-import { proveedorFuenteDatos } from './app/factories/fuente-datos.factory';
 import { apiInterceptor } from './app/interceptors/api.interceptor';
 
 bootstrapApplication(AppComponent, {
@@ -14,7 +13,6 @@ bootstrapApplication(AppComponent, {
     provideIonicAngular({ mode: 'md' }),                            // mismo aspecto en iOS y Android
     provideRouter(routes, withPreloading(PreloadAllModules)),       // rutas con precarga
     provideHttpClient(withInterceptors([apiInterceptor])),          // HTTP + token y GPS en cada petición
-    proveedorFuenteDatos,                                           // Factory: API real o datos de ejemplo
   ],
 });
 

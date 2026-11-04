@@ -2,8 +2,7 @@ import { Component, computed, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { IonApp, IonMenu, IonContent, IonMenuToggle, IonIcon, IonRouterLinkWithHref, IonRouterOutlet } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { receiptOutline, timeOutline, buildOutline, personOutline, locationOutline,
-         notificationsOutline, settingsOutline, helpCircleOutline, logOutOutline } from 'ionicons/icons';
+import { receiptOutline, timeOutline, buildOutline, personOutline, locationOutline, logOutOutline } from 'ionicons/icons';
 import { SesionService } from './services/sesion.service';
 import { ResumenService } from './services/resumen.service';
 import { UbicacionService } from './services/ubicacion.service';
@@ -23,7 +22,7 @@ export class AppComponent {
   resumen = inject(ResumenService);
   private router = inject(Router);
 
-  // Actividad (con contadores reales) · Mis datos · Otros
+  // Bloque 1: actividad con contadores reales · Bloque 2: mis datos
   grupos = computed<OpcionMenu[][]>(() => [
     [
       { titulo: 'Mis pedidos',      url: '/cuenta/pedidos',    icono: 'receipt-outline', contador: this.resumen.pedidos() },
@@ -34,19 +33,13 @@ export class AppComponent {
     [
       { titulo: 'Datos personales', url: '/cuenta/datos-personales', icono: 'person-outline' },
       { titulo: 'Direcciones',      url: '/cuenta/direcciones',      icono: 'location-outline' },
-      { titulo: 'Notificaciones',   url: '/cuenta/notificaciones',   icono: 'notifications-outline' },
-    ],
-    [
-      { titulo: 'Ajustes', url: '/cuenta/ajustes', icono: 'settings-outline' },
-      { titulo: 'Ayuda',   url: '/cuenta/ayuda',   icono: 'help-circle-outline' },
     ],
   ]);
 
   constructor() {
-    inject(UbicacionService).obtener();
-    inject(AgitarService).iniciar();      // acelerómetro: agitar el móvil = recargar   // pide el GPS al abrir (lo usa el interceptor)
-    addIcons({ receiptOutline, timeOutline, buildOutline, personOutline, locationOutline,
-               notificationsOutline, settingsOutline, helpCircleOutline, logOutOutline });
+    inject(UbicacionService).obtener();   // pide el GPS al abrir (lo usa el interceptor)
+    inject(AgitarService).iniciar();      // acelerómetro: agitar el móvil = recargar
+    addIcons({ receiptOutline, timeOutline, buildOutline, personOutline, locationOutline, logOutOutline });
   }
 
   cerrarSesion(): void {

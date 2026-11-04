@@ -1,31 +1,33 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, of, switchMap } from 'rxjs';
+import { concatMap, from, last, of, switchMap } from 'rxjs';
 import { IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon, IonInput, IonTextarea,
          IonChip, IonButton, IonSpinner, IonSkeletonText, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { gameControllerOutline, phonePortraitOutline, tabletLandscapeOutline, laptopOutline, tvOutline,
-         headsetOutline, watchOutline, ellipsisHorizontal, cameraOutline, close, chevronForward, keypadOutline } from 'ionicons/icons';
+         headsetOutline, watchOutline, ellipsisHorizontal, cameraOutline, close, chevronForward, keypadOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import { CabeceraComponent } from '../../components/cabecera/cabecera.component';
+import { EurosPipe } from '../../pipes/euros.pipe';
+import { FechaCortaPipe } from '../../pipes/fecha-corta.pipe';
 import { SesionService } from '../../services/sesion.service';
 import { ReparacionService } from '../../services/reparacion.service';
 import { FotoService } from '../../services/foto.service';
-import { PASOS_REPARACION, Reparacion, TipoDispositivo, departamentoDe } from '../../models/reparacion.model';
+import { NOMBRE_DISPOSITIVO, Reparacion, TipoDispositivo } from '../../models/reparacion.model';
 
 interface OpcionTipo { valor: TipoDispositivo; texto: string; icono: string; }
 
-const MAX_FOTOS = 3;
+const MAX_FOTOS = 5;   // la API admite hasta 5 fotos por reparación
 
 // Componentes que se ofrecen según el dispositivo
 const COMPONENTES: Record<TipoDispositivo, string[]> = {
-  CONSOLA:     ['HDMI', 'Ventilador', 'Lector de discos', 'Placa base', 'Puerto de carga', 'Botones'],
-  MOVIL:       ['Pantalla', 'Batería', 'Puerto de carga', 'Cámara', 'Botones', 'Altavoz'],
-  TABLET:      ['Pantalla', 'Batería', 'Puerto de carga', 'Cámara', 'Botones', 'Altavoz'],
-  ORDENADOR:   ['Pantalla', 'Batería', 'Teclado', 'Ventilador', 'Placa base', 'Disco duro'],
-  MANDO:       ['Joystick', 'Botones', 'Gatillos', 'Batería', 'Puerto de carga'],
-  AURICULARES: ['Batería', 'Altavoz', 'Micrófono', 'Puerto de carga', 'Bluetooth'],
-  RELOJ:       ['Pantalla', 'Batería', 'Correa', 'Botones'],
-  OTRO:        ['Pantalla', 'Batería', 'Puerto de carga', 'Botones', 'Otro'],
+  consola:     ['HDMI', 'Ventilador', 'Lector de discos', 'Placa base', 'Puerto de carga', 'Botones'],
+  movil:       ['Pantalla', 'Batería', 'Puerto de carga', 'Cámara', 'Botones', 'Altavoz'],
+  tablet:      ['Pantalla', 'Batería', 'Puerto de carga', 'Cámara', 'Botones', 'Altavoz'],
+  ordenador:   ['Pantalla', 'Batería', 'Teclado', 'Ventilador', 'Placa base', 'Disco duro'],
+  mando:       ['Joystick', 'Botones', 'Gatillos', 'Batería', 'Puerto de carga'],
+  auriculares: ['Batería', 'Altavoz', 'Micrófono', 'Puerto de carga', 'Bluetooth'],
+  reloj:       ['Pantalla', 'Batería', 'Correa', 'Botones'],
+  otro:        ['Pantalla', 'Batería', 'Puerto de carga', 'Botones', 'Otro'],
 };
 
 @Component({
@@ -33,7 +35,7 @@ const COMPONENTES: Record<TipoDispositivo, string[]> = {
   templateUrl: './taller.page.html',
   styleUrls: ['./taller.page.scss'],
   imports: [IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon, IonInput, IonTextarea,
-            IonChip, IonButton, IonSpinner, IonSkeletonText, CabeceraComponent],
+            IonChip, IonButton, IonSpinner, IonSkeletonText, CabeceraComponent, EurosPipe, FechaCortaPipe],
 })
 export class TallerPage {
   private sesion = inject(SesionService);
@@ -58,22 +60,18 @@ export class TallerPage {
   maxFotos = MAX_FOTOS;
 
   tipos: OpcionTipo[] = [
-    { valor: 'CONSOLA', texto: 'Consola', icono: 'game-controller-outline' },
-    { valor: 'MOVIL', texto: 'Móvil', icono: 'phone-portrait-outline' },
-    { valor: 'TABLET', texto: 'Tablet', icono: 'tablet-landscape-outline' },
-    { valor: 'ORDENADOR', texto: 'Ordenador', icono: 'laptop-outline' },
-    { valor: 'MANDO', texto: 'Mando', icono: 'keypad-outline' },
-    { valor: 'AURICULARES', texto: 'Auriculares', icono: 'headset-outline' },
-    { valor: 'RELOJ', texto: 'Reloj', icono: 'watch-outline' },
-    { valor: 'OTRO', texto: 'Otro', icono: 'ellipsis-horizontal' },
+    { valor: 'consola', texto: 'Consola', icono: 'game-controller-outline' },
+    { valor: 'movil', texto: 'Móvil', icono: 'phone-portrait-outline' },
+    { valor: 'tablet', texto: 'Tablet', icono: 'tablet-landscape-outline' },
+    { valor: 'ordenador', texto: 'Ordenador', icono: 'laptop-outline' },
+    { valor: 'mando', texto: 'Mando', icono: 'keypad-outline' },
+    { valor: 'auriculares', texto: 'Auriculares', icono: 'headset-outline' },
+    { valor: 'reloj', texto: 'Reloj', icono: 'watch-outline' },
+    { valor: 'otro', texto: 'Otro', icono: 'ellipsis-horizontal' },
   ];
 
-  componentes = computed(() => [...COMPONENTES[this.tipo() ?? 'OTRO'], 'No lo sé']);
+  componentes = computed(() => [...COMPONENTES[this.tipo() ?? 'otro'], 'No lo sé']);
   textoTipo = computed(() => this.tipos.find(t => t.valor === this.tipo())?.texto ?? '');
-  departamento = computed(() => {
-    const t = this.tipo();
-    return t ? (departamentoDe(t) === 'TELEFONIA' ? 'Telefonía' : 'Consolas') : '';
-  });
 
   // Errores de cada paso
   errorTipo = computed(() => !this.tipo());
@@ -88,10 +86,13 @@ export class TallerPage {
   // ----- Mis reparaciones
   mias = signal<Reparacion[]>([]);
   cargandoMias = signal(true);
+  enCurso = computed(() => this.mias().filter(r => r.estado !== 'entregada' && r.estado !== 'cancelada'));
+  entregadas = computed(() => this.mias().filter(r => r.estado === 'entregada'));
+  vuelta = 2 * Math.PI * 26;                 // perímetro del círculo de progreso (radio 26)
 
   constructor() {
     addIcons({ gameControllerOutline, phonePortraitOutline, tabletLandscapeOutline, laptopOutline, tvOutline,
-               headsetOutline, watchOutline, ellipsisHorizontal, cameraOutline, close, chevronForward, keypadOutline });
+               headsetOutline, watchOutline, ellipsisHorizontal, cameraOutline, close, chevronForward, keypadOutline, checkmarkCircleOutline });
   }
 
   ionViewWillEnter(): void {
@@ -136,37 +137,36 @@ export class TallerPage {
     this.listaFotos.update(l => l.filter((_, pos) => pos !== i));
   }
 
-  // ----- Enviar: sube las fotos y crea la reparación
+  // ----- Enviar: POST /api/reparaciones y después sube las fotos con su id
   enviar(): void {
-    const u = this.sesion.usuario();
     const tipo = this.tipo();
-    if (!u || !tipo) return;
+    if (!tipo) return;
     this.enviando.set(true);
+    const componente = this.componente() === 'No lo sé' ? undefined : this.componente();
 
-    const subidas$ = this.listaFotos().length
-      ? forkJoin(this.listaFotos().map(f => this.fotos.subir(f, 'soporte')))   // todas a la vez
-      : of([] as string[]);
-
-    subidas$.pipe(
-      switchMap(urls => this.reparaciones.crear({
-        usuarioId: u.id,
-        clienteNombre: `${u.nombre} ${u.apellido1[0]}.`,
-        tipoDispositivo: tipo,
-        marcaModelo: `${this.marca().trim()} ${this.modelo().trim()}`,   // la API lo recibe junto
-        componente: this.componente(),
-        descripcion: this.descripcion().trim(),
-        fotos: urls,
-      })),
+    this.reparaciones.crear({
+      tipo_dispositivo: tipo,
+      marca: this.marca().trim(),
+      modelo: this.modelo().trim(),
+      componente,
+      descripcion_averia: this.descripcion().trim(),
+    }).pipe(
+      // Fotos una detrás de otra (multipart, campo "imagen")
+      switchMap(rep => this.listaFotos().length
+        ? from(this.listaFotos()).pipe(
+            concatMap((f, i) => this.reparaciones.subirFoto(rep.id, this.fotos.aBlob(f), `foto${i + 1}.${this.fotos.extension(f)}`)),
+            last())
+        : of(rep)),
     ).subscribe({
       next: rep => {
         this.enviando.set(false);
         this.reiniciar();
-        this.aviso(`Solicitud #${this.numero(rep.id)} enviada al departamento de ${this.departamentoTexto(rep)}.`, 'dark');
+        this.aviso(`Solicitud ${rep.numero} enviada. Te avisaremos con el presupuesto.`, 'dark');
         this.router.navigate(['/taller/reparacion', rep.id]);    // directo al seguimiento
       },
-      error: () => {
+      error: e => {
         this.enviando.set(false);
-        this.aviso('No se ha podido enviar la solicitud. Inténtalo de nuevo.', 'danger');
+        this.aviso(this.sesion.mensaje(e), 'danger');
       },
     });
   }
@@ -175,21 +175,14 @@ export class TallerPage {
     this.router.navigate(['/taller/reparacion', rep.id]);
   }
 
-  // Ayudas para la plantilla
-  numero(id: number): string { return String(id).padStart(4, '0'); }
-  estadoTexto(r: Reparacion): string { return PASOS_REPARACION.find(p => p.estado === r.estado)?.titulo ?? r.estado; }
-  progreso(r: Reparacion): number {
-    const orden = PASOS_REPARACION.map(p => p.estado);
-    return orden.indexOf(r.estado) / (orden.length - 1);
-  }
-  tipoTexto(r: Reparacion): string { return this.tipos.find(t => t.valor === r.tipoDispositivo)?.texto ?? ''; }
-  private departamentoTexto(r: Reparacion): string { return r.departamento === 'TELEFONIA' ? 'Telefonía' : 'Consolas'; }
+  // Ayudas para la plantilla (paso, total_pasos y estado_texto ya vienen calculados de la API)
+  hueco(r: Reparacion): number { return this.vuelta * (1 - r.paso / r.total_pasos); }
+  tipoTexto(r: Reparacion): string { return NOMBRE_DISPOSITIVO[r.tipo_dispositivo] ?? ''; }
 
+  // GET /api/reparaciones (la más reciente primero)
   private cargarMias(): void {
-    const id = this.sesion.usuario()?.id;
-    if (!id) return;
-    this.reparaciones.delUsuario(id).subscribe({
-      next: lista => { this.mias.set([...lista].reverse()); this.cargandoMias.set(false); },   // la más nueva primero
+    this.reparaciones.listar(1, 50).subscribe({
+      next: r => { this.mias.set(r.datos); this.cargandoMias.set(false); },
       error: () => this.cargandoMias.set(false),
     });
   }

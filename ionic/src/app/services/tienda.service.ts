@@ -1,16 +1,19 @@
 import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable, shareReplay } from 'rxjs';
-import { FUENTE_DATOS } from '../factories/fuente-datos.factory';
-import { Tienda } from '../models/tienda.model';
+import { environment } from '../../environments/environment';
+import { FotoTienda, Tienda } from '../models/tienda.model';
+
+const API = environment.apiUrl;
 
 @Injectable({ providedIn: 'root' })
 export class TiendaService {
-  private fuente = inject(FUENTE_DATOS);
+  private http = inject(HttpClient);
 
-  // Se pide una vez y se reutiliza en las 3 pestañas de Nosotros
-  private tienda$ = this.fuente.obtener<Tienda>('tienda').pipe(shareReplay(1));
+  // Se piden una vez y se reutilizan (no cambian mientras se usa la app)
+  private tienda$ = this.http.get<Tienda>(`${API}/tienda`).pipe(shareReplay(1));
+  private fotos$ = this.http.get<FotoTienda[]>(`${API}/tienda/fotos`).pipe(shareReplay(1));
 
-  obtener(): Observable<Tienda> {
-    return this.tienda$;
-  }
+  obtener(): Observable<Tienda> { return this.tienda$; }
+  fotos(): Observable<FotoTienda[]> { return this.fotos$; }
 }

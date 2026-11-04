@@ -4,16 +4,16 @@ import { addIcons } from 'ionicons';
 import { discOutline, gameControllerOutline, phonePortraitOutline, tabletPortraitOutline } from 'ionicons/icons';
 import { ICONO_TIPO, TipoProducto } from '../../models/producto.model';
 
-// Vale para un Producto completo o para el resumen que trae un alquiler
-interface ProductoMini { id?: number; nombre: string; tipo?: TipoProducto; imagenUrl?: string; }
+// Vale para un Producto de la API o para un resumen con nombre e imagen
+interface ProductoMini { id?: number; nombre: string; tipo?: TipoProducto; imagen_url?: string | null; miniatura_url?: string | null; }
 
-// Formatos que se prueban en orden para la foto local (assets/productos/ID.ext)
+// Formatos que se prueban para la foto local de respaldo (assets/productos/ID.ext)
 const EXTENSIONES = ['jpg', 'png', 'webp', 'jpeg'];
 
 @Component({
   selector: 'app-miniatura-producto',
   template: `
-    <!-- Icono provisional: se ve mientras carga o si no hay foto -->
+    <!-- Icono provisional: se ve mientras carga o si no hay foto (requisito del reto) -->
     <ion-icon [name]="icono()" aria-hidden="true"></ion-icon>
     @if (src()) {
       <img [src]="src()" [alt]="producto().nombre" loading="lazy"
@@ -40,25 +40,25 @@ const EXTENSIONES = ['jpg', 'png', 'webp', 'jpeg'];
 })
 export class MiniaturaProductoComponent {
   producto = input.required<ProductoMini>();
-  cargada = signal(false);       // la foto ya se ha descargado
-  intento = signal(0);           // qué extensión se está probando
+  grande = input(false);         // true = usar la imagen original (ficha) en vez de la miniatura
+  cargada = signal(false);
+  intento = signal(0);           // 0 = imagen de la API · 1.. = fotos locales de respaldo
 
-  icono = computed(() => ICONO_TIPO[this.producto().tipo ?? 'VIDEOJUEGO']);
+  icono = computed(() => ICONO_TIPO[this.producto().tipo ?? 'videojuego']);
 
-  // 1º la URL de la API; si no hay, assets/productos/ID.jpg → .png → .webp → .jpeg
+  // 1º imagen de la API (miniatura en listados, original en la ficha); si no hay o falla → foto local → icono
   src = computed(() => {
     const p = this.producto();
-    const i = this.intento();
-    if (p.imagenUrl) return i === 0 ? p.imagenUrl : '';
-    if (!p.id || i >= EXTENSIONES.length) return '';           // sin foto → se queda el icono
-    return `assets/productos/${p.id}.${EXTENSIONES[i]}`;
+    const api = this.grande() ? (p.imagen_url ?? p.miniatura_url) : (p.miniatura_url ?? p.imagen_url);
+    const opciones = [...(api ? [api] : []), ...(p.id ? EXTENSIONES.map(e => `assets/productos/${p.id}.${e}`) : [])];
+    return opciones[this.intento()] ?? '';
   });
 
   constructor() {
     addIcons({ discOutline, gameControllerOutline, phonePortraitOutline, tabletPortraitOutline });
   }
 
-  // La foto ha fallado: se prueba el siguiente formato
+  // La foto ha fallado: se prueba la siguiente opción
   siguiente(): void {
     this.cargada.set(false);
     this.intento.update(i => i + 1);

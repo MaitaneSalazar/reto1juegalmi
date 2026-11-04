@@ -1,0 +1,56 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/cuenta/direcciones" text=""></ion-back-button></ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <h1 class="titulo">{{ titulo() }}</h1>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+    <div class="campo">
+      <label>Calle</label>
+      <ion-input formControlName="calle" placeholder="Ej. Gran Vía" autocomplete="address-line1" aria-label="Calle" [class.mal]="invalido('calle')"></ion-input>
+      @if (invalido('calle')) { <p class="error">Escribe la calle.</p> }
+    </div>
+
+    <div class="fila2">
+      <div class="campo">
+        <label>Número</label>
+        <ion-input formControlName="numero" placeholder="12" aria-label="Número" [class.mal]="invalido('numero')"></ion-input>
+        @if (invalido('numero')) { <p class="error">Pon el número.</p> }
+      </div>
+      <div class="campo">
+        <label>Piso <small>(opcional)</small></label>
+        <ion-input formControlName="piso" placeholder="3ºB" aria-label="Piso"></ion-input>
+      </div>
+    </div>
+
+    <div class="fila2">
+      <div class="campo">
+        <label>Código postal</label>
+        <ion-input formControlName="codigo_postal" placeholder="48001" inputmode="numeric" maxlength="5" aria-label="Código postal" [class.mal]="invalido('codigo_postal')"></ion-input>
+        @if (invalido('codigo_postal')) { <p class="error">5 cifras.</p> }
+      </div>
+      <div class="campo">
+        <label>Ciudad</label>
+        <ion-input formControlName="ciudad" placeholder="Bilbao" aria-label="Ciudad" [class.mal]="invalido('ciudad')"></ion-input>
+        @if (invalido('ciudad')) { <p class="error">Escribe la ciudad.</p> }
+      </div>
+    </div>
+
+    <div class="campo">
+      <label>Provincia</label>
+      <ion-input formControlName="provincia" placeholder="Bizkaia" aria-label="Provincia" [class.mal]="invalido('provincia')"></ion-input>
+      @if (invalido('provincia')) { <p class="error">Escribe la provincia.</p> }
+    </div>
+  </form>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <div class="pie-boton">
+    <ion-button expand="block" (click)="guardar()" [disabled]="guardando()">
+      @if (guardando()) { <ion-spinner name="crescent"></ion-spinner> } @else { Guardar dirección }
+    </ion-button>
+  </div>
+</ion-footer>

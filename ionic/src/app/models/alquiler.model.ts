@@ -1,12 +1,24 @@
-export type EstadoAlquiler = 'ACTIVO' | 'DEVUELTO' | 'VENCIDO';
+import { Producto } from './producto.model';
 
+export type EstadoAlquiler = 'activo' | 'retrasado' | 'devuelto';
+
+export interface LineaAlquiler {
+  id: number;
+  videojuego: Producto;
+  precio_dia: number;
+  fecha_devolucion: string | null;
+  devuelto: boolean;
+  dias: number;
+  importe: number;
+}
+
+// Alquiler tal como lo devuelve la API
 export interface Alquiler {
   id: number;
-  usuarioId: number;
-  producto: { id: number; nombre: string; plataforma?: string }; // resumen del videojuego
-  fechaInicio: string;           // formato AAAA-MM-DD
-  fechaFin: string;              // fecha límite de devolución
-  dias: number;
-  precioTotal: number;           // dias × precioAlquilerDia
+  fecha_inicio: string;          // AAAA-MM-DD
+  fecha_fin_prevista: string;    // AAAA-MM-DD
   estado: EstadoAlquiler;
+  dias_restantes: number;        // negativo = días de retraso
+  importe: number;
+  lineas: LineaAlquiler[];
 }

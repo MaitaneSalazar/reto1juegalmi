@@ -1,55 +1,76 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonInput, IonButton,
-         IonSpinner, NavController, ToastController } from '@ionic/angular';
+import { Router, RouterLink } from '@angular/router';
+import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonFooter, IonButton, IonIcon,
+         IonSkeletonText, AlertController, ToastController } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { locationOutline, pencilOutline, trashOutline, add, checkmarkCircle } from 'ionicons/icons';
 import { SesionService } from '../../services/sesion.service';
-
-type Campo = 'calle' | 'cp' | 'ciudad' | 'provincia';
+import { DomicilioService } from '../../services/domicilio.service';
+import { Domicilio } from '../../models/domicilio.model';
 
 @Component({
   selector: 'app-direcciones',
   templateUrl: './direcciones.page.html',
-  styleUrls: ['../cuenta/subpagina.scss'],
-  imports: [ReactiveFormsModule, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent,
-            IonInput, IonButton, IonSpinner],
+  styleUrls: ['../cuenta/subpagina.scss', './direcciones.page.scss'],
+  imports: [RouterLink, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonFooter, IonButton, IonIcon, IonSkeletonText],
 })
 export class DireccionesPage {
+  domicilios = inject(DomicilioService);
   private sesion = inject(SesionService);
+  private router = inject(Router);
+  private alerta = inject(AlertController);
   private toast = inject(ToastController);
-  private nav = inject(NavController);
-  guardando = signal(false);
 
-  form = inject(FormBuilder).nonNullable.group({
-    calle: ['', [Validators.required, Validators.minLength(4)]],
-    cp: ['', [Validators.required, Validators.pattern(/^\d{5}$/)]],   // código postal: 5 cifras
-    ciudad: ['', Validators.required],
-    provincia: ['', Validators.required],
-  });
+  cargando = signal(true);
 
+  constructor() {
+    addIcons({ locationOutline, pencilOutline, trashOutline, add, checkmarkCircle });
+  }
+
+  // GET /api/domicilios (activos, el más reciente primero)
   ionViewWillEnter(): void {
-    const d = this.sesion.usuario()?.direccion;
-    if (d) this.form.reset(d);
-  }
-
-  invalido(c: Campo): boolean {
-    return this.form.controls[c].invalid && this.form.controls[c].touched;
-  }
-
-  guardar(): void {
-    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
-    this.guardando.set(true);
-    this.sesion.actualizarDatos({ direccion: this.form.getRawValue() }).subscribe({
-      next: async () => {
-        this.guardando.set(false);
-        const t = await this.toast.create({ message: 'Dirección guardada.', duration: 2000, color: 'dark' });
-        await t.present();
-        this.nav.back();          // vuelve a donde estaba (Cuenta o Cesta)
-      },
-      error: async (e: Error) => {
-        this.guardando.set(false);
-        const t = await this.toast.create({ message: e.message, duration: 2000, color: 'danger' });
-        await t.present();
-      },
+    this.domicilios.cargar().subscribe({
+      next: () => this.cargando.set(false),
+      error: e => { this.cargando.set(false); this.aviso(this.sesion.mensaje(e), 'danger'); },
     });
+  }
+
+  esElegido(d: Domicilio): boolean {
+    return this.domicilios.elegido()?.id === d.id;
+  }
+
+  // Tocar la tarjeta = usarla para enviar los pedidos
+  elegir(d: Domicilio): void {
+    this.domicilios.elegir(d.id);
+    this.aviso('Enviaremos tus pedidos a esta dirección.', 'dark');
+  }
+
+  editar(d: Domicilio, e: Event): void {
+    e.stopPropagation();
+    this.router.navigate(['/cuenta/direcciones', d.id]);
+  }
+
+  // DELETE /api/domicilios/{id}: baja lógica (los pedidos antiguos la conservan)
+  async borrar(d: Domicilio, e: Event): Promise<void> {
+    e.stopPropagation();
+    const alerta = await this.alerta.create({
+      header: 'Borrar dirección',
+      message: `¿Seguro que quieres borrar ${d.texto}?`,
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Borrar', role: 'destructive', handler: () => {
+          this.domicilios.borrar(d.id).subscribe({
+            next: () => { this.aviso('Dirección borrada.', 'dark'); this.domicilios.cargar().subscribe(); },
+            error: err => this.aviso(this.sesion.mensaje(err), 'danger'),
+          });
+        } },
+      ],
+    });
+    await alerta.present();
+  }
+
+  private async aviso(m: string, color: string): Promise<void> {
+    const t = await this.toast.create({ message: m, duration: 2000, color });
+    await t.present();
   }
 }

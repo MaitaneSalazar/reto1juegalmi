@@ -10,12 +10,13 @@ import { SesionService } from '../../services/sesion.service';
 import { ResumenService } from '../../services/resumen.service';
 import { AlquilerService } from '../../services/alquiler.service';
 import { Alquiler } from '../../models/alquiler.model';
+import { FechaCortaPipe } from '../../pipes/fecha-corta.pipe';
 
 @Component({
   selector: 'app-cuenta',
   templateUrl: './cuenta.page.html',
   styleUrls: ['./cuenta.page.scss'],
-  imports: [RouterLink, IonHeader, IonContent, IonIcon, CabeceraComponent, MiniaturaProductoComponent],
+  imports: [RouterLink, IonHeader, IonContent, IonIcon, CabeceraComponent, MiniaturaProductoComponent, FechaCortaPipe],
 })
 export class CuentaPage {
   sesion = inject(SesionService);
@@ -38,19 +39,23 @@ export class CuentaPage {
   async devolver(a: Alquiler): Promise<void> {
     const alerta = await this.alerta.create({
       header: 'Devolver alquiler',
-      message: `¿Confirmas que has devuelto ${a.producto.nombre} en la tienda?`,
+      message: `¿Confirmas que has devuelto ${a.lineas[0]?.videojuego.nombre ?? 'el juego'} en la tienda?`,
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
         { text: 'Devolver', handler: () => {
-          this.alquileres.devolver(a.id).subscribe(async () => {
-            this.resumen.refrescar();
-            const t = await this.toast.create({ message: 'Alquiler devuelto. ¡Gracias!', duration: 2000, color: 'dark' });
-            await t.present();
+          this.alquileres.devolver(a.id).subscribe({
+            next: () => { this.resumen.refrescar(); this.aviso('Alquiler devuelto. ¡Gracias!', 'dark'); },
+            error: e => this.aviso(this.sesion.mensaje(e), 'danger'),
           });
         } },
       ],
     });
     await alerta.present();
+  }
+
+  private async aviso(mensaje: string, color: string): Promise<void> {
+    const t = await this.toast.create({ message: mensaje, duration: 2500, color });
+    await t.present();
   }
 
   cerrarSesion(): void {

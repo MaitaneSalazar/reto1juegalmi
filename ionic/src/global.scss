@@ -136,7 +136,7 @@ ion-chip.filtro.activo {
 
 // Cajas de texto (formularios)
 app-login ion-input, app-registro ion-input, app-taller ion-input, app-taller ion-textarea,
-app-datos-personales ion-input, app-direcciones ion-input {
+app-datos-personales ion-input, app-direcciones ion-input, app-editar-datos ion-input, app-direccion ion-input {
   // !important: Ionic pone sus valores con una clase que pesa más que este selector
   --background: var(--jg-tarjeta) !important;
   --padding-start: 16px !important;

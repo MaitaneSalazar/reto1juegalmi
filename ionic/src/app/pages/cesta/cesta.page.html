@@ -12,7 +12,7 @@
           <app-miniatura-producto [producto]="l.producto"></app-miniatura-producto>
           <div class="datos">
             <strong>{{ l.producto.nombre }}</strong>
-            <app-precio [valor]="l.producto.precio"></app-precio>
+            <app-precio [valor]="l.producto.precio_venta"></app-precio>
           </div>
           <app-selector-cantidad [vertical]="true" [valor]="l.cantidad" [min]="0" [max]="l.producto.stock"
                                  (cambio)="cambiar(l.producto.id, $event)"></app-selector-cantidad>
@@ -23,7 +23,7 @@
       <div class="tarjeta direccion">
         <ion-icon name="location-outline"></ion-icon>
         <span>
-          @if (direccion(); as d) { {{ d.calle }} · {{ d.ciudad }} } @else { Sin dirección de envío }
+          @if (direccion(); as d) { {{ d.texto }} } @else { Sin dirección de envío }
         </span>
         <a routerLink="/cuenta/direcciones">{{ direccion() ? 'Cambiar' : 'Añadir' }}</a>
       </div>

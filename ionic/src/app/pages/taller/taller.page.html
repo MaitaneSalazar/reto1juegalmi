@@ -92,7 +92,6 @@
 
         <div class="tarjeta resumen">
           <div><span>Dispositivo</span><strong>{{ textoTipo() }} · {{ marca() }} {{ modelo() }}</strong></div>
-          <div><span>Departamento</span><strong>{{ departamento() }}</strong></div>
           <div><span>Componente</span><strong>{{ componente() }}</strong></div>
           <div class="bloque"><span>Avería</span><p>{{ descripcion() }}</p></div>
           <div><span>Fotos</span><strong>{{ listaFotos().length }}</strong></div>
@@ -117,23 +116,44 @@
     <!-- ============ MIS REPARACIONES ============ -->
     @if (cargandoMias()) {
       @for (i of [1, 2]; track i) {
-        <ion-skeleton-text [animated]="true" style="height: 110px; border-radius: 24px; margin-bottom: 14px"></ion-skeleton-text>
+        <ion-skeleton-text [animated]="true" style="height: 150px; border-radius: 24px; margin-bottom: 14px"></ion-skeleton-text>
       }
     } @else {
-      <div class="cascada">
-        @for (r of mias(); track r.id) {
-          <button type="button" class="tarjeta reparacion pulsable" (click)="abrir(r)">
-            <span class="numero">Nº {{ numero(r.id) }} · {{ tipoTexto(r) }}</span>
-            <strong>{{ r.marcaModelo }}</strong>
-            <span class="estado">{{ estadoTexto(r) }} <ion-icon name="chevron-forward"></ion-icon></span>
-            <span class="barra">
-              @for (n of [0, 1, 2, 3, 4]; track n) { <i [class.hecho]="progreso(r) * 4 >= n"></i> }
-            </span>
+      @if (enCurso().length) {
+        <h1 class="titulo">En curso</h1>
+        <div class="cascada">
+          @for (r of enCurso(); track r.id) {
+            <button type="button" class="tarjeta en-curso pulsable" (click)="abrir(r)">
+              <span class="arriba">
+                <span class="progreso">
+                  <svg viewBox="0 0 60 60" aria-hidden="true">
+                    <circle cx="30" cy="30" r="26" class="pista"></circle>
+                    <circle cx="30" cy="30" r="26" class="valor" [attr.stroke-dasharray]="vuelta" [attr.stroke-dashoffset]="hueco(r)"></circle>
+                  </svg>
+                  <b>{{ r.paso }}/{{ r.total_pasos }}</b>
+                </span>
+                <span class="textos"><strong>{{ tipoTexto(r) }} · {{ r.marca }} {{ r.modelo }}</strong><small>{{ r.estado_texto }}</small></span>
+                <ion-icon name="chevron-forward"></ion-icon>
+              </span>
+              <span class="dato"><span>Entrada</span><span>{{ r.fecha | fechaCorta }}</span></span>
+              <span class="dato"><span>Nº</span><span>{{ r.numero }}</span></span>
+            </button>
+          }
+        </div>
+      }
+
+      @if (entregadas().length) {
+        <div class="seccion"><h2>Entregadas</h2></div>
+        @for (r of entregadas(); track r.id) {
+          <button type="button" class="tarjeta entregada pulsable" (click)="abrir(r)">
+            <ion-icon name="checkmark-circle-outline"></ion-icon>
+            <span class="textos"><strong>{{ tipoTexto(r) }} · {{ r.marca }} {{ r.modelo }}</strong><small>{{ r.numero }} · entrada el {{ r.fecha | fechaCorta }}</small></span>
+            @if (r.presupuesto != null) { <span class="precio">{{ r.presupuesto | euros }}</span> }
           </button>
-        } @empty {
-          <p class="vacio">Todavía no has pedido ninguna reparación.</p>
         }
-      </div>
+      }
+
+      @if (!mias().length) { <p class="vacio">Todavía no has pedido ninguna reparación.</p> }
     }
   }
 </ion-content>

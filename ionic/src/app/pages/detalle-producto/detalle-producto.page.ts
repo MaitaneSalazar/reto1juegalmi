@@ -1,3 +1,4 @@
+import { FechaCortaPipe } from '../../pipes/fecha-corta.pipe';
 import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,7 +11,7 @@ import { ProductoService } from '../../services/producto.service';
 import { AlquilerService } from '../../services/alquiler.service';
 import { CestaService } from '../../services/cesta.service';
 import { SesionService } from '../../services/sesion.service';
-import { NOMBRE_TIPO, Producto } from '../../models/producto.model';
+import { NOMBRE_TIPO, Producto, esAlquilable } from '../../models/producto.model';
 
 @Component({
   selector: 'app-detalle-producto',
@@ -33,9 +34,11 @@ export class DetalleProductoPage {
   enviando = signal(false);
   opcionesDias = [1, 3, 5, 7];
 
-  totalAlquiler = computed(() => +(this.dias() * (this.producto()?.precioAlquilerDia ?? 0)).toFixed(2));
+  totalAlquiler = computed(() => +(this.dias() * (this.producto()?.precio_alquiler_dia ?? 0)).toFixed(2));
   devolucion = computed(() => this.alquileres.fechaDevolucion(this.dias()));
-  sinStock = computed(() => (this.producto()?.stock ?? 0) <= 0);
+  sinStock = computed(() => (this.producto()?.stock ?? 0) <= 0);                         // para comprar
+  sinCopias = computed(() => (this.producto()?.copias_disponibles ?? 0) <= 0);           // para alquilar
+  alquilable = computed(() => { const p = this.producto(); return !!p && esAlquilable(p); });
 
   // Pastilla de arriba a la derecha: "Switch", "Consola"...
   etiqueta = computed(() => {
@@ -47,7 +50,9 @@ export class DetalleProductoPage {
   chips = computed(() => {
     const p = this.producto();
     if (!p) return [];
-    return p.tipo === 'VIDEOJUEGO' ? [p.genero, `PEGI ${p.pegi}`].filter(Boolean) as string[] : [p.marca, NOMBRE_TIPO[p.tipo]];
+    return p.tipo === 'videojuego'
+      ? [p.genero, p.pegi ? `PEGI ${p.pegi}` : ''].filter(Boolean) as string[]
+      : [p.empresa, NOMBRE_TIPO[p.tipo]];
   });
 
   constructor() {
@@ -57,7 +62,7 @@ export class DetalleProductoPage {
     ruta.paramMap.pipe(takeUntilDestroyed()).subscribe(params => {
       this.producto.set(null);
       this.productos.obtener(Number(params.get('id'))).subscribe(p => {
-        if (!p.alquilable) this.modo.set('comprar');
+        if (!esAlquilable(p)) this.modo.set('comprar');      // los que no se alquilan, solo compra
         this.producto.set(p);
       });
     });
@@ -84,23 +89,22 @@ export class DetalleProductoPage {
   }
 
   private alquilar(p: Producto): void {
-    const usuarioId = this.sesion.usuario()?.id;
-    if (!usuarioId) return;
     this.enviando.set(true);
 
-    this.alquileres.crear(p, this.dias(), usuarioId).subscribe({
+    this.alquileres.crear(this.dias(), [p.id]).subscribe({
       next: async alquiler => {
         this.enviando.set(false);
         const t = await this.toast.create({
-          message: `Alquiler confirmado. Devuélvelo antes del ${alquiler.fechaFin}.`,
+          message: `Alquiler confirmado. Devuélvelo antes del ${new FechaCortaPipe().transform(alquiler.fecha_fin_prevista)}.`,
           duration: 3000, position: 'bottom', color: 'dark',
         });
         await t.present();
         this.router.navigateByUrl('/inicio', { replaceUrl: true });
       },
-      error: async () => {
+      error: async e => {
         this.enviando.set(false);
-        const t = await this.toast.create({ message: 'No se ha podido alquilar. Inténtalo de nuevo.', duration: 2500, color: 'danger' });
+        // 409: "No quedan copias libres de ..." (mensaje de la API)
+        const t = await this.toast.create({ message: this.sesion.mensaje(e), duration: 3000, color: 'danger' });
         await t.present();
       },
     });

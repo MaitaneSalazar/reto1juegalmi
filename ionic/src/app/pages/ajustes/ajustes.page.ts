@@ -17,8 +17,8 @@ export class AjustesPage {
   private alerta = inject(AlertController);
   private toast = inject(ToastController);
 
-  // Útil en la demo: muestra si la app usa datos de ejemplo o la API real
-  origenDatos = environment.usarDatosEjemplo ? 'Datos de ejemplo' : 'API JuegAlmi';
+  // Útil en la demo: a qué API está conectada la app
+  origenDatos = environment.apiUrl;   // dirección de la API que usa la app
   version = '1.0.0';
 
   constructor() {

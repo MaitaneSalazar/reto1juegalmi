@@ -1,6 +1,22 @@
-.pedido {
-  margin-top: 12px; padding: 16px 18px;
-  .cab { display: flex; justify-content: space-between; align-items: center; strong { font-size: 16px; font-weight: 600; } }
-  .productos { margin: 8px 0; color: var(--jg-texto-sec); font-size: 15px; line-height: 1.4; }
-  .pie { display: flex; justify-content: space-between; span { color: var(--jg-texto-sec); font-size: 14px; } b { font-size: 16px; } }
+.actual {
+  padding: 22px;
+  .cabecera { display: flex; justify-content: space-between; align-items: baseline; }
+  strong { font-size: 18px; font-weight: 600; }
+  .cabecera span { color: var(--jg-texto-sec); font-size: 15px; }
 }
+// Barra de 4 tramos con su texto debajo
+.barra { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; gap: 8px; margin: 20px 0 18px; }
+.tramo {
+  display: flex; flex-direction: column; gap: 10px;
+  i { height: 6px; border-radius: 3px; background: var(--jg-segmento); }
+  span { font-size: 13px; color: var(--jg-texto-sec); }
+  &.hecho i { background: var(--jg-acento); }
+  &.ahora span { color: var(--ion-text-color); font-weight: 600; }
+}
+.pie { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.minis { display: flex; gap: 10px; }
+.minis app-miniatura-producto { --tam: 64px; --radio: 10px; --fondo: transparent; --ajuste: contain; height: 76px; }
+.actual app-precio { font-size: 30px; }
+em { font-style: normal; color: var(--jg-texto-sec); font-weight: 400; }
+
+.cancelar { margin: 10px auto 0; display: block; }
