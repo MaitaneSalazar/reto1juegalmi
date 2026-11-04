@@ -1,0 +1,70 @@
+<ion-header class="ion-no-border">
+  <app-cabecera>
+    <button type="button" class="redondo" (click)="alternarBuscador()" [attr.aria-label]="buscando() ? 'Cerrar buscador' : 'Buscar'">
+      <ion-icon [name]="buscando() ? 'close-outline' : 'search-outline'"></ion-icon>
+    </button>
+  </app-cabecera>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <h1 class="titulo">{{ modo() === 'alquilar' ? 'Alquilar' : 'Tienda' }}</h1>
+
+  @if (buscando()) {
+    <ion-searchbar placeholder="Buscar productos" [debounce]="300" [value]="texto()"
+                   (ionInput)="buscar($event.detail.value)"></ion-searchbar>
+  }
+
+  <ion-segment [value]="modo()" (ionChange)="cambiarModo($event.detail.value)">
+    <ion-segment-button value="comprar"><ion-label>Comprar</ion-label></ion-segment-button>
+    <ion-segment-button value="alquilar"><ion-label>Alquilar</ion-label></ion-segment-button>
+  </ion-segment>
+
+  <div class="chips">
+    @for (f of (modo() === 'comprar' ? filtrosComprar : filtrosAlquilar); track f.valor) {
+      <ion-chip class="filtro" [class.activo]="filtro() === f.valor" (click)="elegirFiltro(f.valor)">{{ f.etiqueta }}</ion-chip>
+    }
+  </div>
+
+  @if (cargando()) {
+    <ion-skeleton-text [animated]="true" class="esq-grande"></ion-skeleton-text>
+    <div class="rejilla">
+      @for (i of [1, 2]; track i) { <ion-skeleton-text [animated]="true" class="esq-peque"></ion-skeleton-text> }
+    </div>
+  } @else {
+    <!-- Producto destacado -->
+    @if (destacado(); as p) {
+      <button type="button" class="destacado pulsable" (click)="abrir(p)">
+        <span class="escaparate">
+          <app-miniatura-producto [producto]="p"></app-miniatura-producto>
+          @if (modo() === 'alquilar' && p.stock <= 0) { <span class="etiqueta-mini">Alquilado</span> }
+        </span>
+        <span class="pie">
+          <span class="nombre">{{ p.nombre }}</span>
+          @if (modo() === 'alquilar') { <app-precio [valor]="p.precioAlquilerDia ?? 0" sufijo="/ día"></app-precio> }
+          @else { <app-precio [valor]="p.precio"></app-precio> }
+        </span>
+      </button>
+    }
+
+    <!-- Resto en rejilla de 2 -->
+    <div class="rejilla cascada">
+      @for (p of resto(); track p.id) {
+        <button type="button" class="producto pulsable" (click)="abrir(p)">
+          <span class="foto">
+            <app-miniatura-producto [producto]="p"></app-miniatura-producto>
+            @if (modo() === 'alquilar' && p.stock <= 0) { <span class="etiqueta-mini">Alquilado</span> }
+          </span>
+          <span class="nombre">{{ p.nombre }}</span>
+          @if (modo() === 'alquilar') { <app-precio [valor]="p.precioAlquilerDia ?? 0" sufijo="/ día"></app-precio> }
+          @else { <app-precio [valor]="p.precio"></app-precio> }
+        </button>
+      }
+    </div>
+
+    @if (!productos().length) { <p class="vacio">No hay productos que coincidan.</p> }
+
+    <ion-infinite-scroll [disabled]="!hayMas()" (ionInfinite)="cargarMas($event)">
+      <ion-infinite-scroll-content loadingSpinner="crescent"></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  }
+</ion-content>

@@ -1,0 +1,18 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/cuenta" text=""></ion-back-button></ion-buttons>
+    <ion-title>Notificaciones</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="tarjeta lista">
+    @for (o of opciones; track o.clave) {
+      <div class="item">
+        <div class="crece"><strong>{{ o.titulo }}</strong><span>{{ o.texto }}</span></div>
+        <ion-toggle [checked]="prefs()[o.clave]" (ionChange)="cambiar(o.clave, $event.detail.checked)"
+                    [attr.aria-label]="o.titulo"></ion-toggle>
+      </div>
+    }
+  </div>
+</ion-content>

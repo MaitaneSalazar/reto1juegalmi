@@ -1,0 +1,35 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/cuenta" text=""></ion-back-button></ion-buttons>
+    <ion-title>Mis alquileres</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-segment [value]="filtro()" (ionChange)="cambiarFiltro($event.detail.value)">
+    <ion-segment-button value="activos"><ion-label>Activos</ion-label></ion-segment-button>
+    <ion-segment-button value="historial"><ion-label>Historial</ion-label></ion-segment-button>
+  </ion-segment>
+
+  @if (cargando()) {
+    <ion-skeleton-text [animated]="true" style="height: 92px; border-radius: 16px; margin-top: 16px"></ion-skeleton-text>
+  } @else {
+    @for (a of visibles(); track a.id) {
+      <div class="tarjeta alquiler">
+        <div class="cab">
+          <strong>{{ a.producto.nombre }}</strong>
+          <span class="chip-estado" [class.verde]="a.estado === 'ACTIVO'" [class.rojo]="a.estado === 'VENCIDO'">{{ a.estado }}</span>
+        </div>
+        <span class="fechas">{{ a.producto.plataforma }} · del {{ a.fechaInicio }} al {{ a.fechaFin }}</span>
+        <div class="pie">
+          <b>{{ a.dias }} días · {{ a.precioTotal | euros }}</b>
+          @if (a.estado !== 'DEVUELTO') {
+            <ion-button size="small" fill="outline" (click)="devolver(a)">Devolver</ion-button>
+          }
+        </div>
+      </div>
+    } @empty {
+      <p class="vacio">{{ filtro() === 'activos' ? 'No tienes alquileres activos.' : 'Aún no has devuelto ningún alquiler.' }}</p>
+    }
+  }
+</ion-content>
