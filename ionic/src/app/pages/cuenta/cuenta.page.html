@@ -6,8 +6,8 @@
   @if (sesion.usuario(); as u) {
     <!-- Perfil -->
     <div class="perfil">
-      <div class="avatar">{{ sesion.iniciales() }}</div>
-      <h1>{{ u.nombre }} {{ u.apellido1 }}</h1>
+      <div class="avatar">@if (u.foto_perfil) { <img [src]="u.foto_perfil" alt=""> } @else { {{ sesion.iniciales() }} }</div>
+      <h1>{{ sesion.nombreCompleto() }}</h1>
       <span>{{ u.email }}</span>
     </div>
 
@@ -30,8 +30,8 @@
       <!-- Alquiler activo -->
       @if (resumen.alquilerActivo(); as a) {
         <div class="tarjeta alquiler">
-          <app-miniatura-producto [producto]="a.producto"></app-miniatura-producto>
-          <span class="crece"><strong>{{ a.producto.nombre }}</strong><small>Hasta {{ a.fechaFin }}</small></span>
+          @if (a.lineas[0]; as l) { <app-miniatura-producto [producto]="l.videojuego"></app-miniatura-producto> }
+          <span class="crece"><strong>{{ a.lineas[0]?.videojuego?.nombre }}</strong><small>Hasta el {{ a.fecha_fin_prevista | fechaCorta }}</small></span>
           <button type="button" class="devolver pulsable" (click)="devolver(a)">Devolver</button>
         </div>
       }
@@ -40,7 +40,7 @@
       <nav class="tarjeta lista">
         <a routerLink="/cuenta/datos-personales"><ion-icon name="person-outline"></ion-icon><span>Datos personales</span><ion-icon name="chevron-forward"></ion-icon></a>
         <a routerLink="/cuenta/direcciones"><ion-icon name="location-outline"></ion-icon><span>Direcciones</span>
-          <small>{{ u.direccion?.ciudad ?? 'Añadir' }}</small><ion-icon name="chevron-forward"></ion-icon></a>
+          <ion-icon name="chevron-forward"></ion-icon></a>
         <a routerLink="/cuenta/ajustes"><ion-icon name="settings-outline"></ion-icon><span>Ajustes</span><ion-icon name="chevron-forward"></ion-icon></a>
       </nav>
 

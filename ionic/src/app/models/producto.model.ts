@@ -1,40 +1,52 @@
-// Tipos de producto que vende la tienda
-export type TipoProducto = 'VIDEOJUEGO' | 'CONSOLA' | 'MOVIL' | 'TABLET';
+// Producto tal como lo devuelve la API (tarjeta del listado + datos de la ficha)
+export type TipoProducto = 'videojuego' | 'consola' | 'movil' | 'tablet';
 
 export interface Producto {
   id: number;
-  nombre: string;
-  marca: string;                 // Nintendo, Sony, Samsung...
   tipo: TipoProducto;
-  plataforma?: string;           // solo videojuegos: Switch, PS5, Xbox, Multi
-  descripcion: string;
-  genero?: string;               // solo videojuegos
-  pegi?: number;                 // solo videojuegos
-  precio: number;                // precio de venta
-  alquilable: boolean;           // true si se puede alquilar
-  precioAlquilerDia?: number;    // solo si es alquilable
-  stock: number;                 // unidades disponibles
-  stockTotal: number;            // unidades totales ("2 de 3" en la ficha)
-  imagenUrl?: string;            // sin imagen → icono provisional
+  nombre: string;
+  empresa: string;               // Nintendo, Sony...
+  precio_venta: number;
+  stock: number;
+  disponible: boolean;
+  imagen_url: string | null;     // null → imagen provisional
+  miniatura_url?: string | null; // ~400 px, para listados
+  plataforma?: string;           // videojuegos
+  precio_alquiler_dia?: number | null;
+  alquilado?: boolean;           // listado de alquiler: no queda copia libre
+  // Ficha (GET /api/productos/{id})
+  descripcion?: string;
+  genero?: string;
+  pegi?: number;
+  copias_alquiler?: number;
+  copias_disponibles?: number;
+  almacenamiento_gb?: number;
+  color?: string;
+  edicion?: string;
+  pantalla_pulgadas?: number;
+  ram_gb?: number;
+  sistema_operativo?: string;
+  bateria_mah?: number;
+  conectividad?: string;
 }
 
 // Texto de cada tipo
 export const NOMBRE_TIPO: Record<TipoProducto, string> = {
-  VIDEOJUEGO: 'Videojuego',
-  CONSOLA: 'Consola',
-  MOVIL: 'Móvil',
-  TABLET: 'Tablet',
+  videojuego: 'Videojuego',
+  consola: 'Consola',
+  movil: 'Móvil',
+  tablet: 'Tablet',
 };
 
 // Icono provisional de cada tipo (mientras no hay foto o mientras carga)
 export const ICONO_TIPO: Record<TipoProducto, string> = {
-  VIDEOJUEGO: 'disc-outline',
-  CONSOLA: 'game-controller-outline',
-  MOVIL: 'phone-portrait-outline',
-  TABLET: 'tablet-portrait-outline',
+  videojuego: 'disc-outline',
+  consola: 'game-controller-outline',
+  movil: 'phone-portrait-outline',
+  tablet: 'tablet-portrait-outline',
 };
 
-// "Nintendo · Switch" (videojuego) o "Sony · Consola" (resto)
-export function subtituloProducto(p: Producto): string {
-  return `${p.marca} · ${p.plataforma ?? NOMBRE_TIPO[p.tipo]}`;
+// Un videojuego se puede alquilar si tiene precio por día
+export function esAlquilable(p: Producto): boolean {
+  return p.tipo === 'videojuego' && p.precio_alquiler_dia != null;
 }

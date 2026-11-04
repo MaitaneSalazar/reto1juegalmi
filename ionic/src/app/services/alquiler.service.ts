@@ -1,45 +1,37 @@
 import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { FUENTE_DATOS } from '../factories/fuente-datos.factory';
-import { Alquiler } from '../models/alquiler.model';
-import { Producto } from '../models/producto.model';
+import { environment } from '../../environments/environment';
+import { Alquiler, EstadoAlquiler } from '../models/alquiler.model';
+import { Pagina } from '../models/pagina.model';
+
+const API = environment.apiUrl;
 
 @Injectable({ providedIn: 'root' })
 export class AlquilerService {
-  private fuente = inject(FUENTE_DATOS);
+  private http = inject(HttpClient);
 
-  // Alquileres del usuario (Cuenta y menú lateral)
-  delUsuario(usuarioId: number): Observable<Alquiler[]> {
-    return this.fuente.listar<Alquiler>('alquileres', { usuarioId });
+  // Ficha · "Alquilar": POST /api/alquileres { dias, videojuegos: [ids] } (sin copias → 409)
+  crear(dias: number, videojuegos: number[]): Observable<Alquiler> {
+    return this.http.post<Alquiler>(`${API}/alquileres`, { dias, videojuegos });
   }
 
-  // Solo los activos (Inicio · "En curso")
-  activos(usuarioId: number): Observable<Alquiler[]> {
-    return this.fuente.listar<Alquiler>('alquileres', { usuarioId, estado: 'ACTIVO' });
+  // GET /api/alquileres?estado=activo|retrasado|devuelto
+  listar(estado?: EstadoAlquiler, page = 1, limit = 50): Observable<Pagina<Alquiler>> {
+    const params: Record<string, string | number> = { page, limit };
+    if (estado) params['estado'] = estado;
+    return this.http.get<Pagina<Alquiler>>(`${API}/alquileres`, { params });
   }
 
-  // Fecha límite de devolución en formato AAAA-MM-DD
+  // "Devolver": PUT /api/alquileres/{id}/devolver (sin cuerpo = todos los juegos)
+  devolver(id: number): Observable<Alquiler> {
+    return this.http.put<Alquiler>(`${API}/alquileres/${id}/devolver`, {});
+  }
+
+  // Fecha de devolución que se mostrará antes de alquilar (hoy + días)
   fechaDevolucion(dias: number, desde = new Date()): string {
     const fin = new Date(desde);
     fin.setDate(fin.getDate() + dias);
     return fin.toISOString().slice(0, 10);
-  }
-
-  // Alta de un alquiler (ficha de videojuego)
-  crear(producto: Producto, dias: number, usuarioId: number): Observable<Alquiler> {
-    return this.fuente.crear<Alquiler>('alquileres', {
-      usuarioId,
-      producto: { id: producto.id, nombre: producto.nombre, plataforma: producto.plataforma },
-      fechaInicio: new Date().toISOString().slice(0, 10),
-      fechaFin: this.fechaDevolucion(dias),
-      dias,
-      precioTotal: +(dias * (producto.precioAlquilerDia ?? 0)).toFixed(2),
-      estado: 'ACTIVO',
-    });
-  }
-
-  // Modificación: devolver el juego
-  devolver(id: number): Observable<Alquiler> {
-    return this.fuente.actualizar<Alquiler>('alquileres', id, { estado: 'DEVUELTO' });
   }
 }

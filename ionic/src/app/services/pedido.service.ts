@@ -1,32 +1,36 @@
 import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { FUENTE_DATOS } from '../factories/fuente-datos.factory';
-import { LineaCesta, Pedido } from '../models/pedido.model';
+import { environment } from '../../environments/environment';
+import { LineaCesta, Pedido, PedidoResumen } from '../models/pedido.model';
+import { Pagina } from '../models/pagina.model';
+
+const API = environment.apiUrl;
 
 @Injectable({ providedIn: 'root' })
 export class PedidoService {
-  private fuente = inject(FUENTE_DATOS);
+  private http = inject(HttpClient);
 
-  // Pedidos del usuario (menú lateral · Mis pedidos)
-  delUsuario(usuarioId: number): Observable<Pedido[]> {
-    return this.fuente.listar<Pedido>('pedidos', { usuarioId });
+  // Cesta · "Confirmar pedido": POST /api/pedidos (todo o nada; sin stock → 409)
+  crear(idDomicilio: number, lineas: LineaCesta[]): Observable<Pedido> {
+    return this.http.post<Pedido>(`${API}/pedidos`, {
+      id_domicilio: idDomicilio,
+      lineas: lineas.map(l => ({ id_producto: l.producto.id, cantidad: l.cantidad })),
+    });
   }
 
-  // Alta del pedido al pulsar "Confirmar pedido" en la cesta
-  crear(lineas: LineaCesta[], usuarioId: number, direccion: string): Observable<Pedido> {
-    const total = lineas.reduce((suma, l) => suma + l.producto.precio * l.cantidad, 0);
-    return this.fuente.crear<Pedido>('pedidos', {
-      usuarioId,
-      fecha: new Date().toISOString().slice(0, 10),
-      lineas: lineas.map(l => ({
-        productoId: l.producto.id,
-        nombre: l.producto.nombre,
-        precioUnitario: l.producto.precio,
-        cantidad: l.cantidad,
-      })),
-      total: +total.toFixed(2),
-      direccion,
-      estado: 'PAGADO',
-    });
+  // Mis pedidos: GET /api/pedidos (el más reciente primero)
+  listar(page = 1, limit = 50): Observable<Pagina<PedidoResumen>> {
+    return this.http.get<Pagina<PedidoResumen>>(`${API}/pedidos`, { params: { page, limit } });
+  }
+
+  // Detalle: GET /api/pedidos/{id}
+  obtener(id: number): Observable<Pedido> {
+    return this.http.get<Pedido>(`${API}/pedidos/${id}`);
+  }
+
+  // PUT /api/pedidos/{id}/cancelar (solo pendiente o pagado)
+  cancelar(id: number): Observable<Pedido> {
+    return this.http.put<Pedido>(`${API}/pedidos/${id}/cancelar`, {});
   }
 }

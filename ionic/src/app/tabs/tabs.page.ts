@@ -25,7 +25,6 @@ export class TabsPage {
     { ruta: 'taller',   titulo: 'Taller',   icono: 'build-outline' },
     { ruta: 'cesta',    titulo: 'Cesta',    icono: 'bag-handle-outline' },
     { ruta: 'nosotros', titulo: 'Nosotros', icono: 'information-circle-outline' },
-    { ruta: 'cuenta',   titulo: 'Cuenta',   icono: 'person-outline' },
   ];
 
   constructor() {

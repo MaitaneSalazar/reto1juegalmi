@@ -8,7 +8,7 @@ import { UbicacionService } from '../services/ubicacion.service';
 
 // Se ejecuta antes de cada petición HTTP de la app
 export const apiInterceptor: HttpInterceptorFn = (req, next) => {
-  // Solo las llamadas a nuestra API (los JSON de ejemplo y los mapas no se tocan)
+  // Solo las llamadas a nuestra API (los mapas y las imágenes locales no se tocan)
   if (!req.url.startsWith(environment.apiUrl)) return next(req);
 
   const sesion = inject(SesionService);

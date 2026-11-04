@@ -1,7 +1,5 @@
-// Configuración en producción (ionic build --prod / APK)
+// Configuración en producción (APK / docker)
 export const environment = {
   production: true,
-  apiUrl: 'https://CAMBIAR-POR-LA-URL-DE-AWS/api', // URL HTTPS de la API en AWS (iOS no permite HTTP)
-  usarDatosEjemplo: true,                           // poner a false cuando la API esté lista
-  retardoEjemploMs: 0,
+  apiUrl: 'http://192.168.2.74:8000/api',   // cambiar por la URL HTTPS de AWS cuando esté desplegada
 };
