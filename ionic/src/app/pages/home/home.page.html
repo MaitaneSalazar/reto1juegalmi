@@ -1,0 +1,78 @@
+<ion-header class="ion-no-border">
+  <app-cabecera></app-cabecera>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="refrescar($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <h1 class="titulo">Hola, {{ sesion.usuario()?.nombre }}</h1>
+
+  <div class="cascada">
+    <!-- Tarjeta turquesa del taller -->
+    <section class="taller">
+      <ion-icon class="fondo" name="build-outline" aria-hidden="true"></ion-icon>
+      <div class="cats">
+        @for (c of categorias; track c) { <span>{{ c }}</span> }
+      </div>
+      <h2>Lo reparamos.</h2>
+      <a class="boton-oscuro pulsable" routerLink="/taller">Pedir reparación <ion-icon name="arrow-forward"></ion-icon></a>
+    </section>
+
+    <!-- Comprar / Alquilar -->
+    <div class="accesos">
+      <a class="acceso comprar pulsable" routerLink="/tienda">
+        <ion-icon name="storefront-outline"></ion-icon><strong>Comprar</strong>
+      </a>
+      <a class="acceso alquilar pulsable" routerLink="/tienda" [queryParams]="{ modo: 'alquilar' }">
+        <ion-icon name="time-outline"></ion-icon><strong>Alquilar</strong>
+      </a>
+    </div>
+
+    @if (cargando()) {
+      <ion-skeleton-text [animated]="true" class="esqueleto"></ion-skeleton-text>
+      <ion-skeleton-text [animated]="true" class="esqueleto"></ion-skeleton-text>
+    } @else {
+      <!-- Reparación en curso con círculo de progreso -->
+      @if (reparacion(); as r) {
+        <a class="tarjeta fila pulsable" [routerLink]="['/taller/reparacion', r.id]">
+          <span class="progreso">
+            <svg viewBox="0 0 60 60" aria-hidden="true">
+              <circle cx="30" cy="30" r="26" class="pista"></circle>
+              <circle cx="30" cy="30" r="26" class="valor" [attr.stroke-dasharray]="vuelta" [attr.stroke-dashoffset]="hueco(r)"></circle>
+            </svg>
+            <b>{{ paso(r) }}/5</b>
+          </span>
+          <span class="texto"><strong>{{ tipo(r) }} · {{ r.marcaModelo }}</strong><small>{{ estado(r) }}</small></span>
+          <ion-icon name="chevron-forward"></ion-icon>
+        </a>
+      }
+
+      <!-- Alquiler activo con los días que quedan -->
+      @if (alquiler(); as a) {
+        <a class="tarjeta fila pulsable" routerLink="/cuenta/alquileres">
+          <app-miniatura-producto [producto]="a.producto" class="portada"></app-miniatura-producto>
+          <span class="texto"><strong>{{ a.producto.nombre }}</strong></span>
+          <span class="dias"><b>{{ diasRestantes(a) }}</b> {{ diasRestantes(a) === 1 ? 'día' : 'días' }}</span>
+        </a>
+      }
+    }
+  </div>
+
+  <!-- Novedades (scroll horizontal) -->
+  <div class="seccion">
+    <h2>Novedades</h2>
+    <a routerLink="/tienda">Ver todo</a>
+  </div>
+  <div class="novedades">
+    @for (p of novedades(); track p.id) {
+      <a class="novedad pulsable" [routerLink]="['/producto', p.id]">
+        <app-miniatura-producto [producto]="p"></app-miniatura-producto>
+        @if (p.stock > 0 && p.stock <= 2) { <span class="etiqueta-mini roja">Últimas unidades</span> }
+        <strong>{{ p.nombre }}</strong>
+        <app-precio [valor]="p.precio"></app-precio>
+      </a>
+    }
+  </div>
+</ion-content>

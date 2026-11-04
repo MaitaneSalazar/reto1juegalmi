@@ -1,0 +1,14 @@
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    @for (p of pestanas; track p.ruta) {
+      <ion-tab-button [tab]="p.ruta" layout="icon-start" [attr.aria-label]="p.titulo">
+        <ion-icon [name]="p.icono"></ion-icon>
+        <ion-label>{{ p.titulo }}</ion-label>
+        <!-- Punto rojo si hay algo en la cesta -->
+        @if (p.ruta === 'cesta' && cesta.unidades() > 0) {
+          <span #badge class="punto" aria-hidden="true"></span>
+        }
+      </ion-tab-button>
+    }
+  </ion-tab-bar>
+</ion-tabs>

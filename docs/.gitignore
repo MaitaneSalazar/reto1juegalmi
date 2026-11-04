@@ -1,0 +1,11 @@
+# ==========================================================
+# docs/.gitignore — Documentación
+# ==========================================================
+
+# ---- Archivos temporales de Word, Excel y PowerPoint ----
+# Se crean mientras el documento está abierto (~$Documento.docx)
+~$*
+
+# ---- Copias temporales de draw.io ----
+*.bkp
+*.dtmp

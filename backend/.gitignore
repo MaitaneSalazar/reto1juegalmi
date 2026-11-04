@@ -1,16 +1,37 @@
+# ==========================================================
+# backend/.gitignore — Symfony (API REST)
+# ==========================================================
 
-###> symfony/framework-bundle ###
+# ---- Dependencias (se instalan con: composer install) ----
+/vendor/
+
+# ---- Caché y logs de Symfony ----
+/var/
+
+# ---- Configuración local con secretos ----
+# .env SÍ se sube (valores por defecto SIN secretos)
+# .env.local NO se sube (contraseña de MySQL, frase del JWT...)
 /.env.local
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
-/var/
-/vendor/
-###< symfony/framework-bundle ###
 
-###> lexik/jwt-authentication-bundle ###
+# ---- Claves del JWT (cada uno genera las suyas con:
+#      php bin/console lexik:jwt:generate-keypair) ----
 /config/jwt/*.pem
-###< lexik/jwt-authentication-bundle ###
+
+# ---- Archivos que suben los usuarios (fotos de reparaciones...) ----
+# Se ignoran las fotos, pero se suben las carpetas vacías (.gitkeep)
+# para que existan también en AWS
 /public/uploads/*/*
 !/public/uploads/*/.gitkeep
+
+# ---- Archivos generados por Symfony ----
+/public/bundles/
+/public/assets/
+/assets/vendor/
+
+# ---- Tests ----
+/phpunit.xml
+.phpunit.result.cache
+/.phpunit.cache/

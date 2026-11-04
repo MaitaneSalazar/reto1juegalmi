@@ -1,0 +1,24 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/cuenta" text=""></ion-back-button></ion-buttons>
+    <ion-title>Ayuda</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <h2>Preguntas frecuentes</h2>
+  <ion-accordion-group class="tarjeta">
+    @for (q of preguntas; track q.p) {
+      <ion-accordion [value]="q.p">
+        <ion-item slot="header" lines="none"><ion-label class="ion-text-wrap">{{ q.p }}</ion-label></ion-item>
+        <div slot="content" class="respuesta">{{ q.r }}</div>
+      </ion-accordion>
+    }
+  </ion-accordion-group>
+
+  <h2>Contacto</h2>
+  <div class="tarjeta lista">
+    <a class="item" [href]="telefono()"><ion-icon name="call-outline"></ion-icon><span class="crece">Llamar a la tienda</span><span class="dato">{{ tienda()?.telefono }}</span></a>
+    <a class="item" href="mailto:hola@juegalmi.es"><ion-icon name="mail-outline"></ion-icon><span class="crece">Escríbenos</span><span class="dato">hola&#64;juegalmi.es</span></a>
+  </div>
+</ion-content>

@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">JuegAlmi</string>
+    <string name="marca">JuegAlmi</string>
+    <string name="crear_cuenta">Crear cuenta</string>
+    <string name="login_titulo">Inicia sesión</string>
+    <string name="login_subtitulo">Compra, alquila y repara desde un mismo sitio.</string>
+    <string name="email">Email</string>
+    <string name="password">Contraseña</string>
+    <string name="entrar">Entrar</string>
+    <string name="demo">demo@juegalmi.es · 1234</string>
+    <string name="pie">JuegAlmi · Bilbao</string>
+    <string name="error_vacio">Rellena el email y la contraseña.</string>
+    <string name="error_email">El email no es válido.</string>
+    <string name="error_password">La contraseña debe tener al menos 4 caracteres.</string>
+
+    <string name="ya_tengo_cuenta">Ya tengo cuenta</string>
+    <string name="registro_titulo">Crear cuenta</string>
+    <string name="registro_subtitulo">Solo te llevará un minuto.</string>
+    <string name="nombre">Nombre</string>
+    <string name="apellido1">1er apellido</string>
+    <string name="apellido2">2º apellido</string>
+    <string name="dni">DNI</string>
+    <string name="dni_ejemplo">12345678Z</string>
+    <string name="telefono">Teléfono</string>
+    <string name="registrarme">Registrarme</string>
+    <string name="error_registro_vacio">Rellena nombre, primer apellido, DNI, teléfono, email y contraseña.</string>
+    <string name="error_dni">El DNI no es válido (8 números y la letra correcta).</string>
+    <string name="error_telefono">El teléfono debe tener 9 números.</string>
+
+    <string name="menu">Menú</string>
+    <string name="cat_consolas">Consolas</string>
+    <string name="cat_moviles">Móviles</string>
+    <string name="cat_mandos">Mandos</string>
+    <string name="cat_tablets">Tablets</string>
+    <string name="lo_reparamos">Lo reparamos.</string>
+    <string name="pedir_reparacion">Pedir reparación</string>
+    <string name="buscar">Buscar</string>
+    <string name="tienda">Tienda</string>
+    <string name="nav_inicio">Inicio</string>
+    <string name="nav_tienda">Tienda</string>
+    <string name="nav_taller">Taller</string>
+    <string name="nav_cesta">Cesta</string>
+    <string name="nav_nosotros">Nosotros</string>
+    <string name="nav_cuenta">Cuenta</string>
+</resources>

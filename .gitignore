@@ -1,0 +1,31 @@
+# ==========================================================
+# .gitignore de la RAÍZ: reglas comunes a todo el proyecto
+# ==========================================================
+
+# ---- Sistema operativo ----
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- Editores e IDE ----
+.vscode/
+.idea/
+*.swp
+
+# ---- Logs ----
+*.log
+npm-debug.log*
+
+# ---- Secretos (por si alguno acaba fuera de su carpeta) ----
+.env.local
+.env.*.local
+*.pem
+*.jks
+*.keystore
+
+# ---- Copias de seguridad de la BBDD (contienen datos personales) ----
+# Ojo: NO ignoramos todos los .sql, por si queréis subir el script
+# de creación de la BBDD (por ejemplo docs/juegalmi_estructura.sql)
+backups/
+juegalmi_*.sql
+*.sql.gz

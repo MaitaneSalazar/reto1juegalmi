@@ -1,0 +1,47 @@
+<ion-header class="ion-no-border">
+  <app-cabecera></app-cabecera>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <h1 class="titulo">Cesta</h1>
+
+  @if (cesta.lineas().length) {
+    <div class="cascada">
+      @for (l of cesta.lineas(); track l.producto.id) {
+        <div class="tarjeta linea">
+          <app-miniatura-producto [producto]="l.producto"></app-miniatura-producto>
+          <div class="datos">
+            <strong>{{ l.producto.nombre }}</strong>
+            <app-precio [valor]="l.producto.precio"></app-precio>
+          </div>
+          <app-selector-cantidad [vertical]="true" [valor]="l.cantidad" [min]="0" [max]="l.producto.stock"
+                                 (cambio)="cambiar(l.producto.id, $event)"></app-selector-cantidad>
+        </div>
+      }
+
+      <!-- Dirección de envío -->
+      <div class="tarjeta direccion">
+        <ion-icon name="location-outline"></ion-icon>
+        <span>
+          @if (direccion(); as d) { {{ d.calle }} · {{ d.ciudad }} } @else { Sin dirección de envío }
+        </span>
+        <a routerLink="/cuenta/direcciones">{{ direccion() ? 'Cambiar' : 'Añadir' }}</a>
+      </div>
+
+      <!-- Total -->
+      <div class="total">
+        <div class="linea-total"><span>Envío</span><span>Gratis</span></div>
+        <div class="linea-total"><span>Total</span><app-precio [valor]="cesta.total()"></app-precio></div>
+        <ion-button expand="block" (click)="confirmar()" [disabled]="enviando()">
+          @if (enviando()) { <ion-spinner name="crescent"></ion-spinner> } @else { Confirmar pedido }
+        </ion-button>
+      </div>
+    </div>
+  } @else {
+    <div class="vacia">
+      <ion-icon name="bag-handle-outline"></ion-icon>
+      <p>Tu cesta está vacía.</p>
+      <ion-button routerLink="/tienda">Ir a la tienda</ion-button>
+    </div>
+  }
+</ion-content>

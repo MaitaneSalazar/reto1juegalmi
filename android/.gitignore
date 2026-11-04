@@ -1,0 +1,32 @@
+# ==========================================================
+# android/.gitignore — App Android nativa (Java)
+# ==========================================================
+
+# ---- Archivos de Android Studio / IntelliJ ----
+*.iml
+/.idea/
+
+# ---- Gradle y compilación (se regeneran al compilar) ----
+.gradle/
+/build/
+/app/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+
+# ---- Configuración local ----
+# Contiene la ruta del SDK de cada uno y, si la ponéis ahí,
+# la clave de la API de Google Maps
+/local.properties
+
+# ---- APK y paquetes compilados ----
+# Se suben como "Release" en GitHub, no al código
+*.apk
+*.aab
+*.ap_
+/app/release/
+
+# ---- Firma de la app (NUNCA subir) ----
+*.jks
+*.keystore
+keystore.properties
