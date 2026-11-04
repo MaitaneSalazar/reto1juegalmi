@@ -20,4 +20,17 @@
         android:textColor="@color/color_texto"
         android:textSize="44sp"
         android:textStyle="bold" />
+
+    <!-- PRUEBA: quitar cuando esté la lista de productos -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPruebaFichaJuego"
+        style="@style/BotonPrincipal"
+        android:layout_marginTop="24dp"
+        android:text="@string/prueba_ver_ficha_juego" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPruebaFichaProducto"
+        style="@style/BotonPrincipal"
+        android:layout_marginTop="12dp"
+        android:text="@string/prueba_ver_ficha_producto" />
 </LinearLayout>

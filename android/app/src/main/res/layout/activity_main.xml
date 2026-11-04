@@ -113,21 +113,6 @@
                     android:text="@string/nav_nosotros" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/llNavCuenta"
-                style="@style/PestanaNav"
-                android:contentDescription="@string/nav_cuenta">
-
-                <ImageView
-                    android:id="@+id/ivNavCuenta"
-                    style="@style/PestanaNavIcono"
-                    android:src="@drawable/ic_person" />
-
-                <TextView
-                    android:id="@+id/tvNavCuenta"
-                    style="@style/PestanaNavTexto"
-                    android:text="@string/nav_cuenta" />
-            </LinearLayout>
         </LinearLayout>
     </FrameLayout>
 

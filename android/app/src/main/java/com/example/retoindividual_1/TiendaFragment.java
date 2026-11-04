@@ -22,5 +22,12 @@ public class TiendaFragment extends Fragment {
 
         // En la tienda sí se busca: se enseña la lupa de la barra superior
         view.findViewById(R.id.ivBarraBuscar).setVisibility(View.VISIBLE);
+        // PRUEBA: quitar cuando esté la lista de productos.
+        // Los ids son inventados. Más adelante, cada producto de la lista abrirá su ficha
+        // con su id real, y seAlquila será true solo si es un videojuego
+        view.findViewById(R.id.btnPruebaFichaJuego).setOnClickListener(v ->
+                startActivity(FichaProductoActivity.crearIntent(requireContext(), 1, true)));
+        view.findViewById(R.id.btnPruebaFichaProducto).setOnClickListener(v ->
+                startActivity(FichaProductoActivity.crearIntent(requireContext(), 7, false)));
     }
 }
