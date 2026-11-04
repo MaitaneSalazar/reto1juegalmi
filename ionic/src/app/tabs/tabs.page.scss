@@ -1,0 +1,48 @@
+// Barra flotante redondeada
+ion-tab-bar {
+  --background: var(--jg-barra);
+  --border: 0;
+  height: 64px;
+  margin: 0 14px calc(12px + var(--ion-safe-area-bottom, 0px));
+  padding: 0 8px !important;
+  border-radius: 999px;
+  box-shadow: var(--jg-sombra);
+}
+
+// Pestañas inactivas: solo icono
+ion-tab-button {
+  --color: var(--ion-text-color);
+  --color-selected: #1f2329;
+  --ripple-color: transparent;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: none;
+  overflow: visible;
+
+  ion-icon { font-size: 22px; margin: 0; }
+  ion-label { display: none; }
+}
+
+// Pestaña activa: píldora turquesa con icono + texto
+ion-tab-button.tab-selected {
+  flex: 0 0 auto;
+  align-self: center;
+  height: 48px;
+  padding: 0 18px 0 14px;
+  border-radius: 999px;
+  background: var(--jg-acento);
+
+  ion-label { display: block; margin: 0 0 0 8px; font-size: 15px; font-weight: 600; }
+}
+
+// Punto rojo de la cesta
+.punto {
+  position: absolute;
+  top: 10px;
+  right: 8px;
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: var(--ion-color-danger);
+  border: 2px solid var(--jg-barra);
+}
+ion-tab-button.tab-selected .punto { top: 2px; right: 2px; }

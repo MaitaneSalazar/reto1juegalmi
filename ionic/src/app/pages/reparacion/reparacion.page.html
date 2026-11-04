@@ -1,0 +1,75 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button class="redondo" defaultHref="/taller" text=""></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="refrescar($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (rep(); as r) {
+    <div class="cascada">
+      <!-- Estado en grande + 5 tramos -->
+      <section class="estado">
+        <span>Nº {{ numero() }} · {{ tipo() }} · {{ r.marcaModelo }}</span>
+        <h1>{{ estado() }}</h1>
+        <div class="tramos">
+          @for (p of pasos(); track p.titulo) { <i [class.hecho]="p.hecho"></i> }
+        </div>
+      </section>
+
+      <!-- Avería / Presupuesto -->
+      <div class="datos">
+        <div class="tarjeta"><span>Avería</span><strong>{{ r.descripcion }}</strong></div>
+        <div class="tarjeta">
+          <span>Presupuesto</span>
+          @if (r.presupuesto != null) { <app-precio [valor]="r.presupuesto"></app-precio> }
+          @else { <strong>Pendiente</strong> }
+        </div>
+      </div>
+
+      <!-- Línea de tiempo -->
+      <ol class="tarjeta linea-tiempo">
+        @for (p of pasos(); track p.titulo) {
+          <li [class.hecho]="p.hecho" [class.actual]="p.actual">
+            <span class="punto"></span>
+            <div class="crece">
+              <strong>{{ p.titulo }}</strong>
+              @if (p.actual) { <p>{{ p.texto }}</p> }
+            </div>
+            @if (p.fecha) { <small>{{ p.fecha }}</small> }
+          </li>
+        }
+      </ol>
+
+      <!-- Técnico + llamar -->
+      <div class="contacto">
+        <div class="tarjeta tecnico">
+          <span class="inicial">{{ (r.tecnico ?? 'Taller')[0] }}</span>
+          <span><strong>{{ r.tecnico ?? 'Taller JuegAlmi' }}</strong><small>Taller técnico</small></span>
+        </div>
+        <a class="llamar pulsable" [href]="telefono()" aria-label="Llamar a la tienda"><ion-icon name="call-outline"></ion-icon></a>
+      </div>
+
+      <!-- Fotos -->
+      @if (r.fotos.length) {
+        <div class="seccion"><h2>Fotos</h2></div>
+        <div class="fotos">
+          @for (f of r.fotos; track $index) {
+            <div class="foto">
+              @if (esImagen(f)) { <img [src]="f" alt="Foto {{ $index + 1 }}" loading="lazy"> }
+              @else { <ion-icon name="image-outline"></ion-icon> }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  } @else {
+    <ion-skeleton-text [animated]="true" style="height: 176px; border-radius: 30px"></ion-skeleton-text>
+    <ion-skeleton-text [animated]="true" style="height: 110px; border-radius: 24px; margin-top: 14px"></ion-skeleton-text>
+  }
+</ion-content>

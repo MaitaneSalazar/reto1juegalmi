@@ -1,0 +1,44 @@
+<ion-content class="ion-padding">
+  <!-- Cabecera de acceso: logo + enlace a registro -->
+  <header class="cabecera-acceso">
+    <div class="marca"><span class="logo">J</span><span>JuegAlmi</span></div>
+    <a routerLink="/registro" routerDirection="forward">Crear cuenta</a>
+  </header>
+
+  <h1>Inicia sesión</h1>
+  <p class="subtitulo">Compra, alquila y repara desde un mismo sitio.</p>
+
+  <form [formGroup]="form" (ngSubmit)="entrar()" novalidate>
+    <!-- Email -->
+    <div class="campo">
+      <label for="email">Email</label>
+      <ion-input id="email" formControlName="email" type="email" inputmode="email" autocomplete="email"
+                 aria-label="Email" [class.mal]="invalido('email')"></ion-input>
+      @if (invalido('email')) {
+        <p class="error">Introduce un email válido.</p>
+      }
+    </div>
+
+    <!-- Contraseña -->
+    <div class="campo">
+      <label for="password">Contraseña</label>
+      <ion-input id="password" formControlName="password" type="password" autocomplete="current-password"
+                 aria-label="Contraseña" [class.mal]="invalido('password')"></ion-input>
+      @if (invalido('password')) {
+        <p class="error">Introduce tu contraseña.</p>
+      }
+    </div>
+
+    <!-- Error de la API (email o clave incorrectos, sin conexión...) -->
+    @if (error()) {
+      <p class="error-general" role="alert">{{ error() }}</p>
+    }
+
+    <ion-button type="submit" expand="block" [disabled]="cargando()">
+      @if (cargando()) { <ion-spinner name="crescent"></ion-spinner> } @else { Entrar }
+    </ion-button>
+  </form>
+
+  <p class="nota">demo&#64;juegalmi.es · tecnico&#64;juegalmi.es · 1234</p>
+  <p class="pie">JuegAlmi · Bilbao</p>
+</ion-content>
