@@ -1,0 +1,139 @@
+<ion-header class="ion-no-border">
+  <app-cabecera></app-cabecera>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-segment [value]="vista()" (ionChange)="cambiarVista($event.detail.value)">
+    <ion-segment-button value="nueva"><ion-label>Nueva reparación</ion-label></ion-segment-button>
+    <ion-segment-button value="mis"><ion-label>Mis reparaciones</ion-label></ion-segment-button>
+  </ion-segment>
+
+  @if (vista() === 'nueva') {
+    <!-- Barra de 3 pasos -->
+    <div class="pasos" aria-label="Paso {{ paso() }} de 3">
+      @for (n of [1, 2, 3]; track n) { <span [class.hecho]="paso() >= n"></span> }
+    </div>
+
+    @switch (paso()) {
+      <!-- ============ PASO 1: dispositivo ============ -->
+      @case (1) {
+        <h1 class="titulo">¿Qué reparamos?</h1>
+
+        <div class="tipos">
+          @for (t of tipos; track t.valor) {
+            <button type="button" class="tipo pulsable" [class.activo]="tipo() === t.valor" (click)="elegirTipo(t.valor)">
+              <ion-icon [name]="t.icono"></ion-icon>
+              <span>{{ t.texto }}</span>
+            </button>
+          }
+        </div>
+        @if (intentado() && errorTipo()) { <p class="error">Elige el tipo de dispositivo.</p> }
+
+        <!-- Marca y Modelo en dos columnas -->
+        <div class="dos-campos">
+          <div>
+            <label class="etiqueta">Marca</label>
+            <ion-input [value]="marca()" (ionInput)="marca.set($event.detail.value ?? '')"
+                       placeholder="Sony" aria-label="Marca"
+                       [class.mal]="intentado() && errorMarca()"></ion-input>
+            @if (intentado() && errorMarca()) { <p class="error">Indica la marca.</p> }
+          </div>
+          <div>
+            <label class="etiqueta">Modelo</label>
+            <ion-input [value]="modelo()" (ionInput)="modelo.set($event.detail.value ?? '')"
+                       placeholder="PlayStation 5" aria-label="Modelo"
+                       [class.mal]="intentado() && errorModelo()"></ion-input>
+            @if (intentado() && errorModelo()) { <p class="error">Indica el modelo.</p> }
+          </div>
+        </div>
+
+        @if (tipo()) {
+          <label class="etiqueta">Componente afectado</label>
+          <div class="chips envolver">
+            @for (c of componentes(); track c) {
+              <ion-chip class="filtro" [class.activo]="componente() === c" (click)="componente.set(c)">{{ c }}</ion-chip>
+            }
+          </div>
+          @if (intentado() && errorComponente()) { <p class="error">Elige el componente afectado.</p> }
+        }
+      }
+
+      <!-- ============ PASO 2: avería y fotos ============ -->
+      @case (2) {
+        <h1 class="titulo">¿Qué le pasa?</h1>
+
+        <label class="etiqueta">Describe el problema</label>
+        <ion-textarea [value]="descripcion()" (ionInput)="descripcion.set($event.detail.value ?? '')"
+                      [autoGrow]="true" rows="4" placeholder="¿Qué falla? ¿Desde cuándo?" aria-label="Descripción de la avería"
+                      [class.mal]="intentado() && errorDescripcion()"></ion-textarea>
+        @if (intentado() && errorDescripcion()) { <p class="error">Escribe al menos 10 caracteres.</p> }
+
+        <label class="etiqueta">Fotos ({{ listaFotos().length }}/{{ maxFotos }})</label>
+        <div class="fotos">
+          @for (f of listaFotos(); track $index) {
+            <div class="foto">
+              <img [src]="f" alt="Foto {{ $index + 1 }}">
+              <button type="button" (click)="quitarFoto($index)" aria-label="Quitar foto"><ion-icon name="close"></ion-icon></button>
+            </div>
+          }
+          @if (listaFotos().length < maxFotos) {
+            <button type="button" class="hacer-foto pulsable" (click)="anadirFoto()">
+              <ion-icon name="camera-outline"></ion-icon>
+              <span>Hacer foto</span>
+            </button>
+          }
+        </div>
+        <p class="nota">Opcional, pero ayuda mucho al técnico.</p>
+      }
+
+      <!-- ============ PASO 3: resumen ============ -->
+      @case (3) {
+        <h1 class="titulo">Revisa y envía</h1>
+
+        <div class="tarjeta resumen">
+          <div><span>Dispositivo</span><strong>{{ textoTipo() }} · {{ marca() }} {{ modelo() }}</strong></div>
+          <div><span>Departamento</span><strong>{{ departamento() }}</strong></div>
+          <div><span>Componente</span><strong>{{ componente() }}</strong></div>
+          <div class="bloque"><span>Avería</span><p>{{ descripcion() }}</p></div>
+          <div><span>Fotos</span><strong>{{ listaFotos().length }}</strong></div>
+        </div>
+        <p class="nota">Te avisaremos con el presupuesto antes de reparar.</p>
+      }
+    }
+
+    <div class="acciones">
+      @if (paso() > 1) {
+        <ion-button fill="clear" color="dark" (click)="atras()" [disabled]="enviando()">Atrás</ion-button>
+      }
+      @if (paso() < 3) {
+        <ion-button (click)="siguiente()">Siguiente</ion-button>
+      } @else {
+        <ion-button (click)="enviar()" [disabled]="enviando()">
+          @if (enviando()) { <ion-spinner name="crescent"></ion-spinner> } @else { Enviar solicitud }
+        </ion-button>
+      }
+    </div>
+  } @else {
+    <!-- ============ MIS REPARACIONES ============ -->
+    @if (cargandoMias()) {
+      @for (i of [1, 2]; track i) {
+        <ion-skeleton-text [animated]="true" style="height: 110px; border-radius: 24px; margin-bottom: 14px"></ion-skeleton-text>
+      }
+    } @else {
+      <div class="cascada">
+        @for (r of mias(); track r.id) {
+          <button type="button" class="tarjeta reparacion pulsable" (click)="abrir(r)">
+            <span class="numero">Nº {{ numero(r.id) }} · {{ tipoTexto(r) }}</span>
+            <strong>{{ r.marcaModelo }}</strong>
+            <span class="estado">{{ estadoTexto(r) }} <ion-icon name="chevron-forward"></ion-icon></span>
+            <span class="barra">
+              @for (n of [0, 1, 2, 3, 4]; track n) { <i [class.hecho]="progreso(r) * 4 >= n"></i> }
+            </span>
+          </button>
+        } @empty {
+          <p class="vacio">Todavía no has pedido ninguna reparación.</p>
+        }
+      </div>
+    }
+  }
+</ion-content>

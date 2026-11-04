@@ -1,0 +1,27 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/cuenta" text=""></ion-back-button></ion-buttons>
+    <ion-title>Mis pedidos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (cargando()) {
+    @for (i of [1, 2, 3]; track i) {
+      <ion-skeleton-text [animated]="true" style="height: 92px; border-radius: 16px; margin-top: 12px"></ion-skeleton-text>
+    }
+  } @else {
+    @for (p of pedidos(); track p.id) {
+      <div class="tarjeta pedido">
+        <div class="cab">
+          <strong>Pedido #{{ p.id }}</strong>
+          <span class="chip-estado" [class]="estado(p.estado).clase">{{ estado(p.estado).texto }}</span>
+        </div>
+        <p class="productos">{{ resumen(p) }}</p>
+        <div class="pie"><span>{{ p.fecha }}</span><b>{{ p.total | euros }}</b></div>
+      </div>
+    } @empty {
+      <p class="vacio">Todavía no has hecho ningún pedido.</p>
+    }
+  }
+</ion-content>

@@ -1,0 +1,30 @@
+ion-content { --padding-top: calc(14px + var(--ion-safe-area-top, 0px)); --padding-bottom: 32px; }
+
+.cabecera-acceso {
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: 56px; margin-bottom: 28px;
+  .marca { display: flex; align-items: center; gap: 10px; font-size: 24px; font-weight: 700; letter-spacing: -0.04em; }
+  a { color: var(--ion-text-color); font-size: 16px; font-weight: 500; text-decoration: none; }
+}
+
+h1 { margin: 0; font-size: 46px; line-height: 1.02; font-weight: 800; letter-spacing: -0.055em; }
+.subtitulo { margin: 14px 0 32px; color: var(--jg-texto-sec); font-size: 18px; line-height: 1.5; max-width: 300px; }
+
+form { display: flex; flex-direction: column; gap: 18px; }
+.campo { display: flex; flex-direction: column; gap: 10px; min-width: 0; label { font-size: 17px; font-weight: 500; } }
+.fila { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+
+.error-general {
+  margin: 0; padding: 12px 14px; border-radius: 14px;
+  background: rgba(167, 33, 68, .12); color: var(--ion-color-danger); font-size: 14px;
+}
+
+ion-button { margin-top: 12px; }
+
+// Línea fina con el usuario de prueba en medio
+.nota {
+  display: flex; align-items: center; gap: 12px;
+  margin: 24px 0 0; color: var(--jg-texto-sec); font-size: 13px;
+  &::before, &::after { content: ''; flex: 1; height: 1px; background: var(--jg-borde); }
+}
+.pie { margin: 40px 0 0; text-align: center; color: var(--jg-texto-sec); font-size: 13px; }

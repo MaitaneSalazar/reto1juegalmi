@@ -1,0 +1,62 @@
+// Mapa redondeado
+.mapa { height: 256px; border-radius: 28px; overflow: hidden; z-index: 0; background: var(--jg-gris); }
+:host ::ng-deep .pin-tienda { background: none; border: 0; }
+:host ::ng-deep .pin {
+  width: 72px; height: 72px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(120, 205, 208, .3);
+  svg { width: 46px; height: 46px; padding: 11px; border-radius: 50%; background: var(--jg-acento); }
+}
+.direccion {
+  display: flex; flex-direction: column; gap: 4px; padding: 22px; margin: 14px 0;
+  strong { font-size: 21px; font-weight: 700; letter-spacing: -0.03em; }
+  span { color: var(--jg-texto-sec); font-size: 15px; }
+  small { margin-top: 6px; color: var(--jg-texto-sec); font-size: 13px; }
+}
+
+.dos { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+.horario {
+  display: flex; flex-direction: column; gap: 14px; padding: 20px;
+  ion-icon { font-size: 22px; color: var(--jg-texto-sec); margin-bottom: 8px; }
+  b { display: block; font-size: 17px; font-weight: 600; }
+  span { font-size: 15px; color: var(--jg-texto-sec); }
+}
+.telefono {
+  display: flex; flex-direction: column; justify-content: space-between; padding: 20px;
+  border-radius: var(--jg-radio); text-decoration: none;
+  background: var(--jg-inverso); color: var(--jg-inverso-texto);
+  ion-icon { font-size: 22px; }
+  b { font-size: 18px; font-weight: 600; }
+}
+
+// Historia
+.historia { margin: 6px 0 24px; font-size: 21px; line-height: 1.4; font-weight: 700; letter-spacing: -0.02em; }
+.hitos {
+  list-style: none; margin: 0; padding: 0 0 0 28px; position: relative;
+  &::before { content: ''; position: absolute; left: 6px; top: 12px; bottom: 0; width: 3px; border-radius: 2px; background: var(--jg-acento); opacity: .6; }
+  li { position: relative; margin-bottom: 18px; }
+  .punto { position: absolute; left: -28px; top: 26px; width: 15px; height: 15px; border-radius: 50%; background: #5fbfc3; }
+  .tarjeta { position: relative; padding: 22px; }
+  .icono {
+    position: absolute; top: 20px; right: 20px; width: 46px; height: 46px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; background: var(--jg-acento-suave); font-size: 20px;
+  }
+  b { display: block; font-size: 48px; line-height: 1; font-weight: 800; letter-spacing: -0.05em; }
+  strong { display: block; margin-top: 18px; font-size: 18px; font-weight: 600; }
+  p { margin: 8px 0 0; color: var(--jg-texto-sec); font-size: 15px; line-height: 1.5; }
+}
+
+// Galería: una grande y dos pequeñas
+.galeria { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+figure {
+  position: relative; margin: 0; height: 190px; border-radius: 26px; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(160deg, var(--jg-acento-suave), var(--jg-tarjeta));
+  &.grande { grid-column: span 2; height: 250px; }
+  ion-icon { font-size: 30px; color: var(--jg-texto-sec); opacity: .6; }
+  img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  figcaption {
+    position: absolute; left: 14px; bottom: 14px; padding: 6px 12px; border-radius: 999px;
+    background: #ffffff; color: #1f2329; font-size: 13px; font-weight: 600;
+  }
+}

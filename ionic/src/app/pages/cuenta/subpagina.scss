@@ -1,0 +1,36 @@
+ion-toolbar { --background: var(--ion-background-color); --min-height: 64px; padding: 0 12px; }
+ion-title { text-align: center; padding-inline-end: 60px; font-size: 18px; font-weight: 700; letter-spacing: -0.03em; }
+ion-back-button {
+  --color: var(--ion-text-color); --border-radius: 50%; --icon-font-size: 22px;
+  width: 46px; height: 46px; border-radius: 50%; background: var(--jg-tarjeta);
+}
+
+h2 { margin: 24px 0 10px; font-size: 20px; font-weight: 700; }
+.vacio { text-align: center; color: var(--jg-texto-sec); margin-top: 40px; }
+
+// Lista dentro de tarjeta
+.lista { display: flex; flex-direction: column; overflow: hidden; padding: 4px 0; }
+.item {
+  display: flex; align-items: center; gap: 14px;
+  min-height: 60px; padding: 0 20px; border: 0; border-bottom: 1px solid var(--jg-borde);
+  background: var(--jg-tarjeta); color: var(--ion-text-color); font: inherit; text-align: left; text-decoration: none;
+  &:last-child { border-bottom: 0; }
+  ion-icon { font-size: 20px; color: var(--jg-texto-sec); flex-shrink: 0; }
+  .crece { flex-grow: 1; font-size: 16px; }
+  .dato { color: var(--jg-texto-sec); font-size: 15px; }
+}
+
+// Formularios
+.campo { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; label { font-size: 16px; font-weight: 500; } }
+.fijo { padding: 15px 16px; border-radius: 16px; background: var(--jg-gris); color: var(--jg-texto-sec); font-size: 16px; }
+.fila2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+form ion-button { margin-top: 26px; }
+
+// Etiqueta de estado
+.chip-estado {
+  height: 26px; padding: 0 12px; border-radius: 999px; font-size: 12px; font-weight: 700;
+  display: inline-flex; align-items: center; background: var(--jg-gris); color: var(--jg-texto-sec);
+  &.verde { background: rgba(52, 168, 83, .15); color: #2e9d55; }
+  &.morado { background: var(--jg-acento-suave); color: var(--ion-text-color); }
+  &.rojo { background: rgba(167, 33, 68, .14); color: var(--ion-color-danger); }
+}

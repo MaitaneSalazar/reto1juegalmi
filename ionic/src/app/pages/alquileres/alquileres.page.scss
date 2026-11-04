@@ -1,0 +1,8 @@
+ion-segment { margin-top: 8px; }
+.alquiler {
+  margin-top: 12px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px;
+  .cab { display: flex; justify-content: space-between; align-items: center; gap: 8px; strong { font-size: 16px; font-weight: 600; } }
+  .fechas { color: var(--jg-texto-sec); font-size: 14px; }
+  .pie { display: flex; justify-content: space-between; align-items: center; b { font-size: 15px; font-weight: 600; } }
+  ion-button { min-height: 36px; margin: 0; }
+}
