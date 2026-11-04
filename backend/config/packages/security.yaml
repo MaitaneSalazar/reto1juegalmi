@@ -1,39 +1,59 @@
 security:
-    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    # Las contraseñas se guardan cifradas con el mejor algoritmo disponible (bcrypt/argon2)
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
 
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    # Los usuarios (clientes y trabajadores) se buscan por email en la entidad Usuario
     providers:
-        users_in_memory: { memory: null }
+        app_user_provider:
+            entity:
+                class: App\Entity\Usuario
+                property: email
 
     firewalls:
         dev:
-            # Ensure dev tools and static assets are always allowed
-            pattern: ^/(_profiler(/|$)|(_wdt|assets|build)/)
+            pattern: ^/(_profiler|_wdt|assets|build)/
             security: false
+
+        # POST /api/login: email + contraseña -> token JWT
+        login:
+            pattern: ^/api/login$
+            stateless: true
+            provider: app_user_provider
+            user_checker: App\Security\UserChecker
+            json_login:
+                check_path: api_login
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        # Resto de la API: sin sesiones, cada petición lleva su token
+        api:
+            pattern: ^/api
+            stateless: true
+            provider: app_user_provider
+            user_checker: App\Security\UserChecker
+            jwt: ~
+
+        # Web de los trabajadores (se completa en el B9)
         main:
             lazy: true
-            provider: users_in_memory
+            provider: app_user_provider
 
-            # Activate different ways to authenticate:
-            # https://symfony.com/doc/current/security.html#the-firewall
-
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
-
-    # Note: Only the *first* matching rule is applied
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/api/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/registro$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/estado$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/(productos|videojuegos|tienda|departamentos), roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
 
 when@test:
     security:
         password_hashers:
-            # Password hashers are resource-intensive by design to ensure security.
-            # In tests, it's safe to reduce their cost to improve performance.
             Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
                 algorithm: auto
-                cost: 4 # Lowest possible value for bcrypt
-                time_cost: 3 # Lowest possible value for argon
-                memory_cost: 10 # Lowest possible value for argon
+                cost: 4
+                time_cost: 3
+                memory_cost: 10
