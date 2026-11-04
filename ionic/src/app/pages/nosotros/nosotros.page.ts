@@ -7,7 +7,7 @@ import * as L from 'leaflet';
 import { CabeceraComponent } from '../../components/cabecera/cabecera.component';
 import { TiendaService } from '../../services/tienda.service';
 import { UbicacionService } from '../../services/ubicacion.service';
-import { Tienda } from '../../models/tienda.model';
+import { FOTOS_LOCALES, FotoTienda, HISTORIA, HITOS, HORARIO, Tienda } from '../../models/tienda.model';
 
 type Vista = 'ubicacion' | 'historia' | 'galeria';
 
@@ -32,7 +32,11 @@ export class NosotrosPage implements OnDestroy {
   distancia = signal<number | null>(null);    // km hasta la tienda
   sinGps = signal(false);                     // el usuario no ha dado permiso
 
-  iconosHito = ['storefront-outline', 'build-outline', 'phone-portrait-outline', 'rocket-outline'];
+  // Horario e historia van escritos en la app (la API no los devuelve)
+  horario = HORARIO;
+  historia = HISTORIA;
+  hitos = HITOS;
+  fotos = signal<FotoTienda[]>(FOTOS_LOCALES);   // GET /api/tienda/fotos (si no hay, las locales)
 
   private mapa?: L.Map;
   private marcaUsuario?: L.CircleMarker;
@@ -40,9 +44,16 @@ export class NosotrosPage implements OnDestroy {
   constructor() {
     addIcons({ locationOutline, timeOutline, callOutline, navigateOutline, imageOutline,
                storefrontOutline, buildOutline, phonePortraitOutline, rocketOutline });
-    this.tiendaSrv.obtener().subscribe(t => {
-      this.tienda.set(t);
-      setTimeout(() => this.crearMapa());     // espera a que exista el <div> del mapa
+    this.tiendaSrv.obtener().subscribe({
+      next: t => {
+        this.tienda.set(t);
+        setTimeout(() => this.crearMapa());     // espera a que exista el <div> del mapa
+      },
+      error: () => { /* sin conexión: se queda el esqueleto */ },
+    });
+    this.tiendaSrv.fotos().subscribe({
+      next: l => { if (l.some(f => f.url)) this.fotos.set(l); },
+      error: () => { /* se quedan las fotos locales */ },
     });
   }
 

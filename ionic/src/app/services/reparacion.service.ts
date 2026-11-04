@@ -1,69 +1,40 @@
 import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { FUENTE_DATOS } from '../factories/fuente-datos.factory';
-import { EstadoReparacion, PASOS_REPARACION, Reparacion, TipoDispositivo, departamentoDe } from '../models/reparacion.model';
+import { environment } from '../../environments/environment';
+import { NuevaReparacion, Reparacion } from '../models/reparacion.model';
+import { Pagina } from '../models/pagina.model';
 
-// Datos que rellena el cliente en "Nueva reparación"
-export interface NuevaReparacion {
-  usuarioId: number;
-  clienteNombre: string;
-  tipoDispositivo: TipoDispositivo;
-  marcaModelo: string;
-  componente: string;
-  descripcion: string;
-  fotos: string[];
-}
+const API = environment.apiUrl;
 
 @Injectable({ providedIn: 'root' })
 export class ReparacionService {
-  private fuente = inject(FUENTE_DATOS);
+  private http = inject(HttpClient);
 
-  // Reparaciones del cliente (Taller · Mis reparaciones)
-  delUsuario(usuarioId: number): Observable<Reparacion[]> {
-    return this.fuente.listar<Reparacion>('reparaciones', { usuarioId });
-  }
-
-  // Panel del técnico: filtrar por estado
-  porEstado(estado: EstadoReparacion): Observable<Reparacion[]> {
-    return this.fuente.listar<Reparacion>('reparaciones', { estado });
-  }
-
-  // Todas (panel del técnico)
-  todas(): Observable<Reparacion[]> {
-    return this.fuente.listar<Reparacion>('reparaciones');
-  }
-
-  // Seguimiento de una reparación
-  obtener(id: number): Observable<Reparacion> {
-    return this.fuente.obtener<Reparacion>('reparaciones', id);
-  }
-
-  // Alta: entra como RECIBIDA con la fecha de hoy
+  // Nueva reparación: POST /api/reparaciones → 201 en estado "recibida"
   crear(datos: NuevaReparacion): Observable<Reparacion> {
-    const hoy = new Date().toISOString().slice(0, 10);
-    return this.fuente.crear<Reparacion>('reparaciones', {
-      ...datos,
-      departamento: departamentoDe(datos.tipoDispositivo),
-      estado: 'RECIBIDA',
-      fechaEntrada: hoy,
-      historial: [{ estado: 'RECIBIDA', fecha: hoy }],
-    });
+    return this.http.post<Reparacion>(`${API}/reparaciones`, datos);
   }
 
-  // Técnico: pasa al siguiente estado y guarda el presupuesto
-  avanzar(rep: Reparacion, presupuesto?: number): Observable<Reparacion> {
-    const orden = PASOS_REPARACION.map(p => p.estado);
-    const siguiente = orden[Math.min(orden.indexOf(rep.estado) + 1, orden.length - 1)];
-    const hoy = new Date().toISOString().slice(0, 10);
-    return this.fuente.actualizar<Reparacion>('reparaciones', rep.id, {
-      estado: siguiente,
-      presupuesto: presupuesto ?? rep.presupuesto,
-      historial: [...rep.historial, { estado: siguiente, fecha: hoy }],
-    });
+  // Foto de la cámara: POST /api/reparaciones/{id}/fotos (multipart, campo "imagen")
+  subirFoto(id: number, imagen: Blob, nombre: string): Observable<Reparacion> {
+    const form = new FormData();
+    form.append('imagen', imagen, nombre);
+    return this.http.post<Reparacion>(`${API}/reparaciones/${id}/fotos`, form);
   }
 
-  // Baja: cancelar una solicitud
-  borrar(id: number): Observable<void> {
-    return this.fuente.borrar('reparaciones', id);
+  // Mis reparaciones / Inicio: GET /api/reparaciones (la más reciente primero)
+  listar(page = 1, limit = 50): Observable<Pagina<Reparacion>> {
+    return this.http.get<Pagina<Reparacion>>(`${API}/reparaciones`, { params: { page, limit } });
+  }
+
+  // Seguimiento: GET /api/reparaciones/{id}
+  obtener(id: number): Observable<Reparacion> {
+    return this.http.get<Reparacion>(`${API}/reparaciones/${id}`);
+  }
+
+  // Cancelar (solo en "recibida"): DELETE /api/reparaciones/{id}
+  cancelar(id: number): Observable<Reparacion> {
+    return this.http.delete<Reparacion>(`${API}/reparaciones/${id}`);
   }
 }

@@ -3,10 +3,12 @@
     <ion-content>
       <div class="marca"><span class="logo">J</span>JuegAlmi</div>
 
-      <!-- Usuario -->
+      <!-- Usuario: abre Datos personales -->
       <ion-menu-toggle [autoHide]="false">
-        <a class="usuario" routerLink="/cuenta" routerDirection="root">
-          <span class="avatar">{{ sesion.iniciales() }}</span>
+        <a class="usuario" routerLink="/cuenta/datos-personales" routerDirection="root">
+          <span class="avatar">
+            @if (sesion.usuario()?.foto_perfil; as foto) { <img [src]="foto" alt=""> } @else { {{ sesion.iniciales() }} }
+          </span>
           <span>
             <strong>{{ sesion.usuario()?.nombre }} {{ sesion.usuario()?.apellido1 }}</strong>
             <small>{{ sesion.usuario()?.email }}</small>
@@ -14,7 +16,7 @@
         </a>
       </ion-menu-toggle>
 
-      <!-- Tres bloques de opciones -->
+      <!-- Mi actividad y mis datos -->
       @for (grupo of grupos(); track $index) {
         <nav class="grupo">
           @for (op of grupo; track op.titulo) {
@@ -26,15 +28,17 @@
               </a>
             </ion-menu-toggle>
           }
-          @if ($last) {
-            <ion-menu-toggle [autoHide]="false">
-              <button type="button" class="opcion" (click)="cerrarSesion()">
-                <ion-icon name="log-out-outline"></ion-icon><span>Cerrar sesión</span>
-              </button>
-            </ion-menu-toggle>
-          }
         </nav>
       }
+
+      <!-- Cerrar sesión, en su propio bloque -->
+      <nav class="grupo">
+        <ion-menu-toggle [autoHide]="false">
+          <button type="button" class="opcion" (click)="cerrarSesion()">
+            <ion-icon name="log-out-outline"></ion-icon><span>Cerrar sesión</span>
+          </button>
+        </ion-menu-toggle>
+      </nav>
     </ion-content>
   </ion-menu>
 

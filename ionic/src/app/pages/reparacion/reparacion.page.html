@@ -13,18 +13,20 @@
 
   @if (rep(); as r) {
     <div class="cascada">
-      <!-- Estado en grande + 5 tramos -->
+      <!-- Estado en grande + tramos -->
       <section class="estado">
-        <span>Nº {{ numero() }} · {{ tipo() }} · {{ r.marcaModelo }}</span>
-        <h1>{{ estado() }}</h1>
-        <div class="tramos">
-          @for (p of pasos(); track p.titulo) { <i [class.hecho]="p.hecho"></i> }
-        </div>
+        <span>{{ r.numero }} · {{ tipo() }} · {{ r.marca }} {{ r.modelo }}</span>
+        <h1>{{ r.estado_texto }}</h1>
+        @if (r.estado !== 'cancelada') {
+          <div class="tramos">
+            @for (p of r.pasos ?? []; track p.estado) { <i [class.hecho]="p.hecho"></i> }
+          </div>
+        }
       </section>
 
       <!-- Avería / Presupuesto -->
       <div class="datos">
-        <div class="tarjeta"><span>Avería</span><strong>{{ r.descripcion }}</strong></div>
+        <div class="tarjeta"><span>Avería</span><strong>{{ r.descripcion_averia }}</strong></div>
         <div class="tarjeta">
           <span>Presupuesto</span>
           @if (r.presupuesto != null) { <app-precio [valor]="r.presupuesto"></app-precio> }
@@ -32,40 +34,54 @@
         </div>
       </div>
 
-      <!-- Línea de tiempo -->
-      <ol class="tarjeta linea-tiempo">
-        @for (p of pasos(); track p.titulo) {
-          <li [class.hecho]="p.hecho" [class.actual]="p.actual">
-            <span class="punto"></span>
-            <div class="crece">
-              <strong>{{ p.titulo }}</strong>
-              @if (p.actual) { <p>{{ p.texto }}</p> }
-            </div>
-            @if (p.fecha) { <small>{{ p.fecha }}</small> }
-          </li>
-        }
-      </ol>
+      <!-- Línea de tiempo (pasos calculados por la API) -->
+      @if (r.estado !== 'cancelada') {
+        <ol class="tarjeta linea-tiempo">
+          @for (p of r.pasos ?? []; track p.estado) {
+            <li [class.hecho]="p.hecho" [class.actual]="p.actual">
+              <span class="punto"></span>
+              <div class="crece">
+                <strong>{{ p.texto }}</strong>
+                @if (p.actual && p.descripcion) { <p>{{ p.descripcion }}</p> }
+              </div>
+              @if (p.fecha) { <small>{{ p.fecha | fechaCorta }}</small> }
+            </li>
+          }
+        </ol>
+      }
 
       <!-- Técnico + llamar -->
       <div class="contacto">
         <div class="tarjeta tecnico">
-          <span class="inicial">{{ (r.tecnico ?? 'Taller')[0] }}</span>
-          <span><strong>{{ r.tecnico ?? 'Taller JuegAlmi' }}</strong><small>Taller técnico</small></span>
+          @if (r.trabajador; as t) {
+            <span class="inicial">{{ t.nombre_completo[0] }}</span>
+            <span><strong>{{ t.nombre_completo }}</strong><small>{{ t.cargo }} · {{ t.departamento }}</small></span>
+          } @else {
+            <span class="inicial">J</span>
+            <span><strong>Taller JuegAlmi</strong><small>Técnico pendiente de asignar</small></span>
+          }
         </div>
-        <a class="llamar pulsable" [href]="telefono()" aria-label="Llamar a la tienda"><ion-icon name="call-outline"></ion-icon></a>
+        @if (telefono()) {
+          <a class="llamar pulsable" [href]="telefono()" aria-label="Llamar"><ion-icon name="call-outline"></ion-icon></a>
+        }
       </div>
 
       <!-- Fotos -->
-      @if (r.fotos.length) {
+      @if (r.fotos?.length) {
         <div class="seccion"><h2>Fotos</h2></div>
         <div class="fotos">
-          @for (f of r.fotos; track $index) {
-            <div class="foto">
-              @if (esImagen(f)) { <img [src]="f" alt="Foto {{ $index + 1 }}" loading="lazy"> }
-              @else { <ion-icon name="image-outline"></ion-icon> }
-            </div>
+          @for (f of r.fotos; track f.id) {
+            <a class="foto" [href]="f.url" target="_blank" rel="noopener">
+              <img [src]="f.miniatura_url ?? f.url" alt="Foto {{ $index + 1 }}" loading="lazy">
+            </a>
           }
         </div>
+      }
+
+      @if (r.se_puede_cancelar) {
+        <ion-button expand="block" fill="outline" color="danger" class="cancelar" (click)="cancelar()" [disabled]="cancelando()">
+          Cancelar reparación
+        </ion-button>
       }
     </div>
   } @else {

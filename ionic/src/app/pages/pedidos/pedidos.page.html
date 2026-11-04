@@ -1,27 +1,59 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-buttons slot="start"><ion-back-button defaultHref="/cuenta" text=""></ion-back-button></ion-buttons>
-    <ion-title>Mis pedidos</ion-title>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/inicio" text=""></ion-back-button></ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
+  <h1 class="titulo">Mis pedidos</h1>
+
   @if (cargando()) {
-    @for (i of [1, 2, 3]; track i) {
-      <ion-skeleton-text [animated]="true" style="height: 92px; border-radius: 16px; margin-top: 12px"></ion-skeleton-text>
-    }
+    <ion-skeleton-text [animated]="true" style="height: 200px; border-radius: 24px"></ion-skeleton-text>
   } @else {
-    @for (p of pedidos(); track p.id) {
-      <div class="tarjeta pedido">
-        <div class="cab">
-          <strong>Pedido #{{ p.id }}</strong>
-          <span class="chip-estado" [class]="estado(p.estado).clase">{{ estado(p.estado).texto }}</span>
+    <!-- Pedido en curso con su barra de estado -->
+    @if (actual(); as p) {
+      <div class="tarjeta actual">
+        <div class="cabecera"><strong>Pedido #{{ p.id }}</strong><span>{{ p.fecha | fechaCorta }}</span></div>
+        <div class="barra">
+          @for (etapa of pasos; track etapa.estado; let i = $index) {
+            <div class="tramo" [class.hecho]="i <= paso(p)" [class.ahora]="i === paso(p)">
+              <i></i><span>{{ etapa.texto }}</span>
+            </div>
+          }
         </div>
-        <p class="productos">{{ resumen(p) }}</p>
-        <div class="pie"><span>{{ p.fecha }}</span><b>{{ p.total | euros }}</b></div>
+        <div class="pie">
+          <div class="minis">
+            @if (detalle(); as d) {
+              @for (l of d.lineas; track l.id) { <app-miniatura-producto [producto]="l.producto"></app-miniatura-producto> }
+            } @else {
+              <app-miniatura-producto [producto]="mini(p)"></app-miniatura-producto>
+            }
+          </div>
+          <app-precio [valor]="p.total"></app-precio>
+        </div>
+        @if (p.se_puede_cancelar) {
+          <ion-button fill="clear" color="danger" size="small" class="cancelar" (click)="cancelar(p)">Cancelar pedido</ion-button>
+        }
       </div>
-    } @empty {
-      <p class="vacio">Todavía no has hecho ningún pedido.</p>
     }
+
+    <!-- Anteriores -->
+    @if (anteriores().length) {
+      <h2>Anteriores</h2>
+      <div class="cascada">
+        @for (p of anteriores(); track p.id) {
+          <div class="tarjeta fila">
+            <app-miniatura-producto [producto]="mini(p)"></app-miniatura-producto>
+            <div class="textos">
+              <strong>{{ p.primer_producto }}@if (p.unidades > 1) { <em> · {{ p.unidades }} uds.</em> }</strong>
+              <small>#{{ p.id }} · {{ p.fecha | fechaCorta }} · {{ estadoTexto(p) }}</small>
+            </div>
+            <app-precio [valor]="p.total"></app-precio>
+          </div>
+        }
+      </div>
+    }
+
+    @if (!pedidos().length) { <p class="vacio">Todavía no has hecho ningún pedido.</p> }
   }
 </ion-content>
