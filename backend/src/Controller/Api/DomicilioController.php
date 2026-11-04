@@ -90,4 +90,46 @@ class DomicilioController extends AbstractController
 
         return $this->json(['mensaje' => 'Domicilio dado de baja', 'domicilio' => $this->presenter->presentar($domicilio)]);
     }
+
+    /** PUT /api/domicilios/{id} — «editar»: da de baja el antiguo y crea el nuevo en una sola operación */
+    #[Route('/{id}', name: 'api_domicilios_modificar', requirements: ['id' => '\d+'], methods: ['PUT'])]
+    public function modificar(#[CurrentUser] Usuario $usuario, int $id, Request $request, ValidatorInterface $validator): JsonResponse
+    {
+        $antiguo = $this->em->find(Domicilio::class, $id);
+        if (!$antiguo || $antiguo->getCliente() !== $usuario || !$antiguo->isActivo()) {
+            return RespuestaApi::error(404, 'El domicilio no existe');
+        }
+
+        $datos = RespuestaApi::leerJson($request);
+        $actual = $antiguo->getDireccion();
+
+        // Los campos que no se envían se copian de la dirección antigua
+        $valor = fn (string $campo, ?string $anterior): ?string => array_key_exists($campo, $datos)
+            ? trim((string) $datos[$campo])
+            : $anterior;
+
+        $direccion = (new Direccion())
+            ->setCalle((string) $valor('calle', $actual->getCalle()))
+            ->setNumero((string) $valor('numero', $actual->getNumero()))
+            ->setPiso($valor('piso', $actual->getPiso()) ?: null)
+            ->setCodigoPostal((string) $valor('codigo_postal', $actual->getCodigoPostal()))
+            ->setCiudad((string) $valor('ciudad', $actual->getCiudad()))
+            ->setProvincia((string) $valor('provincia', $actual->getProvincia()));
+
+        $campos = RespuestaApi::camposConError($validator->validate($direccion));
+        if ($campos !== []) {
+            return RespuestaApi::errorValidacion($campos);
+        }
+
+        $nuevo = (new Domicilio())->setCliente($usuario)->setDireccion($direccion);
+
+        // Baja y alta juntas: o se hacen las dos o ninguna
+        $this->em->wrapInTransaction(function () use ($antiguo, $direccion, $nuevo) {
+            $antiguo->setFechaBaja(new \DateTimeImmutable('today'));
+            $this->em->persist($direccion);
+            $this->em->persist($nuevo);
+        });
+
+        return $this->json($this->presenter->presentar($nuevo) + ['sustituye_a' => $antiguo->getId()]);
+    }
 }

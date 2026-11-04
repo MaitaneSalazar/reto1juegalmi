@@ -37,9 +37,21 @@ security:
             jwt: ~
 
         # Web de los trabajadores (se completa en el B9)
+                # Web de los trabajadores: login con formulario y sesión
         main:
             lazy: true
             provider: app_user_provider
+            user_checker: App\Security\UserChecker
+            form_login:
+                login_path: admin_login
+                check_path: admin_login
+                username_parameter: email
+                password_parameter: password
+                enable_csrf: true
+                default_target_path: admin
+            logout:
+                path: admin_logout
+                target: admin_login
 
     access_control:
         - { path: ^/api/login$, roles: PUBLIC_ACCESS }
@@ -47,7 +59,8 @@ security:
         - { path: ^/api/estado$, roles: PUBLIC_ACCESS }
         - { path: ^/api/(productos|videojuegos|tienda|departamentos), roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/admin/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/admin, roles: ROLE_TRABAJADOR }
 
 when@test:
     security:
