@@ -67,4 +67,26 @@ class RespuestaApi
     {
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $texto));
     }
+    /** Lee ?page= y ?limit= (por defecto 20, máximo 50). Devuelve [pagina, porPagina]. */
+    public static function paginacion(Request $request): array
+    {
+        $pagina = max(1, $request->query->getInt('page', 1));
+        $porPagina = min(50, max(1, $request->query->getInt('limit', 20)));
+
+        return [$pagina, $porPagina];
+    }
+
+    /** Respuesta de un listado: {datos, paginacion} */
+    public static function listado(array $datos, int $total, int $pagina, int $porPagina): JsonResponse
+    {
+        return new JsonResponse([
+            'datos' => $datos,
+            'paginacion' => [
+                'pagina' => $pagina,
+                'por_pagina' => $porPagina,
+                'total' => $total,
+                'paginas' => (int) ceil($total / $porPagina),
+            ],
+        ]);
+    }
 }
