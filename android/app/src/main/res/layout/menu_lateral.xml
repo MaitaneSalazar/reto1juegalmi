@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- MENÚ LATERAL (13 del mockup). layout_gravity="start" le dice al DrawerLayout que esto es el panel lateral -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/llMenuLateral"
+    android:layout_width="300dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:background="@drawable/bg_menu_lateral"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Logo y marca -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="4dp">
+
+                <TextView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/bg_logo"
+                    android:gravity="center"
+                    android:text="J"
+                    android:textColor="@color/color_sobre_marca"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:letterSpacing="-0.03"
+                    android:text="@string/marca"
+                    android:textColor="@color/color_texto"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Tarjeta del usuario. El nombre y el email se rellenarán con /api/yo -->
+            <LinearLayout
+                android:id="@+id/llMenuUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_tarjeta_marca"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <ImageView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_avatar"
+                    android:importantForAccessibility="no"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_person"
+                    app:tint="@color/color_marca" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvMenuNombre"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="@string/menu_mi_cuenta"
+                        android:textColor="@color/color_sobre_marca"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        tools:text="Ane Etxeberria" />
+
+                    <TextView
+                        android:id="@+id/tvMenuEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:textColor="@color/color_marca_texto"
+                        android:textSize="13sp"
+                        tools:text="demo@juegalmi.es" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Grupo 1: lo que ha hecho el cliente -->
+            <LinearLayout
+                style="@style/GrupoMenu"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:id="@+id/tvMenuPedidos"
+                    style="@style/ItemMenu"
+                    android:drawableStart="@drawable/ic_list_alt"
+                    android:text="@string/menu_mis_pedidos" />
+
+                <TextView
+                    android:id="@+id/tvMenuAlquileres"
+                    style="@style/ItemMenu"
+                    android:drawableStart="@drawable/ic_schedule"
+                    android:text="@string/menu_mis_alquileres" />
+
+                <TextView
+                    android:id="@+id/tvMenuReparaciones"
+                    style="@style/ItemMenu"
+                    android:drawableStart="@drawable/ic_handyman"
+                    android:text="@string/menu_mis_reparaciones" />
+            </LinearLayout>
+
+            <!-- Grupo 2: datos de la cuenta -->
+            <LinearLayout
+                style="@style/GrupoMenu"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/tvMenuDatos"
+                    style="@style/ItemMenu"
+                    android:drawableStart="@drawable/ic_person"
+                    android:text="@string/menu_datos_personales" />
+
+                <TextView
+                    android:id="@+id/tvMenuDirecciones"
+                    style="@style/ItemMenu"
+                    android:drawableStart="@drawable/ic_location"
+                    android:text="@string/menu_direcciones" />
+            </LinearLayout>
+
+            <!-- Grupo 3: salir -->
+            <LinearLayout
+                style="@style/GrupoMenu"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/tvMenuCerrarSesion"
+                    style="@style/ItemMenu"
+                    android:drawableStart="@drawable/ic_logout"
+                    android:text="@string/menu_cerrar_sesion" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -42,4 +42,16 @@
     <string name="nav_cesta">Cesta</string>
     <string name="nav_nosotros">Nosotros</string>
     <string name="nav_cuenta">Cuenta</string>
+
+    <string name="menu_mi_cuenta">Mi cuenta</string>
+    <string name="menu_mis_pedidos">Mis pedidos</string>
+    <string name="menu_mis_alquileres">Mis alquileres</string>
+    <string name="menu_mis_reparaciones">Mis reparaciones</string>
+    <string name="menu_datos_personales">Datos personales</string>
+    <string name="menu_direcciones">Direcciones</string>
+    <string name="menu_cerrar_sesion">Cerrar sesión</string>
+
+    <string name="volver">Volver</string>
+    <string name="direcciones_subtitulo">Donde te enviamos los pedidos.</string>
+    <string name="pagina_en_construccion">Esta página está en construcción.</string>
 </resources>
