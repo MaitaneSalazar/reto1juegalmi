@@ -18,11 +18,21 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     buildTypes {
+        debug {
+            // API local en la VM de Ubuntu (cambia la IP por la de tu VM)
+            buildConfigField("String", "API_URL", "\"http://192.168.2.74:8000/api/\"")
+        }
         release {
             optimization {
                 enable = false
             }
+            // API en AWS (se cambiará cuando tengáis el dominio)
+            buildConfigField("String", "API_URL", "\"https://api.vuestrodominio.com/api/\"")
         }
     }
     compileOptions {
@@ -36,6 +46,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation("com.android.volley:volley:1.2.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

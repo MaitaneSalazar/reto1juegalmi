@@ -2,17 +2,23 @@ package com.example.retoindividual_1;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.retoindividual_1.network.ApiClient;
 
 /*
  * =====================================================================================
@@ -68,6 +74,8 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(LoginActivity.this, RegistroActivity.class));
             }
         });
+
+        probarConexion();
     }
 
     private void entrar(String email, String password) {
@@ -89,5 +97,23 @@ public class LoginActivity extends AppCompatActivity {
     private void mostrarError(int texto) {
         tvError.setText(texto);
         tvError.setVisibility(View.VISIBLE);
+    }
+
+    private void probarConexion() {
+        String url = ApiClient.BASE_URL + "estado";
+
+        JsonObjectRequest peticion = new JsonObjectRequest(
+                Request.Method.GET, url, null,
+                respuesta -> {
+                    Log.d("API", "Conectado: " + respuesta);
+                    Toast.makeText(this, "API: " + respuesta.optString("estado"), Toast.LENGTH_LONG).show();
+                },
+                error -> {
+                    String mensaje = ApiClient.mensajeDeError(error);
+                    Log.e("API", "Error: " + mensaje, error);
+                    Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
+                });
+
+        ApiClient.getInstance(this).getCola().add(peticion);
     }
 }
