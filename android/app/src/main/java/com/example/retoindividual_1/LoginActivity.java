@@ -19,19 +19,12 @@ import androidx.core.view.WindowInsetsCompat;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.retoindividual_1.network.ApiClient;
+import com.example.retoindividual_1.network.SessionManager;
 
-/*
- * =====================================================================================
- *  PANTALLA DE LOGIN = Login1 del mockup de JuegAlmi.
- *  Es la primera pantalla que se abre (LAUNCHER en el Manifest).
- *
- *  Entrar        -> entrar()  -> comprueba email y contrasena -> MainActivity
- *  Crear cuenta  -> RegistroActivity
- *  Si algo falla, se ensena la caja roja de error (tvLoginError) con el motivo.
- *
- *  De momento NO hay base de datos: cualquier email valido con 6+ caracteres entra.
- * =====================================================================================
- */
+import org.json.JSONException;
+import org.json.JSONObject;
+
+//PANTALLA DE LOGIN, ES LA PRIMERA QUE SE ABRE (LAUNCHER EN EL MANIFEST)
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -47,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            // ime() = el teclado, para que no tape el formulario
+            //CON ime() EL TECLADO NO TAPA EL FORMULARIO
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -59,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         btnEntrar = findViewById(R.id.btnLoginEntrar);
         tvCrearCuenta = findViewById(R.id.tvLoginCrearCuenta);
 
-        // ENTRAR -> valida y abre la app
+        //BOTON ENTRAR
         btnEntrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // CREAR CUENTA -> pantalla de registro
+        //CREAR CUENTA ABRE EL REGISTRO
         tvCrearCuenta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,18 +76,41 @@ public class LoginActivity extends AppCompatActivity {
             mostrarError(R.string.error_vacio);
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             mostrarError(R.string.error_email);
-        } else if (password.length() < 6) {
+        } else if (password.length() < 3) {
             mostrarError(R.string.error_password);
         } else {
             tvError.setVisibility(View.GONE);
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();   // para que el boton atras no vuelva al login
+            //LE PREGUNTAMOS A LA API SI EL EMAIL Y LA CONTRASEÑA SON CORRECTOS
+            JSONObject cuerpo = new JSONObject();
+            try {
+                cuerpo.put("email", email);
+                cuerpo.put("password", password);
+            } catch (JSONException e) {
+                return;
+            }
+            //DESACTIVAMOS EL BOTON PARA QUE NO SE MANDE DOS VECES
+            btnEntrar.setEnabled(false);
+            JsonObjectRequest peticion = new JsonObjectRequest(
+                    Request.Method.POST, ApiClient.BASE_URL + "login", cuerpo,
+                    respuesta -> {
+                        new SessionManager(this).guardarToken(respuesta.optString("token"));
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish(); //PARA QUE ATRAS NO VUELVA AL LOGIN
+                    },
+                    error -> {
+                        btnEntrar.setEnabled(true);
+                        mostrarError(ApiClient.mensajeDeError(error));
+                    });
+            ApiClient.getInstance(this).getCola().add(peticion);
         }
     }
 
-    // Caja roja con el motivo del error
+    //CAJA ROJA CON EL ERROR
     private void mostrarError(int texto) {
+        mostrarError(getString(texto));
+    }
+
+    private void mostrarError(String texto) {
         tvError.setText(texto);
         tvError.setVisibility(View.VISIBLE);
     }

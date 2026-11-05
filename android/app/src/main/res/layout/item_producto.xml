@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ESTO ES UNA TARJETA DE LA TIENDA, NO UNA PANTALLA. LA CARGA EL ADAPTADOR -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:paddingStart="6dp"
+    android:paddingEnd="6dp"
+    android:paddingBottom="24dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvProductoPortada"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:cardBackgroundColor="@color/color_hoja"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="0dp"
+        app:layout_constraintDimensionRatio="3:4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- PORTADA HECHA A MANO PARA LOS PRODUCTOS SIN FOTO -->
+        <FrameLayout
+            android:id="@+id/flProductoSinFoto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvProductoInicial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|end"
+                android:layout_marginTop="-36dp"
+                android:layout_marginEnd="-8dp"
+                android:alpha="0.1"
+                android:includeFontPadding="false"
+                android:textColor="@color/white"
+                android:textSize="150sp"
+                android:textStyle="bold"
+                tools:text="Z" />
+
+            <TextView
+                android:id="@+id/tvProductoEtiqueta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|end"
+                android:layout_margin="12dp"
+                android:alpha="0.8"
+                android:letterSpacing="0.1"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:text="Switch" />
+
+            <TextView
+                android:id="@+id/tvProductoTituloPortada"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_margin="12dp"
+                android:ellipsize="end"
+                android:letterSpacing="-0.04"
+                android:lineSpacingMultiplier="0.85"
+                android:maxLines="4"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:text="Zelda: Tears of the Kingdom" />
+        </FrameLayout>
+
+        <!-- LA FOTO DE VERDAD, LA CARGA GLIDE -->
+        <ImageView
+            android:id="@+id/ivProductoFoto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:visibility="gone" />
+
+        <!-- AGOTADO, ULTIMA UNIDAD... -->
+        <TextView
+            android:id="@+id/tvProductoAviso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            android:layout_margin="10dp"
+            android:paddingStart="10dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="4dp"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/tvProductoNombre"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-medium"
+        android:maxLines="1"
+        android:textColor="@color/color_texto"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cvProductoPortada"
+        tools:text="Zelda: Tears of the Kingdom" />
+
+    <TextView
+        android:id="@+id/tvProductoPrecio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:letterSpacing="-0.03"
+        android:textColor="@color/color_texto"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvProductoNombre"
+        tools:text="59,99 €" />
+
+    <TextView
+        android:id="@+id/tvProductoPorDia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/tienda_por_dia"
+        android:textColor="@color/color_texto_suave"
+        android:textSize="11sp"
+        android:visibility="gone"
+        app:layout_constraintBaseline_toBaselineOf="@id/tvProductoPrecio"
+        app:layout_constraintStart_toEndOf="@id/tvProductoPrecio" />
+</androidx.constraintlayout.widget.ConstraintLayout>

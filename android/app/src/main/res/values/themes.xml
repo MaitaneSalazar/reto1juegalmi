@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Tema "Calamina": lienzo gris agua, hojas blancas, marca calamina, carmín solo para avisos -->
+    <!-- TEMA DE LA APP -->
     <style name="Base.Theme.RetoIndividual_1" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/color_marca</item>
         <item name="colorOnPrimary">@color/color_sobre_marca</item>
@@ -20,7 +20,7 @@
 
     <style name="Theme.RetoIndividual_1" parent="Base.Theme.RetoIndividual_1" />
 
-    <!-- Etiqueta encima de cada campo -->
+    <!-- ETIQUETA ENCIMA DE CADA CAMPO -->
     <style name="Etiqueta">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -30,7 +30,7 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <!-- Campo de texto: hoja blanca con filete de 1 dp y radio 14 dp -->
+    <!-- CAMPO DE TEXTO -->
     <style name="Campo">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -44,7 +44,7 @@
         <item name="android:maxLines">1</item>
     </style>
 
-    <!-- Botón principal: píldora calamina con texto oscuro -->
+    <!-- BOTON PRINCIPAL -->
     <style name="BotonPrincipal" parent="Widget.Material3.Button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">48dp</item>
@@ -56,7 +56,7 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <!-- Chip de cristal sobre la tarjeta calamina: solo informa, no se pulsa -->
+    <!-- CHIP DE LA TARJETA DE INICIO, SOLO INFORMA, NO SE PULSA -->
     <style name="ChipCristal" parent="Widget.Material3.Chip.Assist">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -73,7 +73,7 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <!-- Pestaña de la barra inferior: icono suelto; la activa se abre en píldora con su nombre -->
+    <!-- PESTAÑA DE LA BARRA DE ABAJO, LA ACTIVA SE ABRE CON SU NOMBRE -->
     <style name="PestanaNav">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">44dp</item>

@@ -4,12 +4,41 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.example.retoindividual_1.adaptadores.TiendaPaginasAdapter;
+import com.example.retoindividual_1.network.ApiClient;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class TiendaFragment extends Fragment {
+
+    //LO QUE ESPERA LA API EN ?tipo= , EN EL MISMO ORDEN QUE tienda_filtros_comprar
+    private static final List<String> TIPOS = Arrays.asList("todo", "videojuego", "consola", "movil", "tablet");
+
+    private TextView tvTitulo;
+    private TabLayout tlModo;
+    private TabLayout tlFiltros;
+    private ViewPager2 vpProductos;
+    private TabLayoutMediator mediador;
+
+    private boolean alquiler = false;
+    private final List<String> plataformas = new ArrayList<>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -20,14 +49,95 @@ public class TiendaFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // En la tienda sí se busca: se enseña la lupa de la barra superior
+        //EN LA TIENDA SI SE ENSEÑA LA LUPA DE BUSCAR
         view.findViewById(R.id.ivBarraBuscar).setVisibility(View.VISIBLE);
-        // PRUEBA: quitar cuando esté la lista de productos.
-        // Los ids son inventados. Más adelante, cada producto de la lista abrirá su ficha
-        // con su id real, y seAlquila será true solo si es un videojuego
-        view.findViewById(R.id.btnPruebaFichaJuego).setOnClickListener(v ->
-                startActivity(FichaProductoActivity.crearIntent(requireContext(), 1, true)));
-        view.findViewById(R.id.btnPruebaFichaProducto).setOnClickListener(v ->
-                startActivity(FichaProductoActivity.crearIntent(requireContext(), 7, false)));
+
+        tvTitulo = view.findViewById(R.id.tvTiendaTitulo);
+        tlModo = view.findViewById(R.id.tlTiendaModo);
+        tlFiltros = view.findViewById(R.id.tlTiendaFiltros);
+        vpProductos = view.findViewById(R.id.vpTienda);
+
+        //PESTAÑA 0 COMPRAR, PESTAÑA 1 ALQUILAR
+        tlModo.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                cambiarModo(tab.getPosition() == 1);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
+        cambiarModo(false);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ApiClient.getInstance(requireContext()).getCola().cancelAll(this);
+    }
+
+    private void cambiarModo(boolean alquilar) {
+        alquiler = alquilar;
+        tvTitulo.setText(alquiler ? R.string.tienda_alquilar : R.string.tienda);
+
+        //LAS PLATAFORMAS SOLO SE PIDEN LA PRIMERA VEZ QUE SE ENTRA A ALQUILAR
+        if (alquiler && plataformas.isEmpty()) {
+            cargarPlataformas();
+        } else {
+            montarPestanas();
+        }
+    }
+
+    //LAS PLATAFORMAS PARA ALQUILAR SALEN DE LA API, NO ESTAN PUESTAS A MANO
+    private void cargarPlataformas() {
+        JsonArrayRequest peticion = new JsonArrayRequest(Request.Method.GET, ApiClient.BASE_URL + "videojuegos/plataformas", null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray respuesta) {
+                        for (int i = 0; i < respuesta.length(); i++) {
+                            plataformas.add(respuesta.optString(i));
+                        }
+                        montarPestanas();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //SIN PLATAFORMAS SALE SOLO "TODAS" Y AHI YA SE VERA EL AVISO DE SIN CONEXION
+                        montarPestanas();
+                    }
+                });
+        peticion.setTag(this);
+        ApiClient.getInstance(requireContext()).getCola().add(peticion);
+    }
+
+    private void montarPestanas() {
+        List<String> textos = new ArrayList<>();
+        List<String> filtros = new ArrayList<>();
+        if (alquiler) {
+            textos.add(getString(R.string.tienda_todas));
+            filtros.add("todas");
+            textos.addAll(plataformas);
+            filtros.addAll(plataformas);
+        } else {
+            textos.addAll(Arrays.asList(getResources().getStringArray(R.array.tienda_filtros_comprar)));
+            filtros.addAll(TIPOS);
+        }
+
+        //CADA VEZ QUE SE CAMBIA DE MODO SE QUITAN LAS PESTAÑAS DE ANTES
+        if (mediador != null) {
+            mediador.detach();
+        }
+        vpProductos.setAdapter(new TiendaPaginasAdapter(this, alquiler, filtros));
+        mediador = new TabLayoutMediator(tlFiltros, vpProductos, (tab, position) -> {
+            tab.setText(textos.get(position)); //NOMBRE DE LA PESTAÑA
+        });
+        mediador.attach();
     }
 }

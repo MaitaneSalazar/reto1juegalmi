@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- IMAGEN PROVISIONAL DE GLIDE MIENTRAS SE DESCARGA LA FOTO -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/color_pozo" />
+        </shape>
+    </item>
+    <item
+        android:width="40dp"
+        android:height="40dp"
+        android:drawable="@drawable/ic_storefront"
+        android:gravity="center" />
+</layer-list>

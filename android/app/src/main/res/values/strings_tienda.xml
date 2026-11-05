@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TEXTOS DE LA TIENDA (LOS DE MAITANE ESTAN EN strings.xml) -->
+<resources>
+    <string name="tienda_alquilar">Alquilar</string>
+    <string name="tienda_comprar">Comprar</string>
+    <string-array name="tienda_filtros_comprar">
+        <item>Todo</item>
+        <item>Videojuegos</item>
+        <item>Consolas</item>
+        <item>Móviles</item>
+        <item>Tablets</item>
+    </string-array>
+    <string name="tienda_todas">Todas</string>
+    <string name="tienda_por_dia">/ día</string>
+    <string name="tienda_agotado">Agotado</string>
+    <string name="tienda_alquilado">Alquilado</string>
+    <string name="tienda_ultima_unidad">Última unidad</string>
+    <string name="tienda_ultima_copia">Última copia</string>
+    <string name="tienda_quedan">Quedan %1$d</string>
+    <string name="tienda_vacia_titulo">No hay productos</string>
+    <string name="tienda_vacia_texto">Ahora mismo no hay nada en esta categoría.</string>
+    <string name="tienda_error_titulo">Sin conexión</string>
+    <string name="tienda_reintentar">Reintentar</string>
+</resources>

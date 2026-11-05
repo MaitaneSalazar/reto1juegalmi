@@ -25,15 +25,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import com.example.retoindividual_1.network.SessionManager;
 
-/*
- * =====================================================================================
- *  CONTENEDOR de la app: cada pestaña es un Fragment que se carga en fcvMain.
- *  La barra inferior marca la pestaña activa abriéndola en píldora con su nombre.
- *
- *  Inicio -> InicioFragment      Tienda   -> TiendaFragment     Taller -> TallerFragment
- *  Cesta  -> CestaFragment       Nosotros -> NosotrosFragment
- * =====================================================================================
- */
+//CONTENEDOR DE LA APP, CADA PESTAÑA DE LA BARRA CARGA SU FRAGMENT EN fcvMain
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Mismo orden que en la barra: Inicio, Tienda, Taller, Cesta, Nosotros, Cuenta
+        //MISMO ORDEN QUE LA BARRA (INICIO, TIENDA, TALLER, CESTA, NOSOTROS)
         llPestanas = new LinearLayout[]{findViewById(R.id.llNavInicio), findViewById(R.id.llNavTienda), findViewById(R.id.llNavTaller),
                 findViewById(R.id.llNavCesta), findViewById(R.id.llNavNosotros)};
         ivPestanas = new ImageView[]{findViewById(R.id.ivNavInicio), findViewById(R.id.ivNavTienda), findViewById(R.id.ivNavTaller),
@@ -71,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         tvPestanas = new TextView[]{findViewById(R.id.tvNavInicio), findViewById(R.id.tvNavTienda), findViewById(R.id.tvNavTaller),
                 findViewById(R.id.tvNavCesta), findViewById(R.id.tvNavNosotros)};
 
-        // Cada pestaña abre su Fragment
+        //CADA PESTAÑA ABRE SU FRAGMENT
         for (int i = 0; i < llPestanas.length; i++) {
             final int pestana = i;
             llPestanas[i].setOnClickListener(new View.OnClickListener() {
@@ -82,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        // Al girar la pantalla el Fragment se conserva solo; hay que volver a marcar su pestaña
+        //SI SE GIRA LA PANTALLA HAY QUE VOLVER A MARCAR LA PESTAÑA
         if (savedInstanceState != null) {
             pestanaActual = savedInstanceState.getInt(PESTANA_ACTUAL, INICIO);
         }
@@ -211,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    // La activa: píldora calamina con icono y nombre. Las demás: solo el icono, en blanco tenue
+    //LA ACTIVA SE VE EN PILDORA CON SU NOMBRE, LAS DEMAS SOLO EL ICONO
     private void marcar(int pestana) {
         pestanaActual = pestana;
         for (int i = 0; i < llPestanas.length; i++) {
