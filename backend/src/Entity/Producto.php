@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'producto')]
@@ -52,6 +53,9 @@ abstract class Producto
     #[Assert\NotNull(message: 'Hay que indicar la empresa que lo fabrica')]
     private ?Empresa $empresa = null;
 
+    /** Solo para el formulario de la web: no tiene columna en la base de datos */
+    private ?UploadedFile $archivoImagen = null;
+
     public function getId(): ?int { return $this->id; }
 
     public function getNombre(): ?string { return $this->nombre; }
@@ -76,6 +80,9 @@ abstract class Producto
     public function setEmpresa(Empresa $empresa): static { $this->empresa = $empresa; return $this; }
 
     /** movil, tablet, consola o videojuego (lo usará la API para filtrar) */
+    public function getArchivoImagen(): ?UploadedFile { return $this->archivoImagen; }
+    public function setArchivoImagen(?UploadedFile $archivo): static { $this->archivoImagen = $archivo; return $this; }
+
     abstract public function getTipo(): string;
 
     public function __toString(): string { return (string) $this->nombre; }

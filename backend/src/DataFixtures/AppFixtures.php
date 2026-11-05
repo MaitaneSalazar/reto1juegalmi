@@ -22,6 +22,9 @@ use App\Entity\Trabajador;
 use App\Entity\TrabajadorDepartamento;
 use App\Entity\TrabajadorReparacion;
 use App\Entity\Videojuego;
+use App\Message\CrearMiniatura;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -32,10 +35,24 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  */
 class AppFixtures extends Fixture
 {
+    /** Qué imagen de fixtures/imagenes/productos/ va con cada producto (cambiar aquí por las definitivas) */
+    private const IMAGENES_PRODUCTOS = [
+        'zelda' => 'Greh.jpeg',
+        'ps5' => 'J&D.jpeg',
+    ];
+
+    /** Qué imagen de fixtures/imagenes/tienda/ va con cada foto de la galería */
+    private const IMAGENES_TIENDA = [
+        'Fachada' => 'tukutun.jpeg',
+    ];
+
     private ObjectManager $om;
 
-    public function __construct(private UserPasswordHasherInterface $hasher)
-    {
+    public function __construct(
+        private UserPasswordHasherInterface $hasher,
+        private MessageBusInterface $bus,
+        #[Autowire('%kernel.project_dir%')] private string $directorioProyecto,
+    ) {
     }
 
     public function load(ObjectManager $manager): void
@@ -56,7 +73,7 @@ class AppFixtures extends Fixture
             $this->om->persist((new FotoTienda())
                 ->setTienda($tienda)
                 ->setTitulo($titulo)
-                ->setRuta('/uploads/tienda/foto-' . ($i + 1) . '.jpg'));
+                ->setRuta($this->imagen('tienda', self::IMAGENES_TIENDA[$titulo] ?? null) ?? '/uploads/tienda/foto-' . ($i + 1) . '.jpg'));
         }
 
         $videojuegosDep = $this->departamento($tienda, 'Videojuegos', 'Venta y alquiler de videojuegos para todas las plataformas.', '944000103');
@@ -95,6 +112,14 @@ class AppFixtures extends Fixture
         $this->tablet($empresas['Apple'], 'iPad Air 11"', 'Chip M2, ligero y compatible con Apple Pencil.', 699.00, 11.0, 128, 'iPadOS', 'wifi', 4);
         $this->tablet($empresas['Samsung'], 'Samsung Galaxy Tab S9 FE', 'Resistente al agua y con S Pen incluido.', 449.00, 10.9, 128, 'Android', '5g', 3);
         $this->tablet($empresas['Xiaomi'], 'Xiaomi Pad 6', 'Pantalla de 144 Hz para jugar y ver series.', 349.99, 11.0, 128, 'Android', 'wifi', 6);
+
+        // ---------- Imágenes de los productos ----------
+        $productos = $v + ['ps5' => $ps5, 'switch' => $switch, 'galaxy' => $galaxy];
+        foreach (self::IMAGENES_PRODUCTOS as $clave => $archivo) {
+            if (isset($productos[$clave])) {
+                $productos[$clave]->setImagen($this->imagen('productos', $archivo));
+            }
+        }
 
         // ---------- Usuarios ----------
         $ane = (new Cliente())
@@ -178,6 +203,28 @@ class AppFixtures extends Fixture
     }
 
     // ---------- Ayudantes para no repetir código ----------
+
+
+    /**
+     * Copia fixtures/imagenes/{carpeta}/{archivo} a public/uploads/{carpeta}/ con un nombre seguro,
+     * pide al worker que haga la miniatura y devuelve la ruta. Si no hay archivo, devuelve null.
+     */
+    private function imagen(string $carpeta, ?string $archivo): ?string
+    {
+        $origen = $this->directorioProyecto . '/fixtures/imagenes/' . $carpeta . '/' . $archivo;
+        if ($archivo === null || !is_file($origen)) {
+            return null;
+        }
+
+        $nombre = strtolower(preg_replace('/[^A-Za-z0-9]+/', '-', pathinfo($archivo, PATHINFO_FILENAME)), );
+        $nombre = trim($nombre, '-') . '.' . strtolower(pathinfo($archivo, PATHINFO_EXTENSION));
+        $ruta = '/uploads/' . $carpeta . '/' . $nombre;
+
+        copy($origen, $this->directorioProyecto . '/public' . $ruta);
+        $this->bus->dispatch(new CrearMiniatura($ruta));
+
+        return $ruta;
+    }
 
     private function direccion(string $calle, string $numero, ?string $piso, string $cp): Direccion
     {
