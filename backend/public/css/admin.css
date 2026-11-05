@@ -57,3 +57,60 @@ body { background: var(--juegalmi-fondo); color: var(--juegalmi-texto); }
 
 /* Avisos en rojo (vencidos, stock bajo) */
 .badge-danger, .text-danger { background-color: var(--juegalmi-rojo); }
+
+/* ---------- Ajustes para EasyAdmin 5 ---------- */
+
+/* Colores del menú con las variables de EasyAdmin */
+:root, body, [data-bs-theme] {
+    --sidebar-menu-color: #c9d1d6 !important;
+    --sidebar-menu-icon-color: #8f9ba3 !important;
+    --sidebar-menu-header-color: #8f9ba3 !important;
+    --sidebar-menu-active-item-bg: var(--juegalmi-turquesa) !important;
+    --sidebar-menu-active-item-color: var(--juegalmi-texto) !important;
+    --sidebar-menu-active-item-icon-color: var(--juegalmi-texto) !important;
+}
+
+/* Por si alguna regla no usa las variables */
+.main-sidebar .menu-item:not(.active) .menu-item-contents,
+.main-sidebar .menu-item:not(.active) .menu-item-label,
+.main-sidebar .menu-item:not(.active) .menu-icon { color: #c9d1d6 !important; }
+.main-sidebar .menu-item.active .menu-item-contents {
+    background: var(--juegalmi-turquesa) !important;
+    color: var(--juegalmi-texto) !important;
+    border-radius: 999px;
+}
+.main-sidebar .menu-item:not(.active) .menu-item-contents:hover { background: rgba(255, 255, 255, .08) !important; }
+
+/* Nombre «JuegAlmi» junto a la J, en blanco */
+#header-logo a, #header-logo .logo, .main-sidebar .logo { color: #ffffff !important; font-weight: 800; }
+
+/* Interruptores «Activo» en turquesa en lugar de azul */
+.form-switch .form-check-input:checked {
+    background-color: var(--juegalmi-turquesa-oscuro) !important;
+    border-color: var(--juegalmi-turquesa-oscuro) !important;
+}
+
+/* Imagen del producto en el listado */
+.foto-producto {
+    width: 48px; height: 48px; object-fit: cover;
+    border-radius: .6rem; display: inline-flex; align-items: center; justify-content: center;
+}
+.sin-imagen { background: #dfe8e8; color: #8f9ba3; font-size: 1.2rem; }
+
+/* Color principal de EasyAdmin (interruptores, columna ordenada, foco de los campos) en turquesa */
+:root, body, [data-bs-theme] {
+    --color-primary: var(--juegalmi-turquesa-oscuro) !important;
+    --bs-primary: var(--juegalmi-turquesa-oscuro) !important;
+    --bs-primary-rgb: 62, 158, 161 !important;
+    --form-switch-checked-bg: var(--juegalmi-turquesa-oscuro) !important;
+}
+input.form-check-input:checked {
+    background-color: var(--juegalmi-turquesa-oscuro) !important;
+    border-color: var(--juegalmi-turquesa-oscuro) !important;
+}
+.datagrid th.sorted, .datagrid th[data-sorted] { border-bottom-color: var(--juegalmi-turquesa-oscuro) !important; }
+.datagrid th.sorted a, .datagrid th.sorted i { color: var(--juegalmi-texto) !important; }
+.form-control:focus, .form-select:focus {
+    border-color: var(--juegalmi-turquesa) !important;
+    box-shadow: 0 0 0 .2rem rgba(120, 205, 207, .35) !important;
+}
