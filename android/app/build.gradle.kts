@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation("com.android.volley:volley:1.2.1")
+    implementation(libs.glide) //PARA CARGAR LAS IMAGENES POR URL
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RetoIndividual_1">
 
-        <!-- Pantalla principal (se abre despues del login) -->
+        <!-- PANTALLA PRINCIPAL, SE ABRE DESPUES DEL LOGIN -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />
@@ -24,7 +24,7 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- LOGIN: es la primera pantalla que se abre -->
+        <!-- EL LOGIN ES LA PRIMERA PANTALLA QUE SE ABRE -->
         <activity
             android:name=".LoginActivity"
             android:exported="true"

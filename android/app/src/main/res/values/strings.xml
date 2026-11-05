@@ -11,7 +11,7 @@
     <string name="pie">JuegAlmi · Bilbao</string>
     <string name="error_vacio">Rellena el email y la contraseña.</string>
     <string name="error_email">El email no es válido.</string>
-    <string name="error_password">La contraseña debe tener al menos 4 caracteres.</string>
+    <string name="error_password">La contraseña debe tener al menos 3 caracteres.</string>
 
     <string name="ya_tengo_cuenta">Ya tengo cuenta</string>
     <string name="registro_titulo">Crear cuenta</string>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- INICIO (03 del mockup). De momento: barra superior, saludo y tarjeta de reparación -->
+<!-- PANTALLA DE INICIO -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -23,7 +23,7 @@
         android:textStyle="bold"
         tools:text="Hola, Ane" />
 
-    <!-- Tarjeta calamina: qué reparamos y botón para pedirlo -->
+    <!-- TARJETA DE REPARACIONES CON SU BOTON -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
         android:clipToPadding="false"
         android:padding="24dp">
 
-        <!-- Herramienta de fondo, casi transparente y cortada por la esquina -->
+        <!-- LA HERRAMIENTA DEL FONDO, CASI TRANSPARENTE -->
         <ImageView
             android:layout_width="170dp"
             android:layout_height="170dp"

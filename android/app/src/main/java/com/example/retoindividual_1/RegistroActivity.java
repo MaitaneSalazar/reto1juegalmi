@@ -35,7 +35,7 @@ public class RegistroActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_registro);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            // ime() = el teclado, para que no tape el formulario
+            //CON ime() EL TECLADO NO TAPA EL FORMULARIO
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -59,7 +59,7 @@ public class RegistroActivity extends AppCompatActivity {
             }
         });
 
-        // Volver al login, que sigue debajo en la pila
+        //VOLVEMOS AL LOGIN, QUE SIGUE DEBAJO
         tvTengoCuenta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +76,7 @@ public class RegistroActivity extends AppCompatActivity {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString();
 
-        // El 2º apellido es opcional: hay gente con un solo apellido
+        //EL SEGUNDO APELLIDO NO ES OBLIGATORIO
         if (nombre.isEmpty() || apellido1.isEmpty() || dni.isEmpty()
                 || telefono.isEmpty() || email.isEmpty() || password.isEmpty()) {
             mostrarError(R.string.error_registro_vacio);
@@ -90,14 +90,14 @@ public class RegistroActivity extends AppCompatActivity {
             mostrarError(R.string.error_password);
         } else {
             tvError.setVisibility(View.GONE);
-            // De momento no hay base de datos: se entra directamente
+            //DE MOMENTO SE ENTRA DIRECTAMENTE, FALTA CONECTARLO CON LA API
             Intent intent = new Intent(RegistroActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
     }
 
-    // La letra es la del resto de dividir el número entre 23
+    //LA LETRA DEL DNI ES EL RESTO DE DIVIDIR EL NUMERO ENTRE 23
     private boolean dniValido(String dni) {
         if (!dni.matches("\\d{8}[A-Z]")) {
             return false;
