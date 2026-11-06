@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Color del icono y el texto de cada tipo de dispositivo: oscuro si está elegido, gris si no -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/color_sobre_marca" android:state_selected="true" />
+    <item android:color="@color/color_texto_suave" />
+</selector>

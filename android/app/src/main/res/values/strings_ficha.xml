@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ficha_comprar_precio">Comprar · %1$s</string>
+    <string name="ficha_anadir">Añadir a la cesta</string>
+    <string name="ficha_alquilar">Alquilar</string>
+    <string name="ficha_agotado">Agotado</string>
+    <string name="ficha_sin_copias">Sin copias libres</string>
+    <string name="ficha_pegi">PEGI %1$d</string>
+    <string name="ficha_anadido">Añadido a la cesta</string>
+    <string name="ficha_sin_stock">No quedan más unidades</string>
+    <string name="ficha_error">No se ha podido cargar el producto.</string>
+    <plurals name="ficha_dias">
+        <item quantity="one">%1$d día</item>
+        <item quantity="other">%1$d días</item>
+    </plurals>
+    <plurals name="ficha_alquilado">
+        <item quantity="one">Alquilado por %1$d día</item>
+        <item quantity="other">Alquilado por %1$d días</item>
+    </plurals>
+</resources>

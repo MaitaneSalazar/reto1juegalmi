@@ -118,11 +118,19 @@ public class MainActivity extends AppCompatActivity {
 
     // Abre el seguimiento DENTRO de la pestaña Taller, sin tapar la barra inferior.
     // addToBackStack hace que la flecha y el botón atrás vuelvan al Taller
-    public void abrirSeguimiento() {
+    public void abrirSeguimiento(int idReparacion) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fcvMain, new SeguimientoReparacionFragment())
+                .replace(R.id.fcvMain, SeguimientoReparacionFragment.crear(idReparacion))
                 .addToBackStack(null)
                 .commit();
+    }
+
+    // Abre la pestaña Taller directamente en la sub-pestaña "Mis reparaciones" (desde el menú lateral)
+    private void abrirMisReparaciones() {
+        FragmentManager fm = getSupportFragmentManager();
+        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        fm.beginTransaction().replace(R.id.fcvMain, TallerFragment.crear(true)).commit();
+        marcar(TALLER);
     }
 
     // ============================ MENÚ LATERAL ============================
@@ -162,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         // Mis reparaciones está en la pestaña Taller (14 del mockup)
         findViewById(R.id.tvMenuReparaciones).setOnClickListener(v -> {
             dlMain.closeDrawer(GravityCompat.START);
-            abrir(TALLER);
+            abrirMisReparaciones();
         });
 
         findViewById(R.id.tvMenuCerrarSesion).setOnClickListener(v -> cerrarSesion());

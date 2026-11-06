@@ -16,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.retoindividual_1.adaptadores.TiendaPaginasAdapter;
+import com.example.retoindividual_1.modelos.Plataforma;
 import com.example.retoindividual_1.network.ApiClient;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -123,8 +124,13 @@ public class TiendaFragment extends Fragment {
         if (alquiler) {
             textos.add(getString(R.string.tienda_todas));
             filtros.add("todas");
-            textos.addAll(plataformas);
-            filtros.addAll(plataformas);
+            //Multi YA NO ES UNA PESTAÑA, ESOS JUEGOS SON DE TODAS
+            for (String codigo : plataformas) {
+                if (!codigo.equals("Multi")) {
+                    textos.add(Plataforma.nombre(codigo));
+                    filtros.add(codigo);
+                }
+            }
         } else {
             textos.addAll(Arrays.asList(getResources().getStringArray(R.array.tienda_filtros_comprar)));
             filtros.addAll(TIPOS);

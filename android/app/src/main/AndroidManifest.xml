@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- La app usa la cámara si existe, pero también se puede instalar en dispositivos sin ella -->
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -63,6 +67,17 @@
             android:name=".NuevaDireccionActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
+        <!-- FileProvider: permite que la app de cámara guarde la foto en un archivo de JuegAlmi -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

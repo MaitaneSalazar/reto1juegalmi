@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- NUEVA DIRECCIÓN (20 del mockup). De momento vacía: solo botón de volver y título -->
+<!-- NUEVA DIRECCIÓN (20 del mockup). También sirve para editar una dirección -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -9,6 +9,7 @@
     android:orientation="vertical"
     tools:context=".NuevaDireccionActivity">
 
+    <!-- El padding de los lados va aquí dentro: el de "main" lo pone el código -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,12 +19,186 @@
 
         <include layout="@layout/barra_volver" />
 
-        <TextView
-            style="@style/TituloPagina"
-            android:text="@string/titulo_nueva_direccion" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-        <TextView
-            style="@style/TextoPendiente"
-            android:text="@string/pagina_en_construccion" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="16dp">
+
+                <TextView
+                    android:id="@+id/tvNuevaDireccionTitulo"
+                    style="@style/TituloPagina"
+                    android:text="@string/titulo_nueva_direccion" />
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_marginTop="20dp"
+                    android:labelFor="@id/etDireccionCalle"
+                    android:text="@string/dir_calle" />
+
+                <EditText
+                    android:id="@+id/etDireccionCalle"
+                    style="@style/Campo"
+                    android:hint="@string/dir_calle_ejemplo"
+                    android:importantForAutofill="no"
+                    android:inputType="textPostalAddress|textCapWords" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/Etiqueta"
+                            android:labelFor="@id/etDireccionNumero"
+                            android:text="@string/dir_numero" />
+
+                        <EditText
+                            android:id="@+id/etDireccionNumero"
+                            style="@style/Campo"
+                            android:hint="@string/dir_numero_ejemplo"
+                            android:importantForAutofill="no"
+                            android:inputType="text" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/Etiqueta"
+                                android:layout_width="wrap_content"
+                                android:labelFor="@id/etDireccionPiso"
+                                android:text="@string/dir_piso" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:text="@string/editar_opcional"
+                                android:textColor="@color/color_texto_tenue"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <EditText
+                            android:id="@+id/etDireccionPiso"
+                            style="@style/Campo"
+                            android:hint="@string/dir_piso_ejemplo"
+                            android:importantForAutofill="no"
+                            android:inputType="textCapCharacters" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/Etiqueta"
+                            android:labelFor="@id/etDireccionCp"
+                            android:text="@string/dir_cp" />
+
+                        <EditText
+                            android:id="@+id/etDireccionCp"
+                            style="@style/Campo"
+                            android:hint="@string/dir_cp_ejemplo"
+                            android:importantForAutofill="no"
+                            android:inputType="number"
+                            android:maxLength="5" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/Etiqueta"
+                            android:labelFor="@id/etDireccionCiudad"
+                            android:text="@string/dir_ciudad" />
+
+                        <EditText
+                            android:id="@+id/etDireccionCiudad"
+                            style="@style/Campo"
+                            android:hint="@string/dir_ciudad_ejemplo"
+                            android:importantForAutofill="no"
+                            android:inputType="textCapWords" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_marginTop="14dp"
+                    android:labelFor="@id/etDireccionProvincia"
+                    android:text="@string/dir_provincia" />
+
+                <EditText
+                    android:id="@+id/etDireccionProvincia"
+                    style="@style/Campo"
+                    android:hint="@string/dir_provincia_ejemplo"
+                    android:importantForAutofill="no"
+                    android:inputType="textCapWords" />
+
+                <TextView
+                    android:id="@+id/tvDireccionError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_error"
+                    android:paddingStart="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="8dp"
+                    android:textColor="@color/color_alerta_texto"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </ScrollView>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_tarjeta_hoja"
+            android:padding="10dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGuardarDireccion"
+                style="@style/BotonPrincipal"
+                android:layout_height="52dp"
+                android:text="@string/dir_guardar" />
+        </FrameLayout>
     </LinearLayout>
 </LinearLayout>

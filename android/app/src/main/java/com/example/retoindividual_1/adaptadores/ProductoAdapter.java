@@ -1,11 +1,13 @@
 package com.example.retoindividual_1.adaptadores;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.retoindividual_1.FichaProductoActivity;
 import com.example.retoindividual_1.R;
+import com.example.retoindividual_1.modelos.Plataforma;
 import com.example.retoindividual_1.modelos.Producto;
 
 import java.text.NumberFormat;
@@ -52,13 +55,23 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         holder.tvPorDia.setVisibility(alquiler ? View.VISIBLE : View.GONE);
 
         //PORTADA HECHA A MANO CON EL COLOR DE LA PLATAFORMA, SE VE SI NO HAY FOTO
-        int color = producto.esVideojuego() ? colorPlataforma(producto.getPlataforma()) : R.color.color_oscuro;
+        int color = producto.esVideojuego() && producto.getPlataformas().size() == 1
+                ? Plataforma.color(producto.getPlataformas().get(0)) : R.color.color_oscuro;
         holder.flSinFoto.setBackgroundColor(ContextCompat.getColor(context, color));
         holder.tvInicial.setText(producto.getNombre().substring(0, 1));
-        holder.tvEtiqueta.setText(producto.esVideojuego() ? producto.getPlataforma() : producto.getEmpresa());
+        holder.tvEtiqueta.setText(producto.getEmpresa());
+
+        //LAS PLATAFORMAS DEL JUEGO ARRIBA A LA DERECHA, CADA UNA CON SU COLOR
+        holder.llPlataformas.removeAllViews();
+        for (String codigo : producto.getPlataformas()) {
+            holder.llPlataformas.addView(Plataforma.crearEtiqueta(context, codigo, true));
+        }
+        holder.tvEtiqueta.setVisibility(producto.getPlataformas().isEmpty() ? View.VISIBLE : View.GONE);
         holder.tvTituloPortada.setText(producto.getNombre());
 
         if (producto.getMiniaturaUrl() != null) {
+            //CON FOTO QUITAMOS LA PORTADA HECHA A MANO PARA QUE NO SE VEA DETRAS
+            holder.flSinFoto.setVisibility(View.GONE);
             holder.ivFoto.setVisibility(View.VISIBLE);
             //LOS JUEGOS OCUPAN TODA LA TARJETA, LAS CONSOLAS Y MOVILES SE VEN ENTEROS SOBRE BLANCO
             int margen = producto.esVideojuego() ? 0 : context.getResources().getDimensionPixelSize(R.dimen.tienda_margen_foto);
@@ -72,6 +85,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         } else {
             Glide.with(holder.itemView).clear(holder.ivFoto);
             holder.ivFoto.setVisibility(View.GONE);
+            holder.flSinFoto.setVisibility(View.VISIBLE);
         }
 
         pintarAviso(holder, producto);
@@ -80,7 +94,10 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.getContext().startActivity(FichaProductoActivity.crearIntent(v.getContext(), producto.getId(), producto.esVideojuego()));
+                Intent intent = FichaProductoActivity.crearIntent(v.getContext(), producto.getId(), producto.esVideojuego());
+                //SI VENIMOS DE ALQUILAR LA FICHA SE ABRE YA EN ALQUILAR
+                intent.putExtra(FichaProductoActivity.EXTRA_EMPEZAR_ALQUILANDO, alquiler);
+                v.getContext().startActivity(intent);
             }
         });
     }
@@ -108,18 +125,6 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         holder.tvAviso.setVisibility(agotado || quedan <= 2 ? View.VISIBLE : View.GONE);
     }
 
-    private int colorPlataforma(String plataforma) {
-        if (plataforma.equals("PS5")) {
-            return R.color.color_marca_texto;
-        } else if (plataforma.equals("Xbox")) {
-            return R.color.color_texto_suave;
-        } else if (plataforma.equals("Switch")) {
-            return R.color.color_marca_intenso;
-        } else {
-            return R.color.color_alquiler;
-        }
-    }
-
     @Override
     public int getItemCount() {
         return productos.size();
@@ -135,6 +140,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         TextView tvNombre;
         TextView tvPrecio;
         TextView tvPorDia;
+        LinearLayout llPlataformas;
 
         ProductoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -147,6 +153,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
             tvNombre = itemView.findViewById(R.id.tvProductoNombre);
             tvPrecio = itemView.findViewById(R.id.tvProductoPrecio);
             tvPorDia = itemView.findViewById(R.id.tvProductoPorDia);
+            llPlataformas = itemView.findViewById(R.id.llProductoPlataformas);
         }
     }
 }

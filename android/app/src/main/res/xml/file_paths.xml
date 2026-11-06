@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Carpetas que la app puede compartir con otras apps a través del FileProvider.
+     Solo la carpeta "camara" de la caché: ahí guarda la cámara la foto antes de procesarla -->
+<paths>
+    <cache-path
+        name="camara"
+        path="camara/" />
+</paths>

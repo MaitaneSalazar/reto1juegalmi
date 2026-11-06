@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- UNA PESTAÑA DE LA TIENDA, LA LISTA DE PRODUCTOS -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ListaProductosFragment">
+
+    <!-- PLATAFORMAS PARA FILTRAR, SOLO EN COMPRAR VIDEOJUEGOS. LAS PONE EL CODIGO -->
+    <HorizontalScrollView
+        android:id="@+id/hsvProductosPlataformas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:clipToPadding="false"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:scrollbars="none"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/llProductosFiltroPlataformas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+    </HorizontalScrollView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
     <!-- EL PADDING DE ABAJO ES PARA QUE LA BARRA FLOTANTE NO TAPE LA ULTIMA FILA -->
     <androidx.recyclerview.widget.RecyclerView
@@ -13,7 +38,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:paddingStart="14dp"
-        android:paddingTop="20dp"
+        android:paddingTop="8dp"
         android:paddingEnd="14dp"
         android:paddingBottom="120dp"
         tools:listitem="@layout/item_producto" />
@@ -66,3 +91,4 @@
             android:text="@string/tienda_reintentar" />
     </LinearLayout>
 </FrameLayout>
+</LinearLayout>

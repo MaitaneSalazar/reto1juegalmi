@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- EDITAR DATOS PERSONALES (18 del mockup). De momento vacía: solo botón de volver y título -->
+<!-- EDITAR DATOS PERSONALES (18 del mockup) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -9,6 +10,7 @@
     android:orientation="vertical"
     tools:context=".EditarDatosActivity">
 
+    <!-- El padding de los lados va aquí dentro: el de "main" lo pone el código -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,12 +20,313 @@
 
         <include layout="@layout/barra_volver" />
 
-        <TextView
-            style="@style/TituloPagina"
-            android:text="@string/titulo_editar_datos" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-        <TextView
-            style="@style/TextoPendiente"
-            android:text="@string/pagina_en_construccion" />
+            <ScrollView
+                android:id="@+id/svEditar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp">
+
+                    <TextView
+                        style="@style/TituloPagina"
+                        android:text="@string/editar_titulo" />
+
+                    <FrameLayout
+                        android:id="@+id/flEditarFoto"
+                        android:layout_width="104dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="16dp"
+                        android:clickable="true"
+                        android:contentDescription="@string/editar_cambiar_foto"
+                        android:focusable="true">
+
+                        <TextView
+                            android:id="@+id/tvEditarIniciales"
+                            android:layout_width="96dp"
+                            android:layout_height="96dp"
+                            android:background="@drawable/bg_avatar_marca"
+                            android:gravity="center"
+                            android:letterSpacing="-0.06"
+                            android:textColor="@color/color_sobre_marca"
+                            android:textSize="38sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/ivEditarFoto"
+                            android:layout_width="96dp"
+                            android:layout_height="96dp"
+                            android:background="@drawable/bg_avatar_marca"
+                            android:importantForAccessibility="no"
+                            android:scaleType="centerCrop"
+                            android:visibility="gone" />
+
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_gravity="bottom|end"
+                            android:background="@drawable/bg_insignia_camara"
+                            android:importantForAccessibility="no"
+                            android:padding="9dp"
+                            android:src="@drawable/ic_camara"
+                            app:tint="@color/white" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/tvEditarCambiarFoto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="6dp"
+                        android:padding="4dp"
+                        android:text="@string/editar_cambiar_foto"
+                        android:textColor="@color/color_texto"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        style="@style/Etiqueta"
+                        android:layout_marginTop="20dp"
+                        android:labelFor="@id/etEditarNombre"
+                        android:text="@string/editar_nombre" />
+
+                    <EditText
+                        android:id="@+id/etEditarNombre"
+                        style="@style/Campo"
+                        android:importantForAutofill="no"
+                        android:inputType="textPersonName|textCapWords" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/Etiqueta"
+                                android:labelFor="@id/etEditarApellido1"
+                                android:text="@string/editar_apellido1" />
+
+                            <EditText
+                                android:id="@+id/etEditarApellido1"
+                                style="@style/Campo"
+                                android:importantForAutofill="no"
+                                android:inputType="textPersonName|textCapWords" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    style="@style/Etiqueta"
+                                    android:layout_width="wrap_content"
+                                    android:labelFor="@id/etEditarApellido2"
+                                    android:text="@string/editar_apellido2" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="6dp"
+                                    android:text="@string/editar_opcional"
+                                    android:textColor="@color/color_texto_tenue"
+                                    android:textSize="13sp" />
+                            </LinearLayout>
+
+                            <EditText
+                                android:id="@+id/etEditarApellido2"
+                                style="@style/Campo"
+                                android:importantForAutofill="no"
+                                android:inputType="textPersonName|textCapWords" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/Etiqueta"
+                            android:layout_width="wrap_content"
+                            android:labelFor="@id/etEditarTelefono"
+                            android:text="@string/datos_telefono" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="@string/editar_opcional"
+                            android:textColor="@color/color_texto_tenue"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/etEditarTelefono"
+                        style="@style/Campo"
+                        android:importantForAutofill="no"
+                        android:inputType="phone" />
+
+                    <TextView
+                        style="@style/Etiqueta"
+                        android:layout_marginTop="14dp"
+                        android:text="@string/datos_dni" />
+
+                    <TextView
+                        android:id="@+id/tvEditarDni"
+                        style="@style/CampoBloqueado" />
+
+                    <TextView
+                        style="@style/Etiqueta"
+                        android:layout_marginTop="14dp"
+                        android:text="@string/datos_email" />
+
+                    <TextView
+                        android:id="@+id/tvEditarEmail"
+                        style="@style/CampoBloqueado" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/editar_no_editables"
+                        android:textColor="@color/color_texto_suave"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="32dp"
+                        android:layout_marginBottom="10dp"
+                        android:letterSpacing="-0.04"
+                        android:text="@string/editar_contrasena_titulo"
+                        android:textColor="@color/color_texto"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        style="@style/Etiqueta"
+                        android:labelFor="@id/etEditarContrasenaActual"
+                        android:text="@string/editar_contrasena_actual" />
+
+                    <EditText
+                        android:id="@+id/etEditarContrasenaActual"
+                        style="@style/Campo"
+                        android:importantForAutofill="no"
+                        android:inputType="textPassword" />
+
+                    <TextView
+                        style="@style/Etiqueta"
+                        android:layout_marginTop="14dp"
+                        android:labelFor="@id/etEditarContrasenaNueva"
+                        android:text="@string/editar_contrasena_nueva" />
+
+                    <EditText
+                        android:id="@+id/etEditarContrasenaNueva"
+                        style="@style/Campo"
+                        android:hint="@string/editar_contrasena_pista"
+                        android:importantForAutofill="no"
+                        android:inputType="textPassword" />
+
+                    <TextView
+                        android:id="@+id/tvEditarError"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/bg_error"
+                        android:paddingStart="16dp"
+                        android:paddingTop="8dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="8dp"
+                        android:textColor="@color/color_alerta_texto"
+                        android:textSize="13sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </ScrollView>
+
+            <ProgressBar
+                android:id="@+id/pbEditar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="64dp"
+                android:indeterminateTint="@color/color_marca"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/llEditarAviso"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="56dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/datos_error_titulo"
+                    android:textColor="@color/color_texto"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvEditarAvisoTexto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:textColor="@color/color_texto_suave"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEditarReintentar"
+                    style="@style/BotonPrincipal"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:paddingStart="32dp"
+                    android:paddingEnd="32dp"
+                    android:text="@string/datos_reintentar" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_tarjeta_hoja"
+            android:padding="10dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGuardarDatos"
+                style="@style/BotonPrincipal"
+                android:layout_height="52dp"
+                android:text="@string/editar_guardar" />
+        </FrameLayout>
     </LinearLayout>
 </LinearLayout>

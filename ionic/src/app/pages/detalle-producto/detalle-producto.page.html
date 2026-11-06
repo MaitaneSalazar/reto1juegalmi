@@ -1,10 +1,9 @@
 <ion-content [fullscreen]="true">
-  <!-- Foto grande con degradado, botón volver y plataforma -->
+  <!-- Foto grande con degradado y botón volver -->
   <div class="hero">
     <ion-back-button class="redondo volver" defaultHref="/tienda" text=""></ion-back-button>
     @if (producto(); as p) {
-      <span class="plataforma">{{ etiqueta() }}</span>
-      <app-miniatura-producto [producto]="p" [grande]="true"></app-miniatura-producto>
+      <app-miniatura-producto [producto]="p" [grande]="true" [sinMarca]="p.tipo === 'videojuego'"></app-miniatura-producto>
     }
   </div>
 
@@ -12,6 +11,8 @@
     @if (producto(); as p) {
       <h1>{{ p.nombre }}</h1>
       <div class="etiquetas">
+        <!-- Plataformas en su color (Xbox verde, PS5 azul, Switch rojo) junto al resto -->
+        @if (p.tipo === 'videojuego') { <app-plataformas class="grande" [producto]="p"></app-plataformas> }
         @for (c of chips(); track c) { <span class="etiqueta-mini">{{ c }}</span> }
       </div>
       <p class="descripcion">{{ p.descripcion }}</p>

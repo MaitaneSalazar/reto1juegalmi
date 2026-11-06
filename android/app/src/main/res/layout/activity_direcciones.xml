@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- DIRECCIONES (19 del mockup). De momento vacía: botón de volver, título y subtítulo -->
+<!-- DIRECCIONES (19 del mockup) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -9,7 +10,7 @@
     android:orientation="vertical"
     tools:context=".DireccionesActivity">
 
-    <!-- El padding de los lados va aquí dentro: el de "main" lo pone el código para no quedar debajo de las barras del sistema -->
+    <!-- El padding de los lados va aquí dentro: el de "main" lo pone el código -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,21 +28,82 @@
             style="@style/SubtituloPagina"
             android:text="@string/direcciones_subtitulo" />
 
-        <TextView
-            style="@style/TextoPendiente"
-            android:text="@string/pagina_en_construccion" />
-
-        <!-- Hueco que empuja el botón al final de la pantalla -->
-        <View
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_marginTop="20dp"
+            android:layout_weight="1">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAnadirDireccion"
-            style="@style/BotonPrincipal"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDomicilios"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+            <ProgressBar
+                android:id="@+id/pbDomicilios"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="40dp"
+                android:indeterminateTint="@color/color_marca"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/llDomiciliosAviso"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvDomiciliosAvisoTitulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/color_texto"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvDomiciliosAvisoTexto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:textColor="@color/color_texto_suave"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDomiciliosReintentar"
+                    style="@style/BotonPrincipal"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:paddingStart="32dp"
+                    android:paddingEnd="32dp"
+                    android:text="@string/datos_reintentar" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="@string/boton_anadir_direccion" />
+            android:background="@drawable/bg_tarjeta_hoja"
+            android:padding="10dp">
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAnadirDireccion"
+                style="@style/BotonPrincipal"
+                android:layout_height="52dp"
+                android:text="@string/boton_anadir_direccion"
+                app:icon="@drawable/ic_mas"
+                app:iconGravity="textStart"
+                app:iconPadding="10dp"
+                app:iconSize="22dp"
+                app:iconTint="@color/color_sobre_marca" />
+        </FrameLayout>
     </LinearLayout>
 </LinearLayout>
