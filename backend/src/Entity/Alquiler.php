@@ -37,6 +37,9 @@ class Alquiler
     #[Assert\Valid]
     private Collection $lineas;
 
+    /** Solo para el formulario «Devolución» de la web: no tiene columna en la base de datos */
+    private bool $marcarDevuelto = false;
+
     public function __construct()
     {
         $this->fechaInicio = new \DateTimeImmutable('today');
@@ -97,5 +100,7 @@ class Alquiler
         return round($total, 2);
     }
 
+    public function isMarcarDevuelto(): bool { return $this->marcarDevuelto; }
+    public function setMarcarDevuelto(bool $marcar): static { $this->marcarDevuelto = $marcar; return $this; }
     public function __toString(): string { return 'Alquiler #' . $this->id; }
 }

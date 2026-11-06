@@ -52,6 +52,9 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkTo(TabletCrudController::class, 'Tablets', 'fa fa-tablet-screen-button');
         yield MenuItem::section('Taller');
         yield MenuItem::linkTo(ReparacionCrudController::class, 'Reparaciones', 'fa fa-screwdriver-wrench');
+        yield MenuItem::section('Ventas');
+        yield MenuItem::linkTo(PedidoCrudController::class, 'Pedidos', 'fa fa-bag-shopping');
+        yield MenuItem::linkTo(AlquilerCrudController::class, 'Alquileres', 'fa fa-clock-rotate-left');
         yield MenuItem::linkTo(EmpresaCrudController::class, 'Empresas', 'fa fa-building');
         // Productos, reparaciones, alquileres, pedidos, trabajadores y departamentos: B9.2 – B9.4
     }
