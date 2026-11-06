@@ -79,6 +79,7 @@ class PedidoCrudController extends AbstractCrudController
         yield IdField::new('id', 'Nº')->hideOnForm();
         yield TextField::new('cliente.nombre', 'Cliente')->hideOnForm();
         yield TextField::new('cliente.email', 'Email')->onlyOnDetail();
+        yield Field::new('domicilio', 'Dirección de envío')->setTemplatePath('admin/pedido_direccion.html.twig')->onlyOnDetail();
         yield DateTimeField::new('fecha', 'Fecha')->setFormat('dd/MM/yyyy HH:mm')->hideOnForm();
         yield MoneyField::new('total', 'Total')->setCurrency('EUR')->setStoredAsCents(false)
             ->setSortable(false)->hideOnForm();
