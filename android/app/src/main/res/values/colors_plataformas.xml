@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- EL COLOR DE CADA PLATAFORMA, EL QUE USA CADA MARCA -->
+    <color name="plataforma_playstation">#0070D1</color>
+    <color name="plataforma_xbox">#107C10</color>
+    <color name="plataforma_switch">#E60012</color>
+</resources>
