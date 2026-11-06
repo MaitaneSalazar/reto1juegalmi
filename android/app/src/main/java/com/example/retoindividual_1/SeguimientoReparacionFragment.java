@@ -9,8 +9,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-// SEGUIMIENTO DE REPARACIÓN. Se abre dentro de la pestaña Taller. De momento vacía.
+// SEGUIMIENTO DE REPARACIÓN (09 del mockup). Se abre dentro de la pestaña Taller. De momento vacía.
 public class SeguimientoReparacionFragment extends Fragment {
+
+    // Se usará para pedir la reparación a la API: GET /api/reparaciones/{id}
+    private static final String ARG_ID_REPARACION = "id_reparacion";
+
+    public static SeguimientoReparacionFragment crear(int idReparacion) {
+        SeguimientoReparacionFragment fragment = new SeguimientoReparacionFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_ID_REPARACION, idReparacion);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -21,7 +32,6 @@ public class SeguimientoReparacionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Flecha de volver: saca este Fragment de la pila y vuelve a mostrarse el Taller
         view.findViewById(R.id.ivVolver).setOnClickListener(v ->
                 getParentFragmentManager().popBackStack());
     }

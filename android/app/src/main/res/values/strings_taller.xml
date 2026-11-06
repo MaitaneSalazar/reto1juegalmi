@@ -66,4 +66,20 @@
     <string name="error_sin_camara">No se ha podido abrir la cámara.</string>
     <string name="reparacion_enviando">Enviando…</string>
     <string name="reparacion_enviada_fotos_fallidas">Reparación enviada, pero no se han podido subir %1$d fotos.</string>
+    <string name="mis_rep_en_curso">En curso</string>
+    <string name="mis_rep_entregadas">Entregadas</string>
+    <string name="mis_rep_canceladas">Canceladas</string>
+    <string name="mis_rep_entrada">Entrada</string>
+    <string name="mis_rep_presupuesto">Presupuesto</string>
+    <string name="mis_rep_presupuesto_pendiente">Pendiente</string>
+    <string name="mis_rep_progreso">%1$d/%2$d</string>
+    <string name="mis_rep_titulo">%1$s · %2$s</string>
+    <string name="mis_rep_entregada">Entregada</string>
+    <string name="mis_rep_entregada_el">Entregada el %1$s</string>
+    <string name="mis_rep_cancelada">Cancelada</string>
+    <string name="mis_rep_vacia_titulo">Aún no tienes reparaciones</string>
+    <string name="mis_rep_vacia_texto">Cuando nos traigas algo a reparar, podrás seguirlo desde aquí.</string>
+    <string name="mis_rep_pedir">Pedir una reparación</string>
+    <string name="mis_rep_error_titulo">Sin conexión</string>
+    <string name="mis_rep_reintentar">Reintentar</string>
 </resources>

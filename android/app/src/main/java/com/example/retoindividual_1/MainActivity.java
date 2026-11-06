@@ -118,9 +118,9 @@ public class MainActivity extends AppCompatActivity {
 
     // Abre el seguimiento DENTRO de la pestaña Taller, sin tapar la barra inferior.
     // addToBackStack hace que la flecha y el botón atrás vuelvan al Taller
-    public void abrirSeguimiento() {
+    public void abrirSeguimiento(int idReparacion) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fcvMain, new SeguimientoReparacionFragment())
+                .replace(R.id.fcvMain, SeguimientoReparacionFragment.crear(idReparacion))
                 .addToBackStack(null)
                 .commit();
     }

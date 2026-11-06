@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Título de sección de Mis reparaciones. El tamaño lo pone el adaptador -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tvEncabezado"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="16dp"
+    android:letterSpacing="-0.04"
+    android:textColor="@color/color_texto"
+    android:textStyle="bold" />
