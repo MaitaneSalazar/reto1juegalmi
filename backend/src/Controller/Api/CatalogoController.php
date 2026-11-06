@@ -59,6 +59,13 @@ class CatalogoController extends AbstractController
             $qb->andWhere('LOWER(p.nombre) LIKE :q')->setParameter('q', '%' . mb_strtolower($busqueda) . '%');
         }
 
+        // ?plataforma=PlayStation → solo los videojuegos de esa plataforma (como en /videojuegos/alquiler)
+        $plataforma = trim((string) $request->query->get('plataforma', ''));
+        if ($plataforma !== '' && mb_strtolower($plataforma) !== 'todas') {
+            $qb->andWhere('p.id IN (SELECT vp.id FROM ' . Videojuego::class . ' vp WHERE LOWER(vp.plataforma) = :plataforma)')
+                ->setParameter('plataforma', mb_strtolower($plataforma));
+        }
+
         $qb->setFirstResult(($pagina - 1) * $porPagina)->setMaxResults($porPagina);
         $paginador = new Paginator($qb);
 
