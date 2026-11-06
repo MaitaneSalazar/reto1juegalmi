@@ -44,7 +44,7 @@ class ClienteCrudController extends AbstractCrudController
 
     public function configureFilters(Filters $filters): Filters
     {
-        return $filters->add('activo')->add('fechaRegistro');
+        return $filters->add('activo');
     }
 
     public function configureFields(string $pageName): iterable

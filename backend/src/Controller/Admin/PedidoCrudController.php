@@ -69,8 +69,7 @@ class PedidoCrudController extends AbstractCrudController
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
-            ->add(ChoiceFilter::new('estado', 'Estado')->setChoices(self::ESTADOS))
-            ->add('fecha');
+            ->add(ChoiceFilter::new('estado', 'Estado')->setChoices(self::ESTADOS));
     }
 
     public function configureFields(string $pageName): iterable

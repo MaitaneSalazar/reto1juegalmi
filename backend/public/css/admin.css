@@ -152,3 +152,6 @@ input.form-check-input:checked {
 }
 .resumen-listas .fila span:not(.badge) { color: #6b7780; font-size: .9em; grid-column: 1; }
 .resumen-listas .fila .badge { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+
+/* ---------- Filtros sencillos: sin el desplegable «es igual a», «contiene»... ---------- */
+select[name$="[comparison]"] { display: none !important; }

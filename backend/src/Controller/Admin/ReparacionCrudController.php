@@ -22,6 +22,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 
 /**
  * Reparaciones (soporte técnico). Las abre el cliente desde la app;
@@ -89,7 +90,7 @@ class ReparacionCrudController extends AbstractCrudController
 
     public function configureFilters(Filters $filters): Filters
     {
-        return $filters->add('tipoDispositivo')->add('cliente');
+        return $filters->add(ChoiceFilter::new('tipoDispositivo', 'Dispositivo')->setChoices(self::DISPOSITIVOS));
     }
 
     public function configureFields(string $pageName): iterable

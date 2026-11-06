@@ -53,7 +53,7 @@ class AlquilerCrudController extends AbstractCrudController
 
     public function configureFilters(Filters $filters): Filters
     {
-        return $filters->add('cliente')->add('fechaInicio')->add('fechaFinPrevista');
+        return $filters;
     }
 
     public function configureFields(string $pageName): iterable
