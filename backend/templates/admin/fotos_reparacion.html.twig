@@ -1,0 +1,12 @@
+{# Fotos que subió el cliente: la miniatura del worker y, al pulsar, la original #}
+<div class="fotos-reparacion">
+    {% for foto in field.value %}
+        {% set partes = foto.ruta|split('.') %}
+        {% set mini = partes|slice(0, partes|length - 1)|join('.') ~ '_mini.' ~ partes|last %}
+        <a href="{{ foto.ruta }}" target="_blank" title="Ver la foto original">
+            <img src="{{ mini }}" alt="" onerror="this.onerror=null; this.src='{{ foto.ruta }}';">
+        </a>
+    {% else %}
+        <span class="text-muted">El cliente no ha subido fotos.</span>
+    {% endfor %}
+</div>
