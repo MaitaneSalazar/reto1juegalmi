@@ -1,6 +1,7 @@
 package com.example.retoindividual_1.adaptadores;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,8 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         holder.tvTituloPortada.setText(producto.getNombre());
 
         if (producto.getMiniaturaUrl() != null) {
+            //CON FOTO QUITAMOS LA PORTADA HECHA A MANO PARA QUE NO SE VEA DETRAS
+            holder.flSinFoto.setVisibility(View.GONE);
             holder.ivFoto.setVisibility(View.VISIBLE);
             //LOS JUEGOS OCUPAN TODA LA TARJETA, LAS CONSOLAS Y MOVILES SE VEN ENTEROS SOBRE BLANCO
             int margen = producto.esVideojuego() ? 0 : context.getResources().getDimensionPixelSize(R.dimen.tienda_margen_foto);
@@ -72,6 +75,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         } else {
             Glide.with(holder.itemView).clear(holder.ivFoto);
             holder.ivFoto.setVisibility(View.GONE);
+            holder.flSinFoto.setVisibility(View.VISIBLE);
         }
 
         pintarAviso(holder, producto);
@@ -80,7 +84,10 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.getContext().startActivity(FichaProductoActivity.crearIntent(v.getContext(), producto.getId(), producto.esVideojuego()));
+                Intent intent = FichaProductoActivity.crearIntent(v.getContext(), producto.getId(), producto.esVideojuego());
+                //SI VENIMOS DE ALQUILAR LA FICHA SE ABRE YA EN ALQUILAR
+                intent.putExtra(FichaProductoActivity.EXTRA_EMPEZAR_ALQUILANDO, alquiler);
+                v.getContext().startActivity(intent);
             }
         });
     }
