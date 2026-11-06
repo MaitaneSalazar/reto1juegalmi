@@ -41,7 +41,8 @@ export class CestaPage {
   }
 
   cambiar(productoId: number, cambio: number): void {
-    this.cesta.cambiarCantidad(productoId, cambio);   // si llega a 0 se quita
+    // si llega a 0 se quita; no deja pasar del stock
+    if (!this.cesta.cambiarCantidad(productoId, cambio)) this.aviso('No quedan más unidades', 'dark');
   }
 
   // POST /api/pedidos { id_domicilio, lineas } → todo o nada (sin stock → 409 con el motivo)
