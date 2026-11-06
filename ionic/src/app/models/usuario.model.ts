@@ -18,7 +18,9 @@ export interface Usuario {
   dni: string;
   email: string;
   telefono?: string | null;
-  foto_perfil?: string | null;
+  foto_perfil?: string | null;               // solo la ruta
+  foto_perfil_url?: string | null;           // dirección completa (para mostrarla)
+  foto_perfil_miniatura_url?: string | null; // versión pequeña (avatares)
   activo?: boolean;
   fecha_registro?: string;       // ISO 8601
   contadores?: Contadores;       // solo clientes

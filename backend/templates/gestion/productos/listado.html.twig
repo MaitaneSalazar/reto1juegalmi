@@ -1,0 +1,206 @@
+{% extends 'gestion/base.html.twig' %}
+{% import 'gestion/_macros.html.twig' as m %}
+
+{% block titulo %}Productos y stock{% endblock %}
+
+{% block contenido %}
+    {% set pestanas = {'': 'Todos', 'videojuego': 'Videojuegos', 'consola': 'Consolas', 'movil': 'Móviles', 'tablet': 'Tablets'} %}
+    {% set filtros = {tipo: tipo ?: null, q: q ?: null} %}
+    {% set volver = path('gestion_productos', filtros|merge({page: pagina > 1 ? pagina : null})) %}
+
+    <div class="cabecera">
+        <h1 class="titulo">Productos y stock</h1>
+        <a class="boton principal" href="{{ path('gestion_producto_nuevo') }}">{{ m.icono('plus') }} Nuevo producto</a>
+    </div>
+
+    <section class="tarjeta tabla-tarjeta">
+        <div class="tabla-barra">
+            <nav class="pestanas">
+                {% for clave, texto in pestanas %}
+                    <a class="{{ tipo == clave ? 'activa' }}" href="{{ path('gestion_productos', {tipo: clave ?: null, q: q ?: null}) }}">{{ texto }}</a>
+                {% endfor %}
+            </nav>
+            <form class="buscador" method="get">
+                {% if tipo %}<input type="hidden" name="tipo" value="{{ tipo }}">{% endif %}
+                {{ m.icono('search') }}<input type="search" name="q" value="{{ q }}" placeholder="Buscar">
+            </form>
+        </div>
+
+        {% if productos is empty %}
+            <p class="vacio tabla-vacia">No hay productos{{ q ? ' que coincidan con «' ~ q ~ '»' }}.</p>
+        {% else %}
+            <table class="tabla">
+                <thead>
+                    <tr>
+                        <th>Producto</th><th>Marca</th><th class="dcha">Precio venta</th>
+                        <th class="dcha">Alquiler / día</th><th class="dcha">Stock</th><th class="centro">Activo</th><th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in productos %}
+                        {% set datos = {
+                            id: p.id, nombre: p.nombre, stock: p.stock,
+                            sub: (p.empresa ? p.empresa.nombre ~ ' · ' : '') ~ nombres_tipo[p.tipo],
+                            img: p.imagen ? p.imagen|miniatura : null
+                        } %}
+                        <tr class="{{ not p.activo ? 'inactivo' }}">
+                            <td><div class="celda-producto">{{ m.foto(p.imagen) }}<span>{{ p.nombre }}</span></div></td>
+                            <td>{{ p.empresa ? p.empresa.nombre }}</td>
+                            <td class="dcha">{{ m.precio(p.precioVenta) }}</td>
+                            <td class="dcha">{{ p.tipo == 'videojuego' and p.precioAlquilerDia ? p.precioAlquilerDia|number_format(2, ',', '.') ~ ' €' }}</td>
+                            <td class="dcha{{ p.stock <= stock_bajo ? ' num-rojo' }}">{{ p.stock }}</td>
+                            <td class="centro">
+                                <form method="post" action="{{ path('gestion_producto_activo', {id: p.id}) }}" class="form-activo">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('activo') }}">
+                                    <input type="hidden" name="volver" value="{{ volver }}">
+                                    <input type="hidden" name="activo" value="{{ p.activo ? 0 : 1 }}">
+                                    <button type="submit" class="interruptor{{ p.activo ? ' on' }}" data-nombre="{{ p.nombre }}"
+                                            title="{{ p.activo ? 'Desactivar' : 'Activar' }}"><span></span></button>
+                                </form>
+                            </td>
+                            <td class="acciones-fila">
+                                <button type="button" class="icono-boton" data-stock="{{ datos|json_encode }}" title="Añadir stock">{{ m.icono('plus') }}</button>
+                                <a class="icono-boton" href="{{ path('gestion_producto_editar', {id: p.id}) }}" title="Editar">{{ m.icono('pencil') }}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="tabla-pie">
+                <span>{{ (pagina - 1) * por_pagina + 1 }}–{{ min(pagina * por_pagina, total) }} de {{ total }}</span>
+                {% if paginas > 1 %}
+                    <nav class="paginas">
+                        <a class="{{ pagina == 1 ? 'deshabilitado' }}" href="{{ path('gestion_productos', filtros|merge({page: max(1, pagina - 1)})) }}">{{ m.icono('chevron-left') }}</a>
+                        {% for n in 1..paginas %}
+                            <a class="{{ n == pagina ? 'actual' }}" href="{{ path('gestion_productos', filtros|merge({page: n})) }}">{{ n }}</a>
+                        {% endfor %}
+                        <a class="{{ pagina == paginas ? 'deshabilitado' }}" href="{{ path('gestion_productos', filtros|merge({page: min(paginas, pagina + 1)})) }}">{{ m.icono('chevron-right') }}</a>
+                    </nav>
+                {% endif %}
+            </div>
+        {% endif %}
+    </section>
+
+    {# ---------- Ventana «Añadir stock» (pantalla 04) ---------- #}
+    <dialog class="dialogo" id="dialogo-stock">
+        <form method="post" id="form-stock">
+            <div class="dialogo-cabecera">
+                <h3>Añadir stock</h3>
+                <button type="button" class="cerrar" data-cerrar>{{ m.icono('x') }}</button>
+            </div>
+            <div class="dialogo-producto">
+                <img id="ds-img" class="foto" alt="">
+                <div><strong id="ds-nombre"></strong><span id="ds-sub"></span></div>
+                <span class="etiqueta roja" id="ds-bajo">Stock bajo</span>
+            </div>
+            <div class="stock-calculo">
+                <div><span class="campo-nombre">Actual</span><strong class="cifra" id="ds-actual"></strong></div>
+                <span class="op">+</span>
+                <div>
+                    <span class="campo-nombre">Entrada</span>
+                    <div class="pasos">
+                        <button type="button" data-paso="-1">−</button>
+                        <input type="number" name="cantidad" id="ds-cantidad" min="1" max="999" value="5">
+                        <button type="button" data-paso="1">+</button>
+                    </div>
+                </div>
+                <span class="op">=</span>
+                <div><span class="campo-nombre">Final</span><strong class="cifra final" id="ds-final"></strong></div>
+            </div>
+            <label class="campo-form">
+                <span class="campo-nombre">Nota (opcional)</span>
+                <input type="text" name="nota" maxlength="120" placeholder="Nº de albarán o proveedor">
+            </label>
+            <input type="hidden" name="_token" value="{{ csrf_token('stock') }}">
+            <input type="hidden" name="volver" value="{{ volver }}">
+            <div class="dialogo-pie">
+                <button type="button" class="boton" data-cerrar>Cancelar</button>
+                <button type="submit" class="boton principal">Añadir al stock</button>
+            </div>
+        </form>
+    </dialog>
+
+    {# ---------- Ventana «¿Desactivar?» (pantalla 05) ---------- #}
+    <dialog class="dialogo" id="dialogo-desactivar">
+        <div class="dialogo-cabecera">
+            <h3>¿Desactivar <span id="dd-nombre"></span>?</h3>
+            <button type="button" class="cerrar" data-cerrar>{{ m.icono('x') }}</button>
+        </div>
+        <p>El producto <strong>no se elimina</strong>: se marca como inactivo.</p>
+        <ul class="puntos">
+            <li>Deja de aparecer en la app y no se puede comprar ni alquilar.</li>
+            <li>Los pedidos y alquileres anteriores lo siguen mostrando.</li>
+            <li>Se puede volver a activar en cualquier momento.</li>
+        </ul>
+        <div class="dialogo-pie">
+            <button type="button" class="boton" data-cerrar>Cancelar</button>
+            <button type="button" class="boton peligro" id="dd-confirmar">Desactivar producto</button>
+        </div>
+    </dialog>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(() => {
+    const BAJO = {{ stock_bajo }};
+    const dos = n => String(n).padStart(2, '0');
+
+    // ----- Añadir stock -----
+    const ventana = document.getElementById('dialogo-stock');
+    const form = document.getElementById('form-stock');
+    const cantidad = document.getElementById('ds-cantidad');
+    let actual = 0;
+    const limitar = n => Math.max(1, Math.min(999, n || 1));
+    const recalcular = () => { document.getElementById('ds-final').textContent = dos(actual + limitar(parseInt(cantidad.value, 10))); };
+
+    function abrirStock(p) {
+        actual = p.stock;
+        form.action = '/gestion/productos/' + p.id + '/stock';
+        document.getElementById('ds-nombre').textContent = p.nombre;
+        document.getElementById('ds-sub').textContent = p.sub;
+        const img = document.getElementById('ds-img');
+        img.hidden = !p.img;
+        if (p.img) img.src = p.img;
+        const cifra = document.getElementById('ds-actual');
+        cifra.textContent = dos(p.stock);
+        cifra.classList.toggle('roja', p.stock <= BAJO);
+        document.getElementById('ds-bajo').hidden = p.stock > BAJO;
+        cantidad.value = 5;
+        recalcular();
+        ventana.showModal();
+    }
+    document.querySelectorAll('[data-stock]').forEach(b => b.addEventListener('click', () => abrirStock(JSON.parse(b.dataset.stock))));
+    document.querySelectorAll('[data-paso]').forEach(b => b.addEventListener('click', () => {
+        cantidad.value = limitar((parseInt(cantidad.value, 10) || 0) + parseInt(b.dataset.paso, 10));
+        recalcular();
+    }));
+    cantidad.addEventListener('input', recalcular);
+
+    // ----- Desactivar: pide confirmación; activar va directo -----
+    const confirmar = document.getElementById('dialogo-desactivar');
+    let pendiente = null;
+    document.querySelectorAll('.form-activo').forEach(f => f.addEventListener('submit', e => {
+        if (f.elements.activo.value === '0') {
+            e.preventDefault();
+            pendiente = f;
+            document.getElementById('dd-nombre').textContent = f.querySelector('.interruptor').dataset.nombre;
+            confirmar.showModal();
+        }
+    }));
+    document.getElementById('dd-confirmar').addEventListener('click', () => pendiente && pendiente.submit());
+
+    // ----- Cerrar ventanas -----
+    document.querySelectorAll('[data-cerrar]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
+    document.querySelectorAll('dialog').forEach(d => d.addEventListener('click', e => { if (e.target === d) d.close(); }));
+
+    {% if abrir_stock %}
+        abrirStock({{ {
+            id: abrir_stock.id, nombre: abrir_stock.nombre, stock: abrir_stock.stock,
+            sub: (abrir_stock.empresa ? abrir_stock.empresa.nombre ~ ' · ' : '') ~ nombres_tipo[abrir_stock.tipo],
+            img: abrir_stock.imagen ? abrir_stock.imagen|miniatura : null
+        }|json_encode|raw }});
+    {% endif %}
+})();
+</script>
+{% endblock %}

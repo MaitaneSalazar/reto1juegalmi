@@ -5,6 +5,7 @@ import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonFooter
 import { addIcons } from 'ionicons';
 import { cameraOutline, lockClosedOutline } from 'ionicons/icons';
 import { SesionService } from '../../services/sesion.service';
+import { of, switchMap } from 'rxjs';
 import { FotoService } from '../../services/foto.service';
 import { telefonoValido } from '../../validators/validadores';
 
@@ -56,7 +57,7 @@ export class EditarDatosPage {
     if (!u) return;
     this.form.reset({ nombre: u.nombre, apellido1: u.apellido1, apellido2: u.apellido2 ?? '', telefono: u.telefono ?? '',
                      password_actual: '', password_nueva: '' });
-    this.foto.set(u.foto_perfil ?? null);
+    this.foto.set(u.foto_perfil_url ?? null);
   }
 
   invalido(c: Campo): boolean {
@@ -83,9 +84,15 @@ export class EditarDatosPage {
       nombre: v.nombre.trim(), apellido1: v.apellido1.trim(),
       apellido2: v.apellido2.trim() || null, telefono: v.telefono.trim() || null,
     };
-    if (this.foto() && this.foto() !== this.sesion.usuario()?.foto_perfil) datos['foto_perfil'] = this.foto();
     if (v.password_nueva) { datos['password_actual'] = v.password_actual; datos['password_nueva'] = v.password_nueva; }
-    this.sesion.actualizarDatos(datos).subscribe({
+    // Foto nueva = dataURL de la cámara → se sube aparte como archivo
+    const foto = this.foto();
+    const fotoNueva = foto?.startsWith('data:') ? foto : null;
+    this.sesion.actualizarDatos(datos).pipe(
+      switchMap(u => fotoNueva
+        ? this.sesion.subirFoto(this.fotos.aBlob(fotoNueva), 'perfil.' + this.fotos.extension(fotoNueva))
+        : of(u)),
+    ).subscribe({
       next: () => { this.guardando.set(false); this.aviso('Datos guardados.', 'dark'); this.nav.back(); },
       error: e => { this.guardando.set(false); this.aviso(this.sesion.mensaje(e), 'danger'); },   // p. ej. contraseña actual incorrecta
     });

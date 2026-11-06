@@ -8,7 +8,7 @@
   @if (sesion.usuario(); as u) {
     <div class="perfil">
       <div class="avatar">
-        @if (u.foto_perfil) { <img [src]="u.foto_perfil" alt="Foto de perfil"> } @else { {{ sesion.iniciales() }} }
+        @if (u.foto_perfil_url; as foto) { <img [src]="foto" alt="Foto de perfil"> } @else { {{ sesion.iniciales() }} }
       </div>
       <h1>{{ sesion.nombreCompleto() }}</h1>
       <span>{{ desde() }}</span>

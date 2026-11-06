@@ -53,7 +53,7 @@
       @if (alquiler(); as a) {
         <a class="tarjeta fila pulsable" routerLink="/cuenta/alquileres">
           <app-miniatura-producto [producto]="a.lineas[0].videojuego" class="portada"></app-miniatura-producto>
-          <span class="texto"><strong>{{ a.lineas[0].videojuego.nombre }}</strong></span>
+          <span class="texto"><strong>{{ a.lineas[0].videojuego | nombreProducto }}</strong></span>
           <span class="dias"><b>{{ a.dias_restantes > 0 ? a.dias_restantes : 0 }}</b> {{ a.dias_restantes === 1 ? 'día' : 'días' }}</span>
         </a>
       }

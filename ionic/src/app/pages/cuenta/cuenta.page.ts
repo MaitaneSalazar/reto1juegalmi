@@ -1,3 +1,4 @@
+import { NombreProductoPipe } from '../../pipes/nombre-producto.pipe';
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { IonHeader, IonContent, IonIcon, AlertController, ToastController } from '@ionic/angular';
@@ -16,7 +17,7 @@ import { FechaCortaPipe } from '../../pipes/fecha-corta.pipe';
   selector: 'app-cuenta',
   templateUrl: './cuenta.page.html',
   styleUrls: ['./cuenta.page.scss'],
-  imports: [RouterLink, IonHeader, IonContent, IonIcon, CabeceraComponent, MiniaturaProductoComponent, FechaCortaPipe],
+  imports: [RouterLink, IonHeader, IonContent, IonIcon, CabeceraComponent, MiniaturaProductoComponent, FechaCortaPipe, NombreProductoPipe],
 })
 export class CuentaPage {
   sesion = inject(SesionService);

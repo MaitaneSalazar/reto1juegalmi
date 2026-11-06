@@ -46,10 +46,16 @@ class RespuestaApi
         return $campos;
     }
 
-    /** Respuesta 422 con los campos que han fallado */
+    /**
+     * 422 con los errores de cada campo. En «mensaje» van los motivos concretos
+     * (p. ej. «Ya existe un usuario con este DNI») para que las apps solo tengan que mostrarlo.
+     */
     public static function errorValidacion(array $campos): JsonResponse
     {
-        return self::error(422, 'Los datos enviados no son válidos', $campos);
+        $motivos = array_unique(array_filter(array_values($campos), 'is_string'));
+        $mensaje = $motivos === [] ? 'Los datos enviados no son válidos' : implode('. ', $motivos);
+
+        return self::error(422, $mensaje, $campos);
     }
 
     public static function error(int $codigo, string $mensaje, array $campos = []): JsonResponse

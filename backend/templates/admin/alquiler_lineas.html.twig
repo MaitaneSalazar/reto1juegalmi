@@ -1,0 +1,16 @@
+{# Juegos de un alquiler: precio por día, días y si ya se han devuelto #}
+<table class="table table-sm lineas-tabla">
+    <thead><tr><th>Juego</th><th class="text-end">Precio/día</th><th class="text-end">Días</th><th>Devuelto</th><th class="text-end">Importe</th></tr></thead>
+    <tbody>
+    {% for linea in field.value %}
+        <tr>
+            <td>{{ linea.videojuego.nombre }}</td>
+            <td class="text-end">{{ linea.precio|number_format(2, ',', '.') }} €</td>
+            <td class="text-end">{{ linea.dias }}</td>
+            <td>{% if linea.fechaDevolucion %}{{ linea.fechaDevolucion|date('d/m/Y H:i') }}{% else %}<span class="badge badge-warning">Pendiente</span>{% endif %}</td>
+            <td class="text-end">{{ linea.importe|number_format(2, ',', '.') }} €</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot><tr><th colspan="4" class="text-end">Total</th><th class="text-end">{{ entity.instance.importe|number_format(2, ',', '.') }} €</th></tr></tfoot>
+</table>

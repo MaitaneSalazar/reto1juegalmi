@@ -1,3 +1,4 @@
+import { nombreProducto } from '../../pipes/nombre-producto.pipe';
 import { Component, computed, inject, signal } from '@angular/core';
 import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon, IonSkeletonText,
          AlertController, ToastController } from '@ionic/angular';
@@ -69,7 +70,7 @@ export class AlquileresPage {
 
   // "Elden Ring" o "Elden Ring +1" si el alquiler tiene varios juegos
   titulo(a: Alquiler): string {
-    const n = a.lineas[0]?.videojuego.nombre ?? 'Alquiler';
+    const n = a.lineas[0] ? nombreProducto(a.lineas[0].videojuego) : 'Alquiler';
     return a.lineas.length > 1 ? `${n} +${a.lineas.length - 1}` : n;
   }
 

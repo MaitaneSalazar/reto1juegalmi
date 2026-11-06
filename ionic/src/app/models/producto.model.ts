@@ -40,12 +40,13 @@ export const NOMBRE_TIPO: Record<TipoProducto, string> = {
 
 // Color de la portada generada (cuando la API manda imagen_url: null)
 export const COLOR_PLATAFORMA: Record<string, string> = {
-  PS5: '#375e60', Xbox: '#5c616c', Switch: '#5ea0a2', Multi: '#8a8c84',
+  PlayStation: '#375e60', PS5: '#375e60', Xbox: '#5c616c', Switch: '#5ea0a2', Multi: '#8a8c84',
 };
 export const COLOR_PORTADA = '#1f2329';          // consolas, móviles, tablets y sin plataforma
 
-// Plataformas en las que se juega: "Multi" = las tres (si algún día la API manda una lista, se usa tal cual)
-export const PLATAFORMAS = ['PS5', 'Xbox', 'Switch'] as const;
+// Plataforma del juego. La API manda una por producto ("PlayStation", "Switch", "Xbox"): un juego de
+// varias plataformas viene repetido, uno por cada una. "Multi" (antiguo) = las tres
+export const PLATAFORMAS = ['PlayStation', 'Xbox', 'Switch'] as const;
 export function plataformasDe(p: { plataforma?: string | null; plataformas?: string[] }): string[] {
   if (p.plataformas?.length) return p.plataformas;
   if (!p.plataforma) return [];

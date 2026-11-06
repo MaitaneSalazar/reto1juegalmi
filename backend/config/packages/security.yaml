@@ -43,15 +43,15 @@ security:
             provider: app_user_provider
             user_checker: App\Security\TrabajadorUserChecker
             form_login:
-                login_path: admin_login
-                check_path: admin_login
+                login_path: gestion_acceso
+                check_path: gestion_acceso
                 username_parameter: email
                 password_parameter: password
                 enable_csrf: true
-                default_target_path: admin
+                default_target_path: gestion_resumen
             logout:
-                path: admin_logout
-                target: admin_login
+                path: gestion_salir
+                target: gestion_acceso
 
     access_control:
         - { path: ^/api/login$, roles: PUBLIC_ACCESS }
@@ -59,6 +59,8 @@ security:
         - { path: ^/api/estado$, roles: PUBLIC_ACCESS }
         - { path: ^/api/(productos|videojuegos|tienda|departamentos), roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/gestion/acceso$, roles: PUBLIC_ACCESS }
+        - { path: ^/gestion, roles: ROLE_TRABAJADOR }
         - { path: ^/admin/login$, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_TRABAJADOR }
 

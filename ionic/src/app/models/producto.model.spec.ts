@@ -22,8 +22,8 @@ describe('Etiqueta de stock', () => {
 });
 
 describe('Plataformas de un juego', () => {
-  it('«Multi» se juega en PS5, Xbox y Switch', () => {
-    expect(plataformasDe({ plataforma: 'Multi' })).toEqual(['PS5', 'Xbox', 'Switch']);
+  it('«Multi» (antiguo) se juega en las tres', () => {
+    expect(plataformasDe({ plataforma: 'Multi' })).toEqual(['PlayStation', 'Xbox', 'Switch']);
   });
 
   it('una sola plataforma', () => {
@@ -37,7 +37,7 @@ describe('Plataformas de un juego', () => {
 
 describe('Color de cada plataforma', () => {
   it('PlayStation en azul, la escriba como la escriba', () => {
-    for (const pl of ['PS5', 'ps5', 'PS4', 'PlayStation 5']) expect(colorPlataforma(pl)).toBe('#0070d1');
+    for (const pl of ['PlayStation', 'PS5', 'ps5', 'PlayStation 5']) expect(colorPlataforma(pl)).toBe('#0070d1');
   });
 
   it('Xbox en verde y Switch en rojo', () => {

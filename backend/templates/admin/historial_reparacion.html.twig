@@ -1,0 +1,16 @@
+{# Historial de estados de una reparación, del más antiguo al más reciente #}
+{% set nombres = {
+    recibida: 'Recibida', diagnostico: 'Diagnóstico', en_reparacion: 'En reparación',
+    lista_para_recoger: 'Lista para recoger', entregada: 'Entregada', cancelada: 'Cancelada'
+} %}
+<ol class="historial-reparacion">
+    {% for paso in field.value|sort((a, b) => a.fechaHora <=> b.fechaHora) %}
+        <li class="{{ loop.last ? 'actual' }}">
+            <strong>{{ nombres[paso.estado] ?? paso.estado }}</strong>
+            <span class="fecha">{{ paso.fechaHora|date('d/m/Y H:i') }}</span>
+            {% if paso.descripcion %}<div class="nota">{{ paso.descripcion }}</div>{% endif %}
+        </li>
+    {% else %}
+        <li>Sin estados</li>
+    {% endfor %}
+</ol>

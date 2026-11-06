@@ -1,0 +1,43 @@
+{% extends 'gestion/base.html.twig' %}
+{% import 'gestion/_macros.html.twig' as m %}
+
+{% block titulo %}Acceso de trabajadores{% endblock %}
+
+{% block cuerpo %}
+    {% set hora = 'now'|date('G', 'Europe/Madrid') %}
+    <div class="acceso-marco">
+        <section class="acceso-form">
+            <span class="marca"><span class="logo-j">J</span>JuegAlmi</span>
+
+            <div class="acceso-centro">
+                <h1>{{ hora < 14 ? 'Buenos días.' : (hora < 21 ? 'Buenas tardes.' : 'Buenas noches.') }}</h1>
+                <p class="sub">Entra con tu cuenta de trabajo.</p>
+
+                {% if error %}
+                    <div class="acceso-error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+                <form method="post" action="{{ path('gestion_acceso') }}">
+                    <label class="campo">
+                        <span class="campo-nombre">Email</span>
+                        <span class="entrada">{{ m.icono('mail') }}<input type="email" name="email" value="{{ ultimo_email }}" required autofocus autocomplete="username"></span>
+                    </label>
+                    <label class="campo">
+                        <span class="campo-nombre">Contraseña</span>
+                        <span class="entrada">{{ m.icono('lock') }}<input type="password" name="password" required autocomplete="current-password"></span>
+                    </label>
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    <button class="boton principal grande" type="submit">Entrar</button>
+                </form>
+            </div>
+
+            <p class="acceso-pie">© {{ 'now'|date('Y') }} JuegAlmi · Panel del equipo</p>
+        </section>
+
+        <section class="acceso-panel">
+            <h2>Tienda,<br>alquiler<br>y taller.</h2>
+            <div class="datos"><strong>Gran Vía 12 · Bilbao</strong>Lunes a sábado · 10:00–20:30</div>
+            <div class="gigante">JuegAlmi</div>
+        </section>
+    </div>
+{% endblock %}

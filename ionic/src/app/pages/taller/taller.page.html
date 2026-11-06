@@ -138,7 +138,7 @@
                 <ion-icon name="chevron-forward"></ion-icon>
               </span>
               <span class="dato"><span>Entrada</span><span>{{ r.fecha | fechaCorta }}</span></span>
-              <span class="dato"><span>Nº</span><span>{{ r.numero }}</span></span>
+              <span class="dato"><span>Presupuesto</span><span>{{ r.presupuesto != null ? (r.presupuesto | euros) : 'Pendiente' }}</span></span>
             </button>
           }
         </div>
@@ -149,7 +149,7 @@
         @for (r of entregadas(); track r.id) {
           <button type="button" class="tarjeta entregada pulsable" (click)="abrir(r)">
             <ion-icon name="checkmark-circle-outline"></ion-icon>
-            <span class="textos"><strong>{{ tipoTexto(r) }} · {{ r.marca }} {{ r.modelo }}</strong><small>{{ r.numero }} · entrada el {{ r.fecha | fechaCorta }}</small></span>
+            <span class="textos"><strong>{{ tipoTexto(r) }} · {{ r.marca }} {{ r.modelo }}</strong><small>Entregada el {{ (r.fecha_entrega ?? r.fecha) | fechaCorta }}</small></span>
             @if (r.presupuesto != null) { <span class="precio">{{ r.presupuesto | euros }}</span> }
           </button>
         }

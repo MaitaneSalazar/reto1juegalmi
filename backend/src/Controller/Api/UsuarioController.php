@@ -18,6 +18,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use App\Service\SubidaImagenes;
 
 #[Route('/api', format: 'json')]
 class UsuarioController extends AbstractController
@@ -94,6 +95,25 @@ class UsuarioController extends AbstractController
             $usuario->setPassword($hasher->hashPassword($usuario, (string) $datos['password_nueva']));
         }
 
+        $this->em->flush();
+
+        return $this->yo($usuario);
+    }
+
+    /**
+     * POST /api/yo/foto — foto de perfil. multipart/form-data con el campo «imagen» (JPG, PNG o WEBP, máx. 10 MB).
+     * PHP no lee archivos enviados con PUT, por eso va por POST. Para quitarla: PUT /api/yo {"foto_perfil": null}.
+     */
+    #[Route('/yo/foto', name: 'api_yo_foto', methods: ['POST'])]
+    public function foto(#[CurrentUser] Usuario $usuario, Request $request, SubidaImagenes $subida): JsonResponse
+    {
+        try {
+            $ruta = $subida->subir($request->files->get('imagen'), 'perfil');
+        } catch (\InvalidArgumentException $e) {
+            return RespuestaApi::errorValidacion(['imagen' => $e->getMessage()]);
+        }
+
+        $usuario->setFotoPerfil($ruta);
         $this->em->flush();
 
         return $this->yo($usuario);

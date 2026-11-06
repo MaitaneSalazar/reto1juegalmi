@@ -69,6 +69,13 @@ export class SesionService {
     );
   }
 
+  // POST /api/yo/foto (multipart, campo "imagen"): devuelve el usuario con foto_perfil_url
+  subirFoto(imagen: Blob, nombre: string): Observable<Usuario> {
+    const datos = new FormData();
+    datos.append('imagen', imagen, nombre);
+    return this.http.post<Usuario>(`${API}/yo/foto`, datos).pipe(tap(u => this.actualizarLocal(u)));
+  }
+
   // ---------------------------------------------------------- CERRAR SESIÓN
   cerrar(): void {
     this.sesion.set(null);
