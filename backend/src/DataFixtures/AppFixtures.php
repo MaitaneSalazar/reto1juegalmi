@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Service\CargadorImagenes;
 use App\Entity\Alquiler;
 use App\Entity\AlquilerVideojuego;
 use App\Entity\Cliente;
@@ -35,11 +36,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  */
 class AppFixtures extends Fixture
 {
-    /** Qué imagen de fixtures/imagenes/productos/ va con cada producto (cambiar aquí por las definitivas) */
-    private const IMAGENES_PRODUCTOS = [
-        'zelda' => 'Greh.jpeg',
-        'ps5' => 'J&D.jpeg',
-    ];
+    /** Ya no se usa: las imágenes de los productos están en App\Service\CargadorImagenes */
+    private const IMAGENES_PRODUCTOS = [];
 
     /** Qué imagen de fixtures/imagenes/tienda/ va con cada foto de la galería */
     private const IMAGENES_TIENDA = [
@@ -52,6 +50,7 @@ class AppFixtures extends Fixture
         private UserPasswordHasherInterface $hasher,
         private MessageBusInterface $bus,
         #[Autowire('%kernel.project_dir%')] private string $directorioProyecto,
+        private CargadorImagenes $cargadorImagenes,
     ) {
     }
 
@@ -200,6 +199,9 @@ class AppFixtures extends Fixture
         }
 
         $this->om->flush();
+
+        // Imágenes definitivas: las mismas que pone el comando app:cargar-imagenes
+        $this->cargadorImagenes->cargar();
     }
 
     // ---------- Ayudantes para no repetir código ----------
