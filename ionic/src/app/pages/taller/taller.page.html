@@ -114,7 +114,9 @@
     </div>
   } @else {
     <!-- ============ MIS REPARACIONES ============ -->
-    @if (cargandoMias()) {
+    @if (errorMias()) {
+      <app-estado [error]="true" (reintentar)="cargarMias()"></app-estado>
+    } @else if (cargandoMias()) {
       @for (i of [1, 2]; track i) {
         <ion-skeleton-text [animated]="true" style="height: 150px; border-radius: 24px; margin-bottom: 14px"></ion-skeleton-text>
       }
@@ -153,7 +155,9 @@
         }
       }
 
-      @if (!mias().length) { <p class="vacio">Todavía no has pedido ninguna reparación.</p> }
+      @if (!enCurso().length && !entregadas().length) {
+        <app-estado icono="build-outline" titulo="Sin reparaciones" texto="Cuando nos dejes algo para arreglar, aquí verás cómo va."></app-estado>
+      }
     }
   }
 </ion-content>

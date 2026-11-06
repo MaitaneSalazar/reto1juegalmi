@@ -1,15 +1,17 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonSearchbar, IonChip, IonIcon,
          IonSkeletonText, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { searchOutline, closeOutline } from 'ionicons/icons';
+import { searchOutline, closeOutline, micOutline } from 'ionicons/icons';
 import { CabeceraComponent } from '../../components/cabecera/cabecera.component';
 import { MiniaturaProductoComponent } from '../../components/miniatura-producto/miniatura-producto.component';
 import { PrecioComponent } from '../../components/precio/precio.component';
 import { ProductoService } from '../../services/producto.service';
-import { Producto, TipoProducto } from '../../models/producto.model';
+import { VozService } from '../../services/voz.service';
+import { EtiquetaStock, Producto, TipoProducto, etiquetaStock } from '../../models/producto.model';
+import { EstadoComponent } from '../../components/estado/estado.component';
 
 type Modo = 'comprar' | 'alquilar';
 interface Filtro { etiqueta: string; valor: string; }   // valor '' = todos
@@ -22,11 +24,12 @@ const POR_PAGINA = 8;   // carga progresiva
   styleUrls: ['./tienda.page.scss'],
   imports: [IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonSearchbar, IonChip, IonIcon,
             IonSkeletonText, IonInfiniteScroll, IonInfiniteScrollContent,
-            CabeceraComponent, MiniaturaProductoComponent, PrecioComponent],
+            CabeceraComponent, MiniaturaProductoComponent, PrecioComponent, EstadoComponent],
 })
 export class TiendaPage {
   private servicio = inject(ProductoService);
   private router = inject(Router);
+  voz = inject(VozService);
 
   modo = signal<Modo>('comprar');
   filtro = signal('');
@@ -34,11 +37,8 @@ export class TiendaPage {
   buscando = signal(false);          // muestra el buscador (botón lupa)
   productos = signal<Producto[]>([]);
   cargando = signal(true);
+  error = signal(false);             // la API no responde → «Sin conexión» + Reintentar
   hayMas = signal(true);
-
-  // El primero va en grande; el resto, en rejilla de 2
-  destacado = computed(() => this.productos()[0] ?? null);
-  resto = computed(() => this.productos().slice(1));
 
   filtrosComprar: Filtro[] = [
     { etiqueta: 'Todo', valor: '' },
@@ -54,7 +54,7 @@ export class TiendaPage {
   private peticion = 0;   // descarta respuestas antiguas
 
   constructor() {
-    addIcons({ searchOutline, closeOutline });
+    addIcons({ searchOutline, closeOutline, micOutline });
     this.servicio.plataformas().subscribe({
       next: lista => this.filtrosAlquilar = [{ etiqueta: 'Todas', valor: '' }, ...lista.map(p => ({ etiqueta: p, valor: p }))],
       error: () => { /* sin conexión: solo "Todas" */ },
@@ -63,11 +63,6 @@ export class TiendaPage {
     inject(ActivatedRoute).queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
       this.modo.set(params.get('modo') === 'alquilar' ? 'alquilar' : 'comprar');
       this.filtro.set('');
-      const buscar = params.get('buscar');          // viene de la orden de voz "buscar ..."
-      if (buscar !== null) {
-        this.texto.set(buscar);
-        this.buscando.set(true);
-      }
       this.cargar();
     });
   }
@@ -88,6 +83,14 @@ export class TiendaPage {
     if (!this.buscando() && this.texto()) this.buscar('');   // al cerrar se limpia
   }
 
+  // Micrófono: lo que se dice se escribe en el buscador y se busca
+  async buscarPorVoz(): Promise<void> {
+    const texto = await this.voz.escuchar();
+    if (!texto) return;
+    this.buscando.set(true);
+    this.buscar(texto);
+  }
+
   buscar(texto: string | null | undefined): void {
     this.texto.set(texto ?? '');
     this.cargar();
@@ -97,14 +100,22 @@ export class TiendaPage {
     this.cargar(false, evento);
   }
 
+  // Comprar: unidades en stock · Alquilar: copias libres
+  stock(p: Producto): EtiquetaStock | null {
+    return this.modo() === 'alquilar'
+      ? etiquetaStock(p.copias_disponibles ?? (p.alquilado ? 0 : 3), true)
+      : etiquetaStock(p.stock);
+  }
+
   abrir(p: Producto): void {
     this.router.navigate(['/producto', p.id], { queryParams: { modo: this.modo() } });
   }
 
-  private cargar(reiniciar = true, evento?: InfiniteScrollCustomEvent): void {
+  cargar(reiniciar = true, evento?: InfiniteScrollCustomEvent): void {
     if (reiniciar) {
       this.pagina = 1;
       this.cargando.set(true);
+      this.error.set(false);
       this.hayMas.set(true);
     }
     const id = ++this.peticion;
@@ -130,7 +141,9 @@ export class TiendaPage {
         evento?.target.complete();
       },
       error: () => {
+        if (id !== this.peticion) return;
         this.cargando.set(false);
+        if (reiniciar) this.error.set(true);
         evento?.target.complete();
       },
     });

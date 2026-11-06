@@ -15,6 +15,8 @@
         @for (c of chips(); track c) { <span class="etiqueta-mini">{{ c }}</span> }
       </div>
       <p class="descripcion">{{ p.descripcion }}</p>
+      <!-- Stock visible: «¡Date prisa! Queda 1 unidad», «Agotado»... -->
+      <p class="disponible" [class.aviso]="quedan() <= 2">{{ textoStock() }}</p>
 
       @if (alquilable()) {
         <ion-segment [value]="modo()" (ionChange)="cambiarModo($event.detail.value)">
@@ -32,9 +34,11 @@
             </button>
           }
         </div>
-        <p class="nota">{{ p.precio_alquiler_dia | euros }} por día · {{ p.copias_disponibles ?? 0 }} libres · devolución antes del {{ devolucion() }}</p>
-      } @else {
-        <p class="nota">{{ p.stock > 0 ? p.stock + ' disponibles · envío gratis' : 'Sin unidades ahora mismo' }}</p>
+        <!-- Cálculo antes de pagar: días × precio y fecha de devolución -->
+        <div class="calculo tarjeta">
+          <div><span>{{ dias() }} {{ dias() === 1 ? 'día' : 'días' }} × {{ p.precio_alquiler_dia | euros }}</span><b>{{ totalAlquiler() | euros }}</b></div>
+          <div><span>Devolución antes del</span><b>{{ devolucion() | fechaCorta }}</b></div>
+        </div>
       }
     } @else {
       <ion-skeleton-text [animated]="true" style="width: 80%; height: 34px"></ion-skeleton-text>
@@ -49,13 +53,19 @@
     <div class="compra">
       <div class="importe">
         <app-precio [valor]="modo() === 'alquilar' ? totalAlquiler() : p.precio_venta"></app-precio>
-        <small>{{ modo() === 'alquilar' ? dias() + (dias() === 1 ? ' día' : ' días') : 'IVA incluido' }}</small>
+        <small>{{ modo() === 'alquilar' ? dias() + (dias() === 1 ? ' día de alquiler' : ' días de alquiler') : 'Envío gratis' }}</small>
       </div>
-      <ion-button (click)="confirmar()" [disabled]="enviando() || (modo() === 'alquilar' ? sinCopias() : sinStock())">
-        @if (enviando()) { <ion-spinner name="crescent"></ion-spinner> }
-        @else if (modo() === 'alquilar') { {{ sinCopias() ? 'Alquilado' : 'Alquilar' }} }
-        @else { {{ sinStock() ? 'Sin stock' : 'Añadir a la cesta' }} }
-      </ion-button>
+      @if (quedan() <= 0) {
+        <!-- Agotado: el botón pasa a «Avísame» -->
+        <ion-button fill="outline" class="avisame" (click)="avisame()">
+          <ion-icon slot="start" name="notifications-outline"></ion-icon>Avísame
+        </ion-button>
+      } @else {
+        <ion-button (click)="confirmar()" [disabled]="enviando()">
+          @if (enviando()) { <ion-spinner name="crescent"></ion-spinner> }
+          @else { {{ modo() === 'alquilar' ? 'Alquilar' : 'Añadir a la cesta' }} }
+        </ion-button>
+      }
     </div>
   </ion-footer>
 }

@@ -6,6 +6,7 @@ import { IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon,
 import { addIcons } from 'ionicons';
 import { gameControllerOutline, phonePortraitOutline, tabletLandscapeOutline, laptopOutline, tvOutline,
          headsetOutline, watchOutline, ellipsisHorizontal, cameraOutline, close, chevronForward, keypadOutline, checkmarkCircleOutline } from 'ionicons/icons';
+import { EstadoComponent } from '../../components/estado/estado.component';
 import { CabeceraComponent } from '../../components/cabecera/cabecera.component';
 import { EurosPipe } from '../../pipes/euros.pipe';
 import { FechaCortaPipe } from '../../pipes/fecha-corta.pipe';
@@ -35,7 +36,7 @@ const COMPONENTES: Record<TipoDispositivo, string[]> = {
   templateUrl: './taller.page.html',
   styleUrls: ['./taller.page.scss'],
   imports: [IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon, IonInput, IonTextarea,
-            IonChip, IonButton, IonSpinner, IonSkeletonText, CabeceraComponent, EurosPipe, FechaCortaPipe],
+            IonChip, IonButton, IonSpinner, IonSkeletonText, CabeceraComponent, EstadoComponent, EurosPipe, FechaCortaPipe],
 })
 export class TallerPage {
   private sesion = inject(SesionService);
@@ -86,6 +87,7 @@ export class TallerPage {
   // ----- Mis reparaciones
   mias = signal<Reparacion[]>([]);
   cargandoMias = signal(true);
+  errorMias = signal(false);                 // sin conexión → Reintentar
   enCurso = computed(() => this.mias().filter(r => r.estado !== 'entregada' && r.estado !== 'cancelada'));
   entregadas = computed(() => this.mias().filter(r => r.estado === 'entregada'));
   vuelta = 2 * Math.PI * 26;                 // perímetro del círculo de progreso (radio 26)
@@ -180,10 +182,11 @@ export class TallerPage {
   tipoTexto(r: Reparacion): string { return NOMBRE_DISPOSITIVO[r.tipo_dispositivo] ?? ''; }
 
   // GET /api/reparaciones (la más reciente primero)
-  private cargarMias(): void {
+  cargarMias(): void {
+    this.errorMias.set(false);
     this.reparaciones.listar(1, 50).subscribe({
       next: r => { this.mias.set(r.datos); this.cargandoMias.set(false); },
-      error: () => this.cargandoMias.set(false),
+      error: () => { this.cargandoMias.set(false); this.errorMias.set(true); },
     });
   }
 
