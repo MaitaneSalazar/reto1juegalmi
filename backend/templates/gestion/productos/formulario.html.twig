@@ -1,0 +1,197 @@
+{% extends 'gestion/base.html.twig' %}
+{% import 'gestion/_macros.html.twig' as m %}
+
+{% block titulo %}{{ es_nuevo ? 'Nuevo producto' : 'Editar producto' }}{% endblock %}
+
+{% block contenido %}
+    {% set imagen = producto and producto.imagen ? producto.imagen : null %}
+
+    <a class="miga" href="{{ path('gestion_productos') }}">{{ m.icono('chevron-left') }} Productos y stock</a>
+    <div class="cabecera">
+        <h1 class="titulo">{{ es_nuevo ? 'Nuevo producto' : producto.nombre }}</h1>
+        <div class="acciones">
+            <a class="boton" href="{{ path('gestion_productos') }}">Cancelar</a>
+            <button class="boton principal" type="submit" form="form-producto">Guardar producto</button>
+        </div>
+    </div>
+
+    {% if errores['_'] is defined %}<div class="avisos"><div class="aviso danger">{{ errores['_'] }}</div></div>{% endif %}
+    {% if errores is not empty and errores['_'] is not defined %}
+        <div class="avisos"><div class="aviso danger">Revisa los campos marcados en rojo.{{ es_nuevo ? ' Si habías elegido una imagen, vuelve a elegirla.' }}</div></div>
+    {% endif %}
+
+    <form id="form-producto" method="post" enctype="multipart/form-data" novalidate>
+        <input type="hidden" name="_token" value="{{ csrf_token('producto') }}">
+
+        <div class="form-columnas">
+            <div class="form-principal">
+                <section class="tarjeta">
+                    <h3 class="tarjeta-titulo">Datos generales</h3>
+                    <label class="campo-form">
+                        <span class="campo-nombre">Nombre</span>
+                        <input type="text" name="nombre" maxlength="150" value="{{ v.nombre ?? '' }}">
+                        {{ m.error(errores, 'nombre') }}
+                    </label>
+                    <label class="campo-form">
+                        <span class="campo-nombre">Descripción</span>
+                        <textarea name="descripcion" rows="3">{{ v.descripcion ?? '' }}</textarea>
+                    </label>
+                    <div class="fila fila-2">
+                        <label class="campo-form">
+                            <span class="campo-nombre">Marca (empresa)</span>
+                            <select name="empresa">
+                                <option value="">Elige la marca…</option>
+                                {% for e in empresas %}
+                                    <option value="{{ e.id }}" {{ (v.empresa ?? '') ~ '' == e.id ~ '' ? 'selected' }}>{{ e.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                            {{ m.error(errores, 'empresa') }}
+                        </label>
+                        <label class="campo-form">
+                            <span class="campo-nombre">Precio de venta</span>
+                            <span class="con-prefijo"><span class="prefijo">€</span><input type="text" name="precio_venta" inputmode="decimal" value="{{ v.precio_venta ?? '' }}"></span>
+                            {{ m.error(errores, 'precio_venta') }}
+                        </label>
+                    </div>
+                    <div class="fila fila-2">
+                        <label class="campo-form">
+                            <span class="campo-nombre">{{ es_nuevo ? 'Stock inicial' : 'Stock' }}</span>
+                            <input type="number" name="stock" min="0" value="{{ v.stock ?? 0 }}">
+                            {{ m.error(errores, 'stock') }}
+                        </label>
+                        <div class="campo-form">
+                            <span class="campo-nombre">Estado</span>
+                            <label class="interruptor-linea">
+                                <input type="checkbox" name="activo" value="1" {{ (v.activo ?? false) ? 'checked' }}>
+                                <span class="interruptor-falso"></span> Activo (visible en la app)
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="tarjeta">
+                    <h3 class="tarjeta-titulo">Tipo de producto</h3>
+                    <div class="pestanas pestanas-tipo">
+                        {% for clave, texto in nombres_tipo %}
+                            <label class="{{ tipo == clave ? 'activa' }}{{ not es_nuevo and tipo != clave ? ' deshabilitada' }}">
+                                <input type="radio" name="tipo" value="{{ clave }}" {{ tipo == clave ? 'checked' }} {{ not es_nuevo ? 'disabled' }}>{{ texto }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                    {% if not es_nuevo %}<p class="ayuda">El tipo no se puede cambiar una vez creado el producto.</p>{% endif %}
+
+                    <fieldset class="campos-tipo" data-tipo="videojuego" {{ tipo != 'videojuego' ? 'disabled hidden' }}>
+                        <div class="fila fila-3">
+                            <label class="campo-form">
+                                <span class="campo-nombre">Plataforma</span>
+                                <select name="plataforma">
+                                    <option value="">Elige…</option>
+                                    {% for p in plataformas %}<option value="{{ p }}" {{ (v.plataforma ?? '') == p ? 'selected' }}>{{ p }}</option>{% endfor %}
+                                </select>
+                                {{ m.error(errores, 'plataforma') }}
+                            </label>
+                            <label class="campo-form">
+                                <span class="campo-nombre">Género</span>
+                                <input type="text" name="genero" list="lista-generos" value="{{ v.genero ?? '' }}">
+                                <datalist id="lista-generos">{% for g in generos %}<option value="{{ g }}">{% endfor %}</datalist>
+                                {{ m.error(errores, 'genero') }}
+                            </label>
+                            <label class="campo-form">
+                                <span class="campo-nombre">PEGI</span>
+                                <select name="pegi">
+                                    {% for p in pegis %}<option value="{{ p }}" {{ (v.pegi ?? '') ~ '' == p ~ '' ? 'selected' }}>{{ p }}</option>{% endfor %}
+                                </select>
+                                {{ m.error(errores, 'pegi') }}
+                            </label>
+                        </div>
+                        <div class="fila fila-2">
+                            <label class="campo-form">
+                                <span class="campo-nombre">Alquiler por día</span>
+                                <span class="con-prefijo"><span class="prefijo">€</span><input type="text" name="precio_alquiler_dia" inputmode="decimal" value="{{ v.precio_alquiler_dia ?? '' }}"></span>
+                                {{ m.error(errores, 'precio_alquiler_dia') }}
+                            </label>
+                            <label class="campo-form">
+                                <span class="campo-nombre">Copias para alquilar</span>
+                                <input type="number" name="copias_alquiler" min="0" value="{{ v.copias_alquiler ?? 0 }}">
+                                {{ m.error(errores, 'copias_alquiler') }}
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="campos-tipo" data-tipo="consola" {{ tipo != 'consola' ? 'disabled hidden' }}>
+                        <div class="fila fila-3">
+                            <label class="campo-form"><span class="campo-nombre">Almacenamiento (GB)</span><input type="number" name="almacenamiento_gb" min="0" value="{{ v.almacenamiento_gb ?? '' }}">{{ m.error(errores, 'almacenamiento_gb') }}</label>
+                            <label class="campo-form"><span class="campo-nombre">Color</span><input type="text" name="color" value="{{ v.color ?? '' }}">{{ m.error(errores, 'color') }}</label>
+                            <label class="campo-form"><span class="campo-nombre">Edición</span><input type="text" name="edicion" value="{{ v.edicion ?? '' }}">{{ m.error(errores, 'edicion') }}</label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="campos-tipo" data-tipo="movil" {{ tipo != 'movil' ? 'disabled hidden' }}>
+                        <div class="fila fila-3">
+                            <label class="campo-form"><span class="campo-nombre">Pantalla (pulgadas)</span><input type="text" name="pantalla_pulgadas" inputmode="decimal" value="{{ v.pantalla_pulgadas ?? '' }}">{{ m.error(errores, 'pantalla_pulgadas') }}</label>
+                            <label class="campo-form"><span class="campo-nombre">RAM (GB)</span><input type="number" name="ram_gb" min="0" value="{{ v.ram_gb ?? '' }}">{{ m.error(errores, 'ram_gb') }}</label>
+                            <label class="campo-form"><span class="campo-nombre">Almacenamiento (GB)</span><input type="number" name="almacenamiento_gb" min="0" value="{{ v.almacenamiento_gb ?? '' }}">{{ m.error(errores, 'almacenamiento_gb') }}</label>
+                        </div>
+                        <div class="fila fila-2">
+                            <label class="campo-form"><span class="campo-nombre">Sistema operativo</span><input type="text" name="sistema_operativo" value="{{ v.sistema_operativo ?? '' }}">{{ m.error(errores, 'sistema_operativo') }}</label>
+                            <label class="campo-form"><span class="campo-nombre">Batería (mAh)</span><input type="number" name="bateria_mah" min="0" value="{{ v.bateria_mah ?? '' }}">{{ m.error(errores, 'bateria_mah') }}</label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="campos-tipo" data-tipo="tablet" {{ tipo != 'tablet' ? 'disabled hidden' }}>
+                        <div class="fila fila-2">
+                            <label class="campo-form"><span class="campo-nombre">Pantalla (pulgadas)</span><input type="text" name="pantalla_pulgadas" inputmode="decimal" value="{{ v.pantalla_pulgadas ?? '' }}">{{ m.error(errores, 'pantalla_pulgadas') }}</label>
+                            <label class="campo-form"><span class="campo-nombre">Almacenamiento (GB)</span><input type="number" name="almacenamiento_gb" min="0" value="{{ v.almacenamiento_gb ?? '' }}">{{ m.error(errores, 'almacenamiento_gb') }}</label>
+                        </div>
+                        <div class="fila fila-2">
+                            <label class="campo-form"><span class="campo-nombre">Sistema operativo</span><input type="text" name="sistema_operativo" value="{{ v.sistema_operativo ?? '' }}">{{ m.error(errores, 'sistema_operativo') }}</label>
+                            <label class="campo-form">
+                                <span class="campo-nombre">Conectividad</span>
+                                <select name="conectividad">
+                                    {% for valor, texto in {'wifi': 'Wi-Fi', '4g': '4G', '5g': '5G'} %}
+                                        <option value="{{ valor }}" {{ (v.conectividad ?? 'wifi') == valor ? 'selected' }}>{{ texto }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                        </div>
+                    </fieldset>
+                </section>
+            </div>
+
+            <aside class="tarjeta form-imagen">
+                <h3 class="tarjeta-titulo">Imagen</h3>
+                <label class="zona-imagen{{ imagen ? ' con-imagen' }}" id="zona-imagen">
+                    <input type="file" name="imagen" accept="image/jpeg,image/png,image/webp" id="input-imagen">
+                    <img id="vista-previa" src="{{ imagen ?: '' }}" alt="" {{ not imagen ? 'hidden' }}>
+                    <span class="zona-texto">
+                        {{ m.icono('upload') }}
+                        <strong>{{ imagen ? 'Cambiar la imagen' : 'Arrastra una imagen' }}</strong>
+                        <small>o haz clic para elegirla · JPG o PNG</small>
+                    </span>
+                </label>
+                {{ m.error(errores, 'imagen') }}
+            </aside>
+        </div>
+    </form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(() => {
+    // Tipo de producto: enseña solo los campos de ese tipo (los demás no se envían)
+    document.querySelectorAll('input[name=tipo]').forEach(r => r.addEventListener('change', () => {
+        document.querySelectorAll('.pestanas-tipo label').forEach(l => l.classList.toggle('activa', l.querySelector('input').checked));
+        document.querySelectorAll('.campos-tipo').forEach(f => { const ver = f.dataset.tipo === r.value; f.disabled = !ver; f.hidden = !ver; });
+    }));
+
+    // Imagen: vista previa al elegirla o al arrastrarla
+    const zona = document.getElementById('zona-imagen');
+    const input = document.getElementById('input-imagen');
+    const vista = document.getElementById('vista-previa');
+    const mostrar = archivo => { if (!archivo) return; vista.src = URL.createObjectURL(archivo); vista.hidden = false; zona.classList.add('con-imagen'); };
+    input.addEventListener('change', () => mostrar(input.files[0]));
+    ['dragenter', 'dragover'].forEach(t => zona.addEventListener(t, () => zona.classList.add('encima')));
+    ['dragleave', 'drop'].forEach(t => zona.addEventListener(t, () => zona.classList.remove('encima')));
+})();
+</script>
+{% endblock %}
