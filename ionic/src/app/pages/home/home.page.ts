@@ -1,3 +1,4 @@
+import { NombreProductoPipe } from '../../pipes/nombre-producto.pipe';
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
@@ -23,7 +24,7 @@ const VUELTA = 2 * Math.PI * 26;   // perímetro del círculo de progreso (radio
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   imports: [RouterLink, IonHeader, IonContent, IonIcon, IonSkeletonText, IonRefresher, IonRefresherContent,
-            CabeceraComponent, MiniaturaProductoComponent, PrecioComponent],
+            CabeceraComponent, MiniaturaProductoComponent, PrecioComponent, NombreProductoPipe],
 })
 export class HomePage {
   sesion = inject(SesionService);

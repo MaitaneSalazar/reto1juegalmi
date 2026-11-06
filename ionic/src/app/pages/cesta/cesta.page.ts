@@ -1,3 +1,4 @@
+import { NombreProductoPipe } from '../../pipes/nombre-producto.pipe';
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { IonHeader, IonContent, IonIcon, IonButton, IonSpinner, ToastController } from '@ionic/angular';
@@ -17,7 +18,7 @@ import { DomicilioService } from '../../services/domicilio.service';
   templateUrl: './cesta.page.html',
   styleUrls: ['./cesta.page.scss'],
   imports: [RouterLink, IonHeader, IonContent, IonIcon, IonButton, IonSpinner,
-            CabeceraComponent, MiniaturaProductoComponent, SelectorCantidadComponent, PrecioComponent],
+            CabeceraComponent, MiniaturaProductoComponent, SelectorCantidadComponent, PrecioComponent, NombreProductoPipe],
 })
 export class CestaPage {
   cesta = inject(CestaService);

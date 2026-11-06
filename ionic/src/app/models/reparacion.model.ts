@@ -26,7 +26,8 @@ export interface Reparacion {
   // Solo en el detalle (GET /api/reparaciones/{id})
   componente?: string | null;
   descripcion_averia?: string;
-  presupuesto?: number | null;
+  presupuesto?: number | null;   // null hasta que la tienda lo pone
+  fecha_entrega?: string | null; // cuándo se entregó (null si aún no)
   pasos?: PasoReparacion[];
   trabajador?: { nombre_completo: string; cargo: string; telefono: string; departamento: string } | null;
   fotos?: { id: number; url: string; miniatura_url?: string | null; fecha_subida: string }[];

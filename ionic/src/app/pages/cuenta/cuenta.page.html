@@ -6,7 +6,7 @@
   @if (sesion.usuario(); as u) {
     <!-- Perfil -->
     <div class="perfil">
-      <div class="avatar">@if (u.foto_perfil) { <img [src]="u.foto_perfil" alt=""> } @else { {{ sesion.iniciales() }} }</div>
+      <div class="avatar">@if (u.foto_perfil_miniatura_url ?? u.foto_perfil_url; as foto) { <img [src]="foto" alt=""> } @else { {{ sesion.iniciales() }} }</div>
       <h1>{{ sesion.nombreCompleto() }}</h1>
       <span>{{ u.email }}</span>
     </div>
@@ -31,7 +31,7 @@
       @if (resumen.alquilerActivo(); as a) {
         <div class="tarjeta alquiler">
           @if (a.lineas[0]; as l) { <app-miniatura-producto [producto]="l.videojuego"></app-miniatura-producto> }
-          <span class="crece"><strong>{{ a.lineas[0]?.videojuego?.nombre }}</strong><small>Hasta el {{ a.fecha_fin_prevista | fechaCorta }}</small></span>
+          <span class="crece"><strong>{{ a.lineas[0]?.videojuego | nombreProducto }}</strong><small>Hasta el {{ a.fecha_fin_prevista | fechaCorta }}</small></span>
           <button type="button" class="devolver pulsable" (click)="devolver(a)">Devolver</button>
         </div>
       }

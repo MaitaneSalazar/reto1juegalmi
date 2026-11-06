@@ -7,7 +7,7 @@
       <ion-menu-toggle [autoHide]="false">
         <a class="usuario" routerLink="/cuenta/datos-personales" routerDirection="root">
           <span class="avatar">
-            @if (sesion.usuario()?.foto_perfil; as foto) { <img [src]="foto" alt=""> } @else { {{ sesion.iniciales() }} }
+            @if (sesion.usuario()?.foto_perfil_miniatura_url ?? sesion.usuario()?.foto_perfil_url; as foto) { <img [src]="foto" alt=""> } @else { {{ sesion.iniciales() }} }
           </span>
           <span>
             <strong>{{ sesion.usuario()?.nombre }} {{ sesion.usuario()?.apellido1 }}</strong>
