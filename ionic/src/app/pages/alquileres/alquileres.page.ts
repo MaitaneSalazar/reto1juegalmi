@@ -3,6 +3,7 @@ import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon, 
          AlertController, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { arrowUndoOutline } from 'ionicons/icons';
+import { EstadoComponent } from '../../components/estado/estado.component';
 import { MiniaturaProductoComponent } from '../../components/miniatura-producto/miniatura-producto.component';
 import { PrecioComponent } from '../../components/precio/precio.component';
 import { FechaCortaPipe } from '../../pipes/fecha-corta.pipe';
@@ -18,7 +19,7 @@ const DIA = 86400000;
   templateUrl: './alquileres.page.html',
   styleUrls: ['../cuenta/subpagina.scss', './alquileres.page.scss'],
   imports: [IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon, IonSkeletonText,
-            MiniaturaProductoComponent, PrecioComponent, FechaCortaPipe],
+            EstadoComponent, MiniaturaProductoComponent, PrecioComponent, FechaCortaPipe],
 })
 export class AlquileresPage {
   private servicio = inject(AlquilerService);
@@ -29,6 +30,7 @@ export class AlquileresPage {
 
   todos = signal<Alquiler[]>([]);
   cargando = signal(true);
+  error = signal(false);                     // sin conexión → Reintentar
 
   activos = computed(() => this.todos().filter(a => a.estado !== 'devuelto'));     // activo o retrasado
   devueltos = computed(() => this.todos().filter(a => a.estado === 'devuelto'));
@@ -77,10 +79,11 @@ export class AlquileresPage {
   }
 
   // GET /api/alquileres (el más reciente primero)
-  private cargar(): void {
+  cargar(): void {
+    this.error.set(false);
     this.servicio.listar().subscribe({
       next: r => { this.todos.set(r.datos); this.cargando.set(false); },
-      error: () => this.cargando.set(false),
+      error: () => { this.cargando.set(false); this.error.set(true); },
     });
   }
 

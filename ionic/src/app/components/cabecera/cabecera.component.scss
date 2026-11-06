@@ -14,14 +14,3 @@ ion-menu-button { --color: var(--ion-text-color); font-size: 26px; }
 }
 
 ion-buttons[slot="end"] { gap: 8px; }
-
-// Micrófono: turquesa y latiendo mientras escucha
-.microfono.activo {
-  background: var(--jg-acento);
-  color: #1f2329;
-  animation: latido 1s ease-in-out infinite;
-}
-@keyframes latido {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(120, 205, 208, .6); }
-  50%      { box-shadow: 0 0 0 10px rgba(120, 205, 208, 0); }
-}

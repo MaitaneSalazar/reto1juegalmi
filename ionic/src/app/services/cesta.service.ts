@@ -13,19 +13,26 @@ export class CestaService {
   readonly total = computed(() => +this.lineas().reduce((s, l) => s + l.producto.precio_venta * l.cantidad, 0).toFixed(2));
 
   // Añade un producto (si ya está, suma cantidad)
-  anadir(producto: Producto, cantidad = 1): void {
+  // Devuelve false si se pasaría del stock (no se añade)
+  anadir(producto: Producto, cantidad = 1): boolean {
     const lista = this.lineas();
     const existe = lista.find(l => l.producto.id === producto.id);
+    if ((existe?.cantidad ?? 0) + cantidad > producto.stock) return false;
     this.guardar(existe
       ? lista.map(l => l.producto.id === producto.id ? { ...l, cantidad: l.cantidad + cantidad } : l)
       : [...lista, { producto, cantidad }]);
+    return true;
   }
 
   // Botones − y + de la cesta (si llega a 0 se quita)
-  cambiarCantidad(productoId: number, cambio: number): void {
+  // Devuelve false si se pasaría del stock
+  cambiarCantidad(productoId: number, cambio: number): boolean {
+    const linea = this.lineas().find(l => l.producto.id === productoId);
+    if (linea && cambio > 0 && linea.cantidad + cambio > linea.producto.stock) return false;
     this.guardar(this.lineas()
       .map(l => l.producto.id === productoId ? { ...l, cantidad: l.cantidad + cambio } : l)
       .filter(l => l.cantidad > 0));
+    return true;
   }
 
   quitar(productoId: number): void {

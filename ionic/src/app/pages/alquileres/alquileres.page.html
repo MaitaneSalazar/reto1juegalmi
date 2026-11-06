@@ -7,7 +7,9 @@
 <ion-content class="ion-padding">
   <h1 class="titulo">Mis alquileres</h1>
 
-  @if (cargando()) {
+  @if (error()) {
+    <app-estado [error]="true" (reintentar)="cargar()"></app-estado>
+  } @else if (cargando()) {
     <ion-skeleton-text [animated]="true" style="height: 260px; border-radius: 24px"></ion-skeleton-text>
   } @else {
     <!-- Alquileres en curso -->
@@ -31,7 +33,7 @@
         </button>
       </div>
     } @empty {
-      <p class="vacio">No tienes ningún alquiler en curso.</p>
+      <app-estado icono="time-outline" titulo="Nada alquilado ahora" texto="Alquila un juego desde la Tienda y aquí verás los días que te quedan."></app-estado>
     }
 
     <!-- Devueltos -->

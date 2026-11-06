@@ -1,5 +1,10 @@
 <ion-header class="ion-no-border">
   <app-cabecera>
+    <!-- Buscador por voz: se pone turquesa y late mientras escucha -->
+    <button type="button" class="redondo microfono" [class.activo]="voz.escuchando()" (click)="buscarPorVoz()"
+            [attr.aria-label]="voz.escuchando() ? 'Escuchando…' : 'Buscar por voz'">
+      <ion-icon name="mic-outline"></ion-icon>
+    </button>
     <button type="button" class="redondo" (click)="alternarBuscador()" [attr.aria-label]="buscando() ? 'Cerrar buscador' : 'Buscar'">
       <ion-icon [name]="buscando() ? 'close-outline' : 'search-outline'"></ion-icon>
     </button>
@@ -25,34 +30,31 @@
     }
   </div>
 
-  @if (cargando()) {
-    <ion-skeleton-text [animated]="true" class="esq-grande"></ion-skeleton-text>
+  @if (error()) {
+    <app-estado [error]="true" (reintentar)="cargar()"></app-estado>
+  } @else if (cargando()) {
+    <!-- Huesos grises mientras llega la API -->
     <div class="rejilla">
-      @for (i of [1, 2]; track i) { <ion-skeleton-text [animated]="true" class="esq-peque"></ion-skeleton-text> }
+      @for (i of [1, 2, 3, 4]; track i) {
+        <div class="hueso"><ion-skeleton-text [animated]="true" class="esq-foto"></ion-skeleton-text>
+          <ion-skeleton-text [animated]="true" style="width: 80%"></ion-skeleton-text>
+          <ion-skeleton-text [animated]="true" style="width: 40%"></ion-skeleton-text></div>
+      }
     </div>
-  } @else {
-    <!-- Producto destacado -->
-    @if (destacado(); as p) {
-      <button type="button" class="destacado pulsable" (click)="abrir(p)">
-        <span class="escaparate">
-          <app-miniatura-producto [producto]="p"></app-miniatura-producto>
-          @if (p.alquilado) { <span class="etiqueta-mini">Alquilado</span> }
-        </span>
-        <span class="pie">
-          <span class="nombre">{{ p.nombre }}</span>
-          @if (modo() === 'alquilar') { <app-precio [valor]="p.precio_alquiler_dia ?? 0" sufijo="/ día"></app-precio> }
-          @else { <app-precio [valor]="p.precio_venta"></app-precio> }
-        </span>
-      </button>
+  } @else if (!productos().length) {
+    @if (texto()) {
+      <app-estado icono="search-outline" titulo="Sin resultados" [texto]="'No encontramos nada con «' + texto() + '». Prueba con otra palabra.'"></app-estado>
+    } @else {
+      <app-estado titulo="Aún no hay productos" texto="Estamos reponiendo la tienda. Vuelve en un rato o mira otra categoría."></app-estado>
     }
-
-    <!-- Resto en rejilla de 2 -->
+  } @else {
+    <!-- Rejilla de 2 columnas -->
     <div class="rejilla cascada">
-      @for (p of resto(); track p.id) {
+      @for (p of productos(); track p.id) {
         <button type="button" class="producto pulsable" (click)="abrir(p)">
           <span class="foto">
             <app-miniatura-producto [producto]="p"></app-miniatura-producto>
-            @if (p.alquilado) { <span class="etiqueta-mini">Alquilado</span> }
+            @if (stock(p); as e) { <span class="stock" [class.aviso]="e.tipo === 'aviso'">{{ e.texto }}</span> }
           </span>
           <span class="nombre">{{ p.nombre }}</span>
           @if (modo() === 'alquilar') { <app-precio [valor]="p.precio_alquiler_dia ?? 0" sufijo="/ día"></app-precio> }
@@ -60,8 +62,6 @@
         </button>
       }
     </div>
-
-    @if (!productos().length) { <p class="vacio">No hay productos que coincidan.</p> }
 
     <ion-infinite-scroll [disabled]="!hayMas()" (ionInfinite)="cargarMas($event)">
       <ion-infinite-scroll-content loadingSpinner="crescent"></ion-infinite-scroll-content>

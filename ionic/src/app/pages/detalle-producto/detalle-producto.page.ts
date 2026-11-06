@@ -3,7 +3,9 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonContent, IonFooter, IonBackButton, IonSegment, IonSegmentButton, IonLabel, IonButton,
-         IonSpinner, IonSkeletonText, ToastController } from '@ionic/angular';
+         IonSpinner, IonSkeletonText, IonIcon, ToastController } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { notificationsOutline } from 'ionicons/icons';
 import { MiniaturaProductoComponent } from '../../components/miniatura-producto/miniatura-producto.component';
 import { PrecioComponent } from '../../components/precio/precio.component';
 import { EurosPipe } from '../../pipes/euros.pipe';
@@ -18,7 +20,7 @@ import { NOMBRE_TIPO, Producto, esAlquilable } from '../../models/producto.model
   templateUrl: './detalle-producto.page.html',
   styleUrls: ['./detalle-producto.page.scss'],
   imports: [IonContent, IonFooter, IonBackButton, IonSegment, IonSegmentButton, IonLabel, IonButton,
-            IonSpinner, IonSkeletonText, MiniaturaProductoComponent, PrecioComponent, EurosPipe],
+            IonSpinner, IonSkeletonText, IonIcon, MiniaturaProductoComponent, PrecioComponent, EurosPipe, FechaCortaPipe],
 })
 export class DetalleProductoPage {
   private productos = inject(ProductoService);
@@ -36,8 +38,18 @@ export class DetalleProductoPage {
 
   totalAlquiler = computed(() => +(this.dias() * (this.producto()?.precio_alquiler_dia ?? 0)).toFixed(2));
   devolucion = computed(() => this.alquileres.fechaDevolucion(this.dias()));
-  sinStock = computed(() => (this.producto()?.stock ?? 0) <= 0);                         // para comprar
-  sinCopias = computed(() => (this.producto()?.copias_disponibles ?? 0) <= 0);           // para alquilar
+  // Lo que queda: unidades para comprar o copias libres para alquilar
+  quedan = computed(() => {
+    const p = this.producto();
+    return !p ? 0 : this.modo() === 'alquilar' ? (p.copias_disponibles ?? 0) : p.stock;
+  });
+  textoStock = computed(() => {
+    const n = this.quedan(), alq = this.modo() === 'alquilar';
+    if (n <= 0) return alq ? 'Todas las copias están alquiladas' : 'Agotado';
+    if (n === 1) return `¡Date prisa! Queda 1 ${alq ? 'copia' : 'unidad'}`;
+    if (n === 2) return `¡Date prisa! Quedan 2 ${alq ? 'copias' : 'unidades'}`;
+    return alq ? 'Disponible para alquilar' : 'En stock · envío en 24 h';
+  });
   alquilable = computed(() => { const p = this.producto(); return !!p && esAlquilable(p); });
 
   // Pastilla de arriba a la derecha: "Switch", "Consola"...
@@ -56,6 +68,7 @@ export class DetalleProductoPage {
   });
 
   constructor() {
+    addIcons({ notificationsOutline });
     const ruta = inject(ActivatedRoute);
     this.modo.set(ruta.snapshot.queryParamMap.get('modo') === 'alquilar' ? 'alquilar' : 'comprar');
 
@@ -78,10 +91,20 @@ export class DetalleProductoPage {
     this.modo() === 'comprar' ? this.anadirCesta(p) : this.alquilar(p);
   }
 
+  // Agotado: de momento solo se avisa (la API no tiene avisos de stock)
+  async avisame(): Promise<void> {
+    const t = await this.toast.create({ message: 'Te avisaremos cuando vuelva a estar disponible', duration: 2500, color: 'dark' });
+    await t.present();
+  }
+
   private async anadirCesta(p: Producto): Promise<void> {
-    this.cesta.anadir(p);
+    if (!this.cesta.anadir(p)) {                       // ya tienes en la cesta todas las que quedan
+      const t = await this.toast.create({ message: 'No quedan más unidades', duration: 2000, color: 'dark' });
+      await t.present();
+      return;
+    }
     const t = await this.toast.create({
-      message: `${p.nombre} añadido a la cesta`,
+      message: 'Añadido a la cesta',
       duration: 2500, position: 'bottom', color: 'dark',
       buttons: [{ text: 'Ver cesta', handler: () => { this.router.navigateByUrl('/cesta'); } }],
     });
