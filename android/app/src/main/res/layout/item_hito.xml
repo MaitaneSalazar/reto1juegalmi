@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- UN HITO DE LA HISTORIA: LA LINEA CON SU PUNTO A LA IZQUIERDA Y LA TARJETA A LA DERECHA -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <!-- LA LINEA VA DE ARRIBA A ABAJO PARA QUE SE UNA CON LA DEL SIGUIENTE HITO -->
+    <FrameLayout
+        android:layout_width="32dp"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/vHitoLinea"
+            android:layout_width="3dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/color_marca_texto" />
+
+        <View
+            android:id="@+id/vHitoPunto"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="26dp"
+            android:background="@drawable/bg_punto_hecho" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/llHitoTarjeta"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_tarjeta_hoja"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvHitoAnio"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:letterSpacing="-0.04"
+                android:textColor="@color/color_texto"
+                android:textSize="40sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/ivHitoIcono"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_circulo_hoja"
+                android:backgroundTint="@color/color_pozo"
+                android:contentDescription="@null"
+                android:padding="10dp"
+                app:tint="@color/color_texto_suave" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvHitoTitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:textColor="@color/color_texto"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvHitoTexto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/color_texto_suave"
+            android:textSize="13sp" />
+    </LinearLayout>
+</LinearLayout>

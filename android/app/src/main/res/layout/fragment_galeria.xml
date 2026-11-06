@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- PESTAÑA GALERIA, LAS FOTOS DE LA TIENDA EN MOSAICO -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GaleriaFragment">
+
+    <!-- EL PADDING DE ABAJO ES PARA QUE LA BARRA FLOTANTE NO TAPE LA ULTIMA FOTO -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvGaleria"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingBottom="120dp"
+        tools:listitem="@layout/item_foto_tienda" />
+
+    <ProgressBar
+        android:id="@+id/pbGaleria"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="64dp"
+        android:indeterminateTint="@color/color_marca" />
+
+    <TextView
+        android:id="@+id/tvGaleriaAviso"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:gravity="center"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textColor="@color/color_texto_suave"
+        android:visibility="gone" />
+</FrameLayout>

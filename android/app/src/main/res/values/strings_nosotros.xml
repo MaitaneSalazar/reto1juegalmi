@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nosotros_titulo">Sobre nosotros</string>
+    <string-array name="nosotros_pestanas">
+        <item>Ubicación</item>
+        <item>Historia</item>
+        <item>Galería</item>
+    </string-array>
+
+    <!-- UBICACION. EL HORARIO VA EN LA APP, LA API NO LO DEVUELVE -->
+    <string name="nosotros_horario_semana">10:00 – 20:30</string>
+    <string name="nosotros_dias_semana">Lunes a viernes</string>
+    <string name="nosotros_horario_sabado">10:00 – 14:00</string>
+    <string name="nosotros_dias_sabado">Sábados</string>
+    <string name="nosotros_como_llegar">Cómo llegar</string>
+    <string name="nosotros_error">No hemos podido cargar los datos de la tienda.</string>
+    <string name="nosotros_sin_fotos">Todavía no hay fotos de la tienda.</string>
+
+    <!-- HISTORIA. TAMBIEN VA EN LA APP. LOS 4 ARRAYS VAN EN EL MISMO ORDEN -->
+    <string name="nosotros_historia_intro">JuegAlmi nació de la afición de dos amigos por los videojuegos y la electrónica. Hoy somos tienda, alquiler y taller, con el mismo trato cercano del primer día.</string>
+    <string-array name="nosotros_hitos_anio">
+        <item>2012</item>
+        <item>2015</item>
+        <item>2018</item>
+        <item>2021</item>
+        <item>2026</item>
+    </string-array>
+    <string-array name="nosotros_hitos_titulo">
+        <item>Abrimos en Bilbao</item>
+        <item>Nace el taller</item>
+        <item>Llegan los móviles</item>
+        <item>Alquiler de videojuegos</item>
+        <item>La app JuegAlmi</item>
+    </string-array>
+    <string-array name="nosotros_hitos_texto">
+        <item>Un pequeño local en Gran Vía dedicado a la compraventa de videojuegos de segunda mano.</item>
+        <item>Empezamos a reparar consolas y mandos en la trastienda, con un único técnico.</item>
+        <item>Ampliamos la tienda con venta y reparación de móviles y tablets.</item>
+        <item>Lanzamos el alquiler por días para probar un juego antes de comprarlo.</item>
+        <item>Todo el catálogo, los alquileres y el seguimiento de reparaciones, desde el móvil.</item>
+    </string-array>
+    <array name="nosotros_hitos_icono">
+        <item>@drawable/ic_storefront</item>
+        <item>@drawable/ic_handyman</item>
+        <item>@drawable/ic_movil</item>
+        <item>@drawable/ic_schedule</item>
+        <item>@drawable/ic_mando</item>
+    </array>
+</resources>

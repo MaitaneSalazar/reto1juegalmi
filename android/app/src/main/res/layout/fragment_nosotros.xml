@@ -1,8 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- PANTALLA DE SOBRE NOSOTROS, DE MOMENTO VACIA -->
+<!-- PANTALLA DE SOBRE NOSOTROS: UBICACION, HISTORIA Y GALERIA EN PESTAÑAS -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".NosotrosFragment" />
+    tools:context=".NosotrosFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <include layout="@layout/barra_superior" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:letterSpacing="-0.05"
+            android:text="@string/nosotros_titulo"
+            android:textColor="@color/color_texto"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+        <!-- LAS 3 PESTAÑAS, LOS TEXTOS LOS PONE EL CODIGO -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tlNosotros"
+            style="@style/PestanasTienda"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_pildora_pozo"
+            android:padding="4dp"
+            app:tabIndicator="@drawable/bg_pildora_hoja"
+            app:tabIndicatorColor="@color/color_hoja"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/color_texto" />
+    </LinearLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vpNosotros"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:layout_weight="1" />
+</LinearLayout>

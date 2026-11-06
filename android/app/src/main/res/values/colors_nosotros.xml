@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ARO DEL PIN DEL MAPA, EL COLOR DE LA MARCA AL 30% -->
+    <color name="nosotros_halo_pin">#4D78CDD0</color>
+</resources>

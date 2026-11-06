@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="tienda_margen_foto">20dp</dimen>
+    <dimen name="galeria_alto_ancha">200dp</dimen>
+    <dimen name="galeria_alto_cuadrada">165dp</dimen>
 </resources>
