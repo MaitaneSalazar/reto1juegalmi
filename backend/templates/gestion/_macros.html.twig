@@ -1,0 +1,22 @@
+{# Piezas reutilizables de la web de gestión #}
+
+{% macro icono(nombre) %}<i data-lucide="{{ nombre }}"></i>{% endmacro %}
+
+{% macro menu(url, texto, icono, activo, contador = null) %}
+    <a class="menu-item{{ activo ? ' activo' }}" href="{{ url }}">
+        <i data-lucide="{{ icono }}"></i><span>{{ texto }}</span>
+        {% if contador %}<span class="contador">{{ contador }}</span>{% endif %}
+    </a>
+{% endmacro %}
+
+{# 59,99 € con los céntimos pequeños, como en el mockup #}
+{% macro precio(valor) %}{% set c = (valor * 100)|round %}<span class="precio">{{ (c // 100)|number_format(0, ',', '.') }}<sup>,{{ '%02d'|format(c % 100) }} €</sup></span>{% endmacro %}
+
+{# Miniatura del worker; si aún no existe, la original; sin imagen, un icono #}
+{% macro foto(ruta, clase = 'foto') %}
+    {%- if ruta -%}
+        <img class="{{ clase }}" src="{{ ruta|miniatura }}" alt="" loading="lazy" onerror="this.onerror=null;this.src='{{ ruta }}'">
+    {%- else -%}
+        <span class="{{ clase }} sin-foto"><i data-lucide="image"></i></span>
+    {%- endif -%}
+{% endmacro %}

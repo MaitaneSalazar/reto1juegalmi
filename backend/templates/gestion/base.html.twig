@@ -1,0 +1,84 @@
+{% import 'gestion/_macros.html.twig' as m %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block titulo %}Panel{% endblock %} · JuegAlmi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="{{ asset('css/gestion.css') }}">
+</head>
+<body class="gestion">
+{% block cuerpo %}
+    {% set ruta = app.request.pathInfo %}
+    {% set n = menu_contadores() %}
+    <div class="app">
+        <aside class="menu">
+            <a class="marca" href="{{ path('gestion_resumen') }}"><span class="logo-j">J</span>JuegAlmi</a>
+
+            <form class="menu-buscar" action="/gestion/buscar" method="get">
+                {{ m.icono('search') }}
+                <input type="search" name="q" placeholder="Buscar" value="{{ app.request.query.get('q') }}">
+            </form>
+
+            <nav>
+                {{ m.menu('/gestion', 'Resumen', 'layout-grid', ruta == '/gestion') }}
+                {{ m.menu('/gestion/productos', 'Productos y stock', 'clipboard-check', ruta starts with '/gestion/productos') }}
+                {{ m.menu('/gestion/reparaciones', 'Reparaciones', 'wrench', ruta starts with '/gestion/reparaciones', n.reparaciones) }}
+                {{ m.menu('/gestion/alquileres', 'Alquileres', 'clock', ruta starts with '/gestion/alquileres', n.vencidos) }}
+                {{ m.menu('/gestion/pedidos', 'Pedidos', 'receipt-text', ruta starts with '/gestion/pedidos', n.pendientes) }}
+
+                <div class="menu-separador"></div>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    {{ m.menu('/gestion/trabajadores', 'Trabajadores', 'users', ruta starts with '/gestion/trabajadores') }}
+                    {{ m.menu('/gestion/departamentos', 'Departamentos', 'building-2', ruta starts with '/gestion/departamentos') }}
+                    {{ m.menu('/gestion/clientes', 'Clientes', 'contact', ruta starts with '/gestion/clientes') }}
+                {% endif %}
+                {{ m.menu('/gestion/empresas', 'Empresas', 'factory', ruta starts with '/gestion/empresas') }}
+                {% if is_granted('ROLE_ADMIN') %}
+                    {{ m.menu('/gestion/tienda', 'Tienda', 'store', ruta starts with '/gestion/tienda') }}
+                {% endif %}
+            </nav>
+
+            <div class="menu-pie">
+                {{ m.menu('/gestion/ajustes', 'Ajustes', 'settings', ruta starts with '/gestion/ajustes') }}
+                {{ m.menu('/gestion/ayuda', 'Ayuda', 'circle-help', ruta starts with '/gestion/ayuda') }}
+
+                <details class="usuario">
+                    <summary>
+                        <span class="avatar">{{ app.user|iniciales }}</span>
+                        <span class="usuario-datos">
+                            <span class="nombre">{{ app.user.nombre }} {{ app.user.apellido1 }}</span>
+                            <span class="rol">{{ app.user.cargo }}{{ app.user.esAdmin ? ' · Admin' }}</span>
+                        </span>
+                        <span class="mas">{{ m.icono('ellipsis-vertical') }}</span>
+                    </summary>
+                    <div class="desplegable">
+                        <a href="{{ path('gestion_salir') }}">{{ m.icono('log-out') }} Cerrar sesión</a>
+                    </div>
+                </details>
+            </div>
+        </aside>
+
+        <main class="contenido">
+            {% set avisos = app.flashes %}
+            {% if avisos is not empty %}
+                <div class="avisos">
+                    {% for tipo, mensajes in avisos %}
+                        {% for mensaje in mensajes %}<div class="aviso {{ tipo }}">{{ mensaje }}</div>{% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block contenido %}{% endblock %}
+        </main>
+    </div>
+{% endblock %}
+
+<script src="{{ asset('js/lucide.min.js') }}"></script>
+<script>lucide.createIcons();</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

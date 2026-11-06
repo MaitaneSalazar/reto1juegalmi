@@ -11,6 +11,10 @@ use App\Entity\Usuario;
  */
 class UsuarioPresenter
 {
+    /** Reutiliza las funciones que convierten una ruta en dirección completa y buscan la miniatura */
+    public function __construct(private ProductoPresenter $imagenes)
+    {
+    }
     public function presentar(Usuario $usuario): array
     {
         $datos = [
@@ -25,6 +29,8 @@ class UsuarioPresenter
             'email' => $usuario->getEmail(),
             'telefono' => $usuario->getTelefono(),
             'foto_perfil' => $usuario->getFotoPerfil(),
+            'foto_perfil_url' => $this->imagenes->url($usuario->getFotoPerfil()),
+            'foto_perfil_miniatura_url' => $this->imagenes->miniatura($usuario->getFotoPerfil()),
             'activo' => $usuario->isActivo(),
         ];
 

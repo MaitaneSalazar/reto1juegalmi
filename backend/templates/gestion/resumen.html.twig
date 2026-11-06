@@ -1,0 +1,117 @@
+{% extends 'gestion/base.html.twig' %}
+{% import 'gestion/_macros.html.twig' as m %}
+
+{% block titulo %}Resumen{% endblock %}
+
+{% block contenido %}
+    {% set hora = 'now'|date('G', 'Europe/Madrid') %}
+    {% set estados = [
+        ['recibida', 'Recibida'], ['diagnostico', 'Diagnóstico'], ['en_reparacion', 'En reparación'],
+        ['lista_para_recoger', 'Lista para recoger'], ['entregada', 'Entregada']
+    ] %}
+
+    <div class="cabecera">
+        <h1 class="titulo">{{ hora < 14 ? 'Buenos días' : (hora < 21 ? 'Buenas tardes' : 'Buenas noches') }}, {{ app.user.nombre }}</h1>
+    </div>
+
+    <div class="resumen-grid">
+        {# Reparaciones en curso #}
+        <section class="hero">
+            <div class="hero-cabecera">
+                <span>Reparaciones en curso</span>
+                <a class="boton oscuro" href="/gestion/reparaciones">Ver tablero {{ m.icono('chevron-right') }}</a>
+            </div>
+            <div class="hero-numero">{{ en_curso }}</div>
+            <div class="hero-estados">
+                {% for e in estados %}
+                    <div>
+                        <div class="barra{{ por_estado[e[0]] > 0 and e[0] != 'entregada' ? ' llena' }}"></div>
+                        <strong>{{ por_estado[e[0]] }}</strong>
+                        <small>{{ e[1] }}</small>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <div class="lado">
+            <a class="tarjeta oscura kpi" href="/gestion/alquileres">
+                <div class="kpi-cabecera">
+                    {{ m.icono('clock') }}
+                    {% if vencidos|length %}<span class="etiqueta roja">{{ vencidos|length }} vencido{{ vencidos|length > 1 ? 's' }}</span>{% endif %}
+                </div>
+                <div class="numero">{{ alquileres_activos }}</div>
+                <div class="texto">Alquileres activos</div>
+            </a>
+            <a class="tarjeta kpi" href="/gestion/pedidos">
+                <div class="kpi-cabecera">{{ m.icono('receipt-text') }}</div>
+                <div class="numero">{{ pendientes|length }}</div>
+                <div class="texto">Pedidos por preparar</div>
+            </a>
+
+            <section class="tarjeta stock-bajo">
+                <h3 class="tarjeta-titulo">Stock bajo</h3>
+                {% if stock_bajo is empty %}
+                    <p class="vacio">Todo el catálogo tiene stock suficiente.</p>
+                {% else %}
+                    <div class="productos">
+                        {% for p in stock_bajo|slice(0, 3) %}
+                            <a class="producto" href="/gestion/productos?stock={{ p.id }}">
+                                <div class="imagen">
+                                    <span class="etiqueta roja">{{ p.stock == 0 ? 'Agotado' : 'Quedan ' ~ p.stock }}</span>
+                                    {{ m.foto(p.imagen, 'foto-grande') }}
+                                </div>
+                                <span>{{ p.nombre }}</span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+
+    <h2 class="seccion">Requiere atención</h2>
+    {% set alquiler = vencidos|first %}
+    {% set producto = stock_bajo|first %}
+    {% set reparacion = listas|first %}
+    {% set pedido = pendientes|first %}
+
+    {% if not alquiler and not producto and not reparacion and not pedido %}
+        <p class="vacio">Nada pendiente. ¡Todo al día!</p>
+    {% else %}
+        <div class="atencion">
+            {% if alquiler %}
+                {% set juego = alquiler.lineas|filter(l => not l.fechaDevolucion)|first %}
+                <article class="tarjeta">
+                    <span><span class="etiqueta roja">Vencido</span></span>
+                    <h3>Alquiler #{{ '%04d'|format(alquiler.id) }}</h3>
+                    <p>{{ juego ? juego.videojuego.nombre }} · {{ alquiler.cliente.nombre }} {{ alquiler.cliente.apellido1 }}</p>
+                    <a class="boton" href="/gestion/alquileres?avisar={{ alquiler.id }}">Avisar</a>
+                </article>
+            {% endif %}
+            {% if producto %}
+                <article class="tarjeta">
+                    <span><span class="etiqueta roja">Stock bajo</span></span>
+                    <h3>{{ producto.nombre }}</h3>
+                    <p>{{ producto.stock == 0 ? 'Agotado' : (producto.stock == 1 ? 'Queda 1 unidad' : 'Quedan ' ~ producto.stock ~ ' unidades') }}</p>
+                    <a class="boton" href="/gestion/productos?stock={{ producto.id }}">Añadir stock</a>
+                </article>
+            {% endif %}
+            {% if reparacion %}
+                <article class="tarjeta">
+                    <span><span class="etiqueta turquesa">Lista</span></span>
+                    <h3>Reparación #{{ '%04d'|format(reparacion.id) }}</h3>
+                    <p>{{ reparacion.modelo }} · {{ reparacion.cliente.nombre }} {{ reparacion.cliente.apellido1 }}</p>
+                    <a class="boton" href="/gestion/reparaciones/{{ reparacion.id }}">Avisar</a>
+                </article>
+            {% endif %}
+            {% if pedido %}
+                <article class="tarjeta">
+                    <span><span class="etiqueta oscura">Pendiente</span></span>
+                    <h3>Pedido #{{ pedido.id }}</h3>
+                    <p>{{ pedido.cliente.nombre }} {{ pedido.cliente.apellido1 }} · {{ pedido.total|number_format(2, ',', '.') }} €</p>
+                    <a class="boton" href="/gestion/pedidos?id={{ pedido.id }}">Preparar</a>
+                </article>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Service\CargadorImagenes;
 use App\Entity\Alquiler;
 use App\Entity\AlquilerVideojuego;
 use App\Entity\Cliente;
@@ -35,16 +36,11 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  */
 class AppFixtures extends Fixture
 {
-    /** Qué imagen de fixtures/imagenes/productos/ va con cada producto (cambiar aquí por las definitivas) */
-    private const IMAGENES_PRODUCTOS = [
-        'zelda' => 'Greh.jpeg',
-        'ps5' => 'J&D.jpeg',
-    ];
+    /** Ya no se usa: las imágenes de los productos están en App\Service\CargadorImagenes */
+    private const IMAGENES_PRODUCTOS = [];
 
-    /** Qué imagen de fixtures/imagenes/tienda/ va con cada foto de la galería */
-    private const IMAGENES_TIENDA = [
-        'Fachada' => 'tukutun.jpeg',
-    ];
+    /** Ya no se usa: las imágenes de la tienda están en App\Service\CargadorImagenes */
+    private const IMAGENES_TIENDA = [];
 
     private ObjectManager $om;
 
@@ -52,6 +48,7 @@ class AppFixtures extends Fixture
         private UserPasswordHasherInterface $hasher,
         private MessageBusInterface $bus,
         #[Autowire('%kernel.project_dir%')] private string $directorioProyecto,
+        private CargadorImagenes $cargadorImagenes,
     ) {
     }
 
@@ -69,7 +66,7 @@ class AppFixtures extends Fixture
             ->setDireccion($this->direccion('Gran Vía', '12', 'Bajo', '48001'));
         $this->om->persist($tienda);
 
-        foreach (['Fachada', 'Mostrador', 'Zona de videojuegos', 'Taller'] as $i => $titulo) {
+        foreach (['Fachada', 'Mostrador', 'Zona de videojuegos', 'Taller', 'Zona de consolas'] as $i => $titulo) {
             $this->om->persist((new FotoTienda())
                 ->setTienda($tienda)
                 ->setTitulo($titulo)
@@ -97,6 +94,8 @@ class AppFixtures extends Fixture
         $v['forza'] = $this->videojuego($empresas['Microsoft'], 'Forza Horizon 5', 'Conducción en mundo abierto por los paisajes de México.', 39.99, 'Xbox', 'Conducción', 3, 1.25, 2, 4);
         $v['halo'] = $this->videojuego($empresas['Microsoft'], 'Halo Infinite', 'El Jefe Maestro vuelve en la entrega más grande de Halo.', 29.99, 'Xbox', 'Shooter', 16, 1.00, 1, 2);
         $v['minecraft'] = $this->videojuego($empresas['Mojang'], 'Minecraft', 'Construye, explora y sobrevive en un mundo de bloques.', 29.99, 'Multi', 'Sandbox', 7, 1.00, 3, 10);
+        $v['minecraft_xbox'] = $this->videojuego($empresas['Mojang'], 'Minecraft', 'Construye, explora y sobrevive en un mundo de bloques.', 29.99, 'Xbox', 'Sandbox', 7, 1.00, 3, 10);
+        $v['minecraft_switch'] = $this->videojuego($empresas['Mojang'], 'Minecraft', 'Construye, explora y sobrevive en un mundo de bloques.', 29.99, 'Switch', 'Sandbox', 7, 1.00, 3, 10);
 
         // ---------- Consolas ----------
         $ps5 = $this->consola($empresas['Sony'], 'PlayStation 5 Slim', 'La PS5 en un formato más compacto, con lector de discos.', 499.99, 1000, 'Blanco', 'Estándar', 5);
@@ -200,6 +199,9 @@ class AppFixtures extends Fixture
         }
 
         $this->om->flush();
+
+        // Imágenes definitivas: las mismas que pone el comando app:cargar-imagenes
+        $this->cargadorImagenes->cargar();
     }
 
     // ---------- Ayudantes para no repetir código ----------

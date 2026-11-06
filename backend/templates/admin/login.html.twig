@@ -1,0 +1,8 @@
+{# Login de la web con el estilo de las apps: la plantilla de EasyAdmin + nuestra letra y nuestro CSS #}
+{% extends '@EasyAdmin/page/login.html.twig' %}
+
+{% block head_stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+{% endblock %}

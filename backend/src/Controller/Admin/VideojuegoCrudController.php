@@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 
 class VideojuegoCrudController extends ProductoCrudController
 {
@@ -26,7 +27,11 @@ class VideojuegoCrudController extends ProductoCrudController
 
     public function configureFilters(Filters $filters): Filters
     {
-        return parent::configureFilters($filters)->add('plataforma')->add('pegi');
+        return parent::configureFilters($filters)
+            ->add(ChoiceFilter::new('plataforma', 'Plataforma')
+                ->setChoices(['PlayStation' => 'PlayStation', 'Switch' => 'Switch', 'Xbox' => 'Xbox']))
+            ->add(ChoiceFilter::new('pegi', 'PEGI')
+                ->setChoices(array_combine(array_map(fn ($p) => 'PEGI ' . $p, Videojuego::PEGI), Videojuego::PEGI)));
     }
 
     protected function camposPropios(): iterable
