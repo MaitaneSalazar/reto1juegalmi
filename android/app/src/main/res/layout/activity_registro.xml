@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -158,13 +159,30 @@
                         android:labelFor="@id/etRegistroDni"
                         android:text="@string/dni" />
 
-                    <EditText
-                        android:id="@+id/etRegistroDni"
-                        style="@style/Campo"
-                        android:hint="@string/dni_ejemplo"
-                        android:importantForAutofill="no"
-                        android:inputType="textCapCharacters"
-                        android:maxLength="9" />
+                    <!-- EL DADO DE DENTRO DEL CAMPO GENERA UN DNI ALEATORIO -->
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/etRegistroDni"
+                            style="@style/Campo"
+                            android:hint="@string/dni_ejemplo"
+                            android:importantForAutofill="no"
+                            android:inputType="textCapCharacters"
+                            android:maxLength="9"
+                            android:paddingEnd="40dp" />
+
+                        <ImageButton
+                            android:id="@+id/btnRegistroDniAleatorio"
+                            android:layout_width="40dp"
+                            android:layout_height="44dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/dni_aleatorio"
+                            android:src="@drawable/ic_casino"
+                            app:tint="@color/color_marca_texto" />
+                    </FrameLayout>
                 </LinearLayout>
 
                 <LinearLayout
