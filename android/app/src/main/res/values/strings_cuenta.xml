@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="datos_cliente_desde">Cliente desde %1$s</string>
+    <string name="datos_nombre_completo">Nombre completo</string>
+    <string name="datos_dni">DNI</string>
+    <string name="datos_email">Email</string>
+    <string name="datos_telefono">Teléfono</string>
+    <string name="datos_sin_telefono">Sin teléfono</string>
+    <string name="datos_contrasena">Contraseña</string>
+    <string name="datos_contrasena_oculta">••••••••</string>
+    <string name="datos_foto">Foto de perfil</string>
+    <string name="datos_error_titulo">Sin conexión</string>
+    <string name="datos_reintentar">Reintentar</string>
+</resources>
