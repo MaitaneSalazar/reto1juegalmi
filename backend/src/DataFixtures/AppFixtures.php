@@ -66,7 +66,7 @@ class AppFixtures extends Fixture
             ->setDireccion($this->direccion('Gran Vía', '12', 'Bajo', '48001'));
         $this->om->persist($tienda);
 
-        foreach (['Fachada', 'Mostrador', 'Zona de videojuegos', 'Taller'] as $i => $titulo) {
+        foreach (['Fachada', 'Mostrador', 'Zona de videojuegos', 'Taller', 'Zona de consolas'] as $i => $titulo) {
             $this->om->persist((new FotoTienda())
                 ->setTienda($tienda)
                 ->setTitulo($titulo)

@@ -44,6 +44,7 @@ class CargadorImagenes
         'Mostrador' => 'Mostrador.png',
         'Zona de videojuegos' => 'Videojuegos.png',
         'Taller' => 'Taller.png',
+        'Zona de consolas' => 'Consolas.png',
     ];
 
     public function __construct(
