@@ -6,6 +6,7 @@ import { IonContent, IonFooter, IonBackButton, IonSegment, IonSegmentButton, Ion
          IonSpinner, IonSkeletonText, IonIcon, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { notificationsOutline } from 'ionicons/icons';
+import { PlataformasComponent } from '../../components/plataformas/plataformas.component';
 import { MiniaturaProductoComponent } from '../../components/miniatura-producto/miniatura-producto.component';
 import { PrecioComponent } from '../../components/precio/precio.component';
 import { EurosPipe } from '../../pipes/euros.pipe';
@@ -20,7 +21,7 @@ import { NOMBRE_TIPO, Producto, esAlquilable } from '../../models/producto.model
   templateUrl: './detalle-producto.page.html',
   styleUrls: ['./detalle-producto.page.scss'],
   imports: [IonContent, IonFooter, IonBackButton, IonSegment, IonSegmentButton, IonLabel, IonButton,
-            IonSpinner, IonSkeletonText, IonIcon, MiniaturaProductoComponent, PrecioComponent, EurosPipe, FechaCortaPipe],
+            IonSpinner, IonSkeletonText, IonIcon, PlataformasComponent, MiniaturaProductoComponent, PrecioComponent, EurosPipe, FechaCortaPipe],
 })
 export class DetalleProductoPage {
   private productos = inject(ProductoService);
@@ -53,11 +54,6 @@ export class DetalleProductoPage {
   alquilable = computed(() => { const p = this.producto(); return !!p && esAlquilable(p); });
 
   // Pastilla de arriba a la derecha: "Switch", "Consola"...
-  etiqueta = computed(() => {
-    const p = this.producto();
-    return p ? (p.plataforma ?? NOMBRE_TIPO[p.tipo]) : '';
-  });
-
   // Chips bajo el título
   chips = computed(() => {
     const p = this.producto();
