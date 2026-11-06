@@ -51,7 +51,7 @@
     <!-- Rejilla de 2 columnas -->
     <div class="rejilla cascada">
       @for (p of productos(); track p.id) {
-        <button type="button" class="producto pulsable" (click)="abrir(p)">
+        <button type="button" class="producto pulsable" [class.alquilado]="modo() === 'alquilar' && stock(p)?.tipo === 'off'" (click)="abrir(p)">
           <span class="foto">
             <app-miniatura-producto [producto]="p"></app-miniatura-producto>
             @if (stock(p); as e) { <span class="stock" [class.aviso]="e.tipo === 'aviso'">{{ e.texto }}</span> }
