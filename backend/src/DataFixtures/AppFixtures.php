@@ -39,10 +39,8 @@ class AppFixtures extends Fixture
     /** Ya no se usa: las imágenes de los productos están en App\Service\CargadorImagenes */
     private const IMAGENES_PRODUCTOS = [];
 
-    /** Qué imagen de fixtures/imagenes/tienda/ va con cada foto de la galería */
-    private const IMAGENES_TIENDA = [
-        'Fachada' => 'tukutun.jpeg',
-    ];
+    /** Ya no se usa: las imágenes de la tienda están en App\Service\CargadorImagenes */
+    private const IMAGENES_TIENDA = [];
 
     private ObjectManager $om;
 

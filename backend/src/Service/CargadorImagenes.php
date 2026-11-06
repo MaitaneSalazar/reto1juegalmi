@@ -40,10 +40,10 @@ class CargadorImagenes
 
     /** Imagen de cada foto de la galería (por su título) en fixtures/imagenes/tienda/ */
     public const TIENDA = [
-        'Fachada' => 'tienda-fachada.jpg',
-        'Mostrador' => 'tienda-mostrador.jpg',
-        'Zona de videojuegos' => 'tienda-zona-de-videojuegos.jpg',
-        'Taller' => 'tienda-taller.jpg',
+        'Fachada' => 'Fachada.png',
+        'Mostrador' => 'Mostrador.png',
+        'Zona de videojuegos' => 'Videojuegos.png',
+        'Taller' => 'Taller.png',
     ];
 
     public function __construct(
