@@ -1,12 +1,13 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonSkeletonText, IonButton,
+import { Component, inject, signal } from '@angular/core';
+import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonSkeletonText,
          AlertController, ToastController } from '@ionic/angular';
+import { EstadoComponent } from '../../components/estado/estado.component';
 import { MiniaturaProductoComponent } from '../../components/miniatura-producto/miniatura-producto.component';
 import { PrecioComponent } from '../../components/precio/precio.component';
 import { FechaCortaPipe } from '../../pipes/fecha-corta.pipe';
 import { PedidoService } from '../../services/pedido.service';
 import { SesionService } from '../../services/sesion.service';
-import { EstadoPedido, Pedido, PedidoResumen } from '../../models/pedido.model';
+import { EstadoPedido, PedidoResumen } from '../../models/pedido.model';
 
 // Pasos de la barra del pedido en curso
 const PASOS: { estado: EstadoPedido; texto: string }[] = [
@@ -20,8 +21,8 @@ const PASOS: { estado: EstadoPedido; texto: string }[] = [
   selector: 'app-pedidos',
   templateUrl: './pedidos.page.html',
   styleUrls: ['../cuenta/subpagina.scss', './pedidos.page.scss'],
-  imports: [IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonSkeletonText, IonButton,
-            MiniaturaProductoComponent, PrecioComponent, FechaCortaPipe],
+  imports: [IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonSkeletonText,
+            EstadoComponent, MiniaturaProductoComponent, PrecioComponent, FechaCortaPipe],
 })
 export class PedidosPage {
   private servicio = inject(PedidoService);
@@ -30,13 +31,9 @@ export class PedidosPage {
   private toast = inject(ToastController);
 
   pedidos = signal<PedidoResumen[]>([]);     // GET /api/pedidos (el más reciente primero)
-  detalle = signal<Pedido | null>(null);     // GET /api/pedidos/{id} del pedido en curso (sus líneas)
   cargando = signal(true);
+  error = signal(false);                     // sin conexión → Reintentar
   pasos = PASOS;
-
-  // El más reciente sin entregar va arriba en grande; el resto, en "Anteriores"
-  actual = computed(() => this.pedidos().find(p => p.estado !== 'entregado' && p.estado !== 'cancelado') ?? null);
-  anteriores = computed(() => this.pedidos().filter(p => p !== this.actual()));
 
   ionViewWillEnter(): void {
     this.cargar();
@@ -74,16 +71,11 @@ export class PedidosPage {
     await a.present();
   }
 
-  private cargar(): void {
+  cargar(): void {
+    this.error.set(false);
     this.servicio.listar().subscribe({
-      next: r => {
-        this.pedidos.set(r.datos);
-        this.cargando.set(false);
-        const a = this.actual();
-        this.detalle.set(null);
-        if (a) this.servicio.obtener(a.id).subscribe({ next: d => this.detalle.set(d), error: () => {} });
-      },
-      error: () => this.cargando.set(false),
+      next: r => { this.pedidos.set(r.datos); this.cargando.set(false); },
+      error: () => { this.cargando.set(false); this.error.set(true); },
     });
   }
 
