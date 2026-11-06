@@ -21,6 +21,7 @@
     <string name="apellido2">2º apellido</string>
     <string name="dni">DNI</string>
     <string name="dni_ejemplo">12345678Z</string>
+    <string name="dni_aleatorio">Generar un DNI aleatorio</string>
     <string name="telefono">Teléfono</string>
     <string name="registrarme">Registrarme</string>
     <string name="error_registro_vacio">Rellena nombre, primer apellido, DNI, teléfono, email y contraseña.</string>
