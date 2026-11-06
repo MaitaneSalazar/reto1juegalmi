@@ -21,7 +21,10 @@
 /config/jwt/*.pem
 
 # ---- Archivos que suben los usuarios (fotos de reparaciones...) ----
-/public/uploads/
+# Se ignoran las fotos, pero se suben las carpetas vacías (.gitkeep)
+# para que existan también en AWS
+/public/uploads/*/*
+!/public/uploads/*/.gitkeep
 
 # ---- Archivos generados por Symfony ----
 /public/bundles/

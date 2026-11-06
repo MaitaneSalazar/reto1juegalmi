@@ -1,0 +1,6 @@
+# Procesos que arranca «symfony server:start» junto con la API
+workers:
+    # Segundo proceso: hace las miniaturas de las fotos (Symfony Messenger)
+    messenger_consume_async:
+        cmd: ['symfony', 'console', 'messenger:consume', 'async']
+        watch: ['config', 'src']

@@ -1,0 +1,116 @@
+/* JuegAlmi · Web de trabajadores — colores de los mockups */
+:root {
+    --juegalmi-turquesa: #78cdcf;
+    --juegalmi-turquesa-oscuro: #3e9ea1;
+    --juegalmi-menu: #1f242b;
+    --juegalmi-fondo: #eaf1f1;
+    --juegalmi-texto: #1d2125;
+    --juegalmi-rojo: #b3203e;
+
+    /* Variables de EasyAdmin */
+    --body-bg: var(--juegalmi-fondo);
+    --sidebar-bg: var(--juegalmi-menu);
+    --link-color: var(--juegalmi-turquesa-oscuro);
+    --button-primary-bg: var(--juegalmi-turquesa);
+    --button-primary-color: var(--juegalmi-texto);
+    --button-primary-border-color: var(--juegalmi-turquesa);
+}
+
+body { background: var(--juegalmi-fondo); color: var(--juegalmi-texto); }
+
+/* Menú lateral oscuro con la opción activa en turquesa */
+.sidebar, .sidebar-wrapper, .main-sidebar { background: var(--juegalmi-menu) !important; }
+.sidebar a, .sidebar .menu-item-label, .sidebar .menu-icon { color: #c9d1d6 !important; }
+.sidebar .menu-item.active > a,
+.sidebar .menu-item.active .menu-item-contents {
+    background: var(--juegalmi-turquesa) !important;
+    color: var(--juegalmi-texto) !important;
+    border-radius: 999px;
+}
+.sidebar .menu-item.active .menu-item-label,
+.sidebar .menu-item.active .menu-icon { color: var(--juegalmi-texto) !important; }
+
+/* Logo «J» */
+.logo-j {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 1.6em; height: 1.6em; margin-right: .3em;
+    background: var(--juegalmi-turquesa); color: var(--juegalmi-texto);
+    border-radius: .4em; font-weight: 800;
+}
+
+/* Títulos grandes y compactos, como en los mockups */
+.saludo, .content-header-title h1, .title {
+    font-weight: 800; letter-spacing: -0.03em; color: var(--juegalmi-texto);
+}
+.saludo { font-size: 3rem; margin: .5rem 0 1rem; }
+
+/* Botones redondeados en turquesa */
+.btn-primary {
+    background: var(--juegalmi-turquesa) !important;
+    border-color: var(--juegalmi-turquesa) !important;
+    color: var(--juegalmi-texto) !important;
+    border-radius: 999px;
+}
+
+/* Tarjetas y tablas blancas con esquinas redondeadas */
+.content-panel, .card, .datagrid { border-radius: 1.25rem; }
+
+/* Avisos en rojo (vencidos, stock bajo) */
+.badge-danger, .text-danger { background-color: var(--juegalmi-rojo); }
+
+/* ---------- Ajustes para EasyAdmin 5 ---------- */
+
+/* Colores del menú con las variables de EasyAdmin */
+:root, body, [data-bs-theme] {
+    --sidebar-menu-color: #c9d1d6 !important;
+    --sidebar-menu-icon-color: #8f9ba3 !important;
+    --sidebar-menu-header-color: #8f9ba3 !important;
+    --sidebar-menu-active-item-bg: var(--juegalmi-turquesa) !important;
+    --sidebar-menu-active-item-color: var(--juegalmi-texto) !important;
+    --sidebar-menu-active-item-icon-color: var(--juegalmi-texto) !important;
+}
+
+/* Por si alguna regla no usa las variables */
+.main-sidebar .menu-item:not(.active) .menu-item-contents,
+.main-sidebar .menu-item:not(.active) .menu-item-label,
+.main-sidebar .menu-item:not(.active) .menu-icon { color: #c9d1d6 !important; }
+.main-sidebar .menu-item.active .menu-item-contents {
+    background: var(--juegalmi-turquesa) !important;
+    color: var(--juegalmi-texto) !important;
+    border-radius: 999px;
+}
+.main-sidebar .menu-item:not(.active) .menu-item-contents:hover { background: rgba(255, 255, 255, .08) !important; }
+
+/* Nombre «JuegAlmi» junto a la J, en blanco */
+#header-logo a, #header-logo .logo, .main-sidebar .logo { color: #ffffff !important; font-weight: 800; }
+
+/* Interruptores «Activo» en turquesa en lugar de azul */
+.form-switch .form-check-input:checked {
+    background-color: var(--juegalmi-turquesa-oscuro) !important;
+    border-color: var(--juegalmi-turquesa-oscuro) !important;
+}
+
+/* Imagen del producto en el listado */
+.foto-producto {
+    width: 48px; height: 48px; object-fit: cover;
+    border-radius: .6rem; display: inline-flex; align-items: center; justify-content: center;
+}
+.sin-imagen { background: #dfe8e8; color: #8f9ba3; font-size: 1.2rem; }
+
+/* Color principal de EasyAdmin (interruptores, columna ordenada, foco de los campos) en turquesa */
+:root, body, [data-bs-theme] {
+    --color-primary: var(--juegalmi-turquesa-oscuro) !important;
+    --bs-primary: var(--juegalmi-turquesa-oscuro) !important;
+    --bs-primary-rgb: 62, 158, 161 !important;
+    --form-switch-checked-bg: var(--juegalmi-turquesa-oscuro) !important;
+}
+input.form-check-input:checked {
+    background-color: var(--juegalmi-turquesa-oscuro) !important;
+    border-color: var(--juegalmi-turquesa-oscuro) !important;
+}
+.datagrid th.sorted, .datagrid th[data-sorted] { border-bottom-color: var(--juegalmi-turquesa-oscuro) !important; }
+.datagrid th.sorted a, .datagrid th.sorted i { color: var(--juegalmi-texto) !important; }
+.form-control:focus, .form-select:focus {
+    border-color: var(--juegalmi-turquesa) !important;
+    box-shadow: 0 0 0 .2rem rgba(120, 205, 207, .35) !important;
+}
