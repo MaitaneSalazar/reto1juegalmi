@@ -11,6 +11,10 @@ public class Producto {
     private final String empresa;
     private final String plataforma;
     private final String miniaturaUrl;
+    private final String imagenUrl;
+    private final String descripcion;
+    private final String genero;
+    private final int pegi;
     private final double precioVenta;
     private final double precioAlquilerDia;
     private final int stock;
@@ -26,6 +30,11 @@ public class Producto {
         this.plataforma = json.optString("plataforma");
         //SI NO TIENE FOTO LA API MANDA null
         this.miniaturaUrl = json.isNull("miniatura_url") ? null : json.optString("miniatura_url");
+        this.imagenUrl = json.isNull("imagen_url") ? null : json.optString("imagen_url", null);
+        //ESTOS SOLO VIENEN CUANDO PEDIMOS UN PRODUCTO SUELTO
+        this.descripcion = json.optString("descripcion");
+        this.genero = json.optString("genero");
+        this.pegi = json.optInt("pegi");
         this.precioVenta = json.optDouble("precio_venta");
         this.precioAlquilerDia = json.optDouble("precio_alquiler_dia");
         this.stock = json.optInt("stock");
@@ -55,6 +64,22 @@ public class Producto {
 
     public String getMiniaturaUrl() {
         return miniaturaUrl;
+    }
+
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public int getPegi() {
+        return pegi;
     }
 
     public double getPrecioVenta() {
