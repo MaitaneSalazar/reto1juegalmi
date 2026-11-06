@@ -41,4 +41,20 @@
     <string name="dir_cancelar">Cancelar</string>
     <string name="dir_borrada">Dirección borrada</string>
     <string name="dir_error_lectura">No se han podido leer las direcciones.</string>
+    <string name="dir_calle">Calle</string>
+    <string name="dir_calle_ejemplo">Ej. Gran Vía</string>
+    <string name="dir_numero">Número</string>
+    <string name="dir_numero_ejemplo">12</string>
+    <string name="dir_piso">Piso</string>
+    <string name="dir_piso_ejemplo">3ºB</string>
+    <string name="dir_cp">Código postal</string>
+    <string name="dir_cp_ejemplo">48001</string>
+    <string name="dir_ciudad">Ciudad</string>
+    <string name="dir_ciudad_ejemplo">Bilbao</string>
+    <string name="dir_provincia">Provincia</string>
+    <string name="dir_provincia_ejemplo">Bizkaia</string>
+    <string name="dir_guardar">Guardar dirección</string>
+    <string name="dir_guardando">Guardando…</string>
+    <string name="dir_guardada">Dirección guardada</string>
+    <string name="dir_error_cp">El código postal tiene 5 números</string>
 </resources>
