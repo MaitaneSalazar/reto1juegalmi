@@ -25,6 +25,19 @@ class ReparacionPresenter
     ) {
     }
 
+    /** Cuándo pasó a «entregada» (la última vez), en ISO 8601; null si aún no se ha entregado */
+    private function fechaEntrega(Reparacion $reparacion): ?string
+    {
+        $fecha = null;
+        foreach ($reparacion->getHistorial() as $paso) {
+            if ($paso->getEstado() === 'entregada' && ($fecha === null || $paso->getFechaHora() > $fecha)) {
+                $fecha = $paso->getFechaHora();
+            }
+        }
+
+        return $fecha?->format(DATE_ATOM);
+    }
+
     /** Para el listado y la tarjeta de Inicio */
     public function resumen(Reparacion $reparacion): array
     {
@@ -43,6 +56,8 @@ class ReparacionPresenter
             'total_pasos' => count(self::PASOS),
             'fecha' => $reparacion->getHistorial()->first()?->getFechaHora()->format(DATE_ATOM),
             'se_puede_cancelar' => $estado === 'recibida',
+            'presupuesto' => $reparacion->getPresupuesto(),          // null hasta que la tienda lo ponga
+            'fecha_entrega' => $this->fechaEntrega($reparacion),      // null hasta que se entregue
         ];
     }
 

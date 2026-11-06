@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class SubidaImagenes
 {
-    public const TIPOS = ['soporte', 'productos', 'tienda'];
+    public const TIPOS = ['soporte', 'productos', 'tienda', 'perfil'];
 
     public function __construct(
         private ValidatorInterface $validator,
