@@ -16,14 +16,44 @@ use App\Entity\Empresa;
 use App\Entity\Movil;
 use App\Entity\Tablet;
 use App\Entity\Videojuego;
+use App\Entity\Alquiler;
+use App\Entity\Pedido;
+use App\Entity\Producto;
+use App\Entity\Reparacion;
+use Doctrine\ORM\EntityManagerInterface;
 
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
 {
     /** Pantalla 02: Resumen (la completamos en el B9.5) */
+        /** A partir de cuántas unidades se avisa de poco stock */
+    private const STOCK_BAJO = 2;
+
+    public function __construct(private EntityManagerInterface $em)
+    {
+    }
+
     public function index(): Response
     {
-        return $this->render('admin/resumen.html.twig');
+        $reparaciones = array_values(array_filter(
+            $this->em->getRepository(Reparacion::class)->findBy([], ['id' => 'DESC']),
+            fn (Reparacion $r) => !in_array($r->getEstadoActual(), ['entregada', 'cancelada'], true),
+        ));
+        $alquileres = $this->em->getRepository(Alquiler::class)->findAll();
+        $retrasados = array_values(array_filter($alquileres, fn (Alquiler $a) => $a->getEstado() === 'retrasado'));
+
+        return $this->render('admin/resumen.html.twig', [
+            'reparaciones' => $reparaciones,
+            'para_recoger' => count(array_filter($reparaciones, fn (Reparacion $r) => $r->getEstadoActual() === 'lista_para_recoger')),
+            'alquileres_activos' => count(array_filter($alquileres, fn (Alquiler $a) => $a->getEstado() === 'activo')),
+            'retrasados' => $retrasados,
+            'por_enviar' => $this->em->getRepository(Pedido::class)->count(['estado' => ['pendiente', 'pagado']]),
+            'stock_bajo' => $this->em->getRepository(Producto::class)->createQueryBuilder('p')
+                ->where('p.activo = true')->andWhere('p.stock <= :minimo')
+                ->setParameter('minimo', self::STOCK_BAJO)
+                ->orderBy('p.stock', 'ASC')->getQuery()->getResult(),
+            'stock_minimo' => self::STOCK_BAJO,
+        ]);
     }
 
     public function configureDashboard(): Dashboard
@@ -55,6 +85,11 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section('Ventas');
         yield MenuItem::linkTo(PedidoCrudController::class, 'Pedidos', 'fa fa-bag-shopping');
         yield MenuItem::linkTo(AlquilerCrudController::class, 'Alquileres', 'fa fa-clock-rotate-left');
+        yield MenuItem::section('Administración')->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkTo(ClienteCrudController::class, 'Clientes', 'fa fa-users')->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkTo(TrabajadorCrudController::class, 'Trabajadores', 'fa fa-id-badge')->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkTo(DepartamentoCrudController::class, 'Departamentos', 'fa fa-sitemap')->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkTo(TiendaCrudController::class, 'Tienda', 'fa fa-store')->setPermission('ROLE_ADMIN');
         yield MenuItem::linkTo(EmpresaCrudController::class, 'Empresas', 'fa fa-building');
         // Productos, reparaciones, alquileres, pedidos, trabajadores y departamentos: B9.2 – B9.4
     }

@@ -132,3 +132,23 @@ input.form-check-input:checked {
 .lineas-tabla { max-width: 720px; margin: 0; }
 .lineas-tabla th { color: #6b7780; font-weight: 600; }
 .lineas-tabla tfoot th { color: var(--juegalmi-texto); font-weight: 800; }
+
+/* ---------- Resumen ---------- */
+.resumen-tarjetas { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.resumen-tarjetas .tarjeta {
+    display: flex; flex-direction: column; padding: 1.3rem 1.4rem; border-radius: 1.25rem;
+    background: #fff; color: var(--juegalmi-texto); text-decoration: none; box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+}
+.resumen-tarjetas a.tarjeta:hover { box-shadow: 0 4px 14px rgba(0, 0, 0, .1); }
+.resumen-tarjetas .numero { font-size: 2.6rem; font-weight: 800; line-height: 1; color: var(--juegalmi-turquesa-oscuro); }
+.resumen-tarjetas .tarjeta.aviso .numero { color: var(--juegalmi-rojo); }
+.resumen-tarjetas .texto { font-weight: 700; margin-top: .4rem; }
+.resumen-tarjetas .detalle { color: #6b7780; font-size: .9em; }
+.resumen-listas { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+.resumen-listas h2 { font-size: 1.15rem; font-weight: 800; margin-bottom: .7rem; }
+.resumen-listas .fila {
+    display: grid; grid-template-columns: 1fr auto; gap: .1rem .8rem; padding: .7rem .9rem; margin-bottom: .5rem;
+    background: #fff; border-radius: .9rem; color: var(--juegalmi-texto); text-decoration: none;
+}
+.resumen-listas .fila span:not(.badge) { color: #6b7780; font-size: .9em; grid-column: 1; }
+.resumen-listas .fila .badge { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
