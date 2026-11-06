@@ -53,7 +53,8 @@
       @for (p of productos(); track p.id) {
         <button type="button" class="producto pulsable" [class.alquilado]="modo() === 'alquilar' && stock(p)?.tipo === 'off'" (click)="abrir(p)">
           <span class="foto">
-            <app-miniatura-producto [producto]="p"></app-miniatura-producto>
+            <app-miniatura-producto [producto]="p" [sinMarca]="p.tipo === 'videojuego'"></app-miniatura-producto>
+            @if (p.tipo === 'videojuego') { <app-plataformas class="columna" [producto]="p"></app-plataformas> }
             @if (stock(p); as e) { <span class="stock" [class.aviso]="e.tipo === 'aviso'">{{ e.texto }}</span> }
           </span>
           <span class="nombre">{{ p.nombre }}</span>

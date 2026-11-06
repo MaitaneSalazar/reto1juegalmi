@@ -8,6 +8,8 @@ import { searchOutline, closeOutline, micOutline } from 'ionicons/icons';
 import { CabeceraComponent } from '../../components/cabecera/cabecera.component';
 import { MiniaturaProductoComponent } from '../../components/miniatura-producto/miniatura-producto.component';
 import { PrecioComponent } from '../../components/precio/precio.component';
+import { PlataformasComponent } from '../../components/plataformas/plataformas.component';
+import { forkJoin, map } from 'rxjs';
 import { ProductoService } from '../../services/producto.service';
 import { VozService } from '../../services/voz.service';
 import { EtiquetaStock, Producto, TipoProducto, etiquetaStock } from '../../models/producto.model';
@@ -24,7 +26,7 @@ const POR_PAGINA = 8;   // carga progresiva
   styleUrls: ['./tienda.page.scss'],
   imports: [IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonSearchbar, IonChip, IonIcon,
             IonSkeletonText, IonInfiniteScroll, IonInfiniteScrollContent,
-            CabeceraComponent, MiniaturaProductoComponent, PrecioComponent, EstadoComponent],
+            CabeceraComponent, MiniaturaProductoComponent, PrecioComponent, EstadoComponent, PlataformasComponent],
 })
 export class TiendaPage {
   private servicio = inject(ProductoService);
@@ -56,7 +58,9 @@ export class TiendaPage {
   constructor() {
     addIcons({ searchOutline, closeOutline, micOutline });
     this.servicio.plataformas().subscribe({
-      next: lista => this.filtrosAlquilar = [{ etiqueta: 'Todas', valor: '' }, ...lista.map(p => ({ etiqueta: p, valor: p }))],
+      // «Multi» no es una plataforma: esos juegos salen dentro de PS5, Xbox y Switch
+      next: lista => this.filtrosAlquilar = [{ etiqueta: 'Todas', valor: '' },
+        ...lista.filter(p => p !== 'Multi').map(p => ({ etiqueta: p, valor: p }))],
       error: () => { /* sin conexión: solo "Todas" */ },
     });
     // ?modo=alquilar (desde la tarjeta "Alquilar" de Inicio)
@@ -122,8 +126,16 @@ export class TiendaPage {
     const texto = this.texto().trim();
 
     // Comprar: GET /api/productos (con q= para buscar) · Alquilar: GET /api/videojuegos/alquiler
-    const peticion$ = this.modo() === 'alquilar'
-      ? this.servicio.alquiler({ plataforma: this.filtro() || undefined, page: this.pagina, limit: POR_PAGINA })
+    const plataforma = this.modo() === 'alquilar' ? this.filtro() : '';
+    const peticion$ = plataforma
+      // Una plataforma: sus juegos + los «Multi» (se pueden jugar en las tres), sin paginar
+      ? forkJoin([this.servicio.alquiler({ plataforma, limit: 50 }), this.servicio.alquiler({ plataforma: 'Multi', limit: 50 })]).pipe(
+          map(([propios, multi]) => ({
+            datos: [...propios.datos, ...multi.datos].sort((a, b) => a.nombre.localeCompare(b.nombre)),
+            paginacion: { pagina: 1, por_pagina: 100, total: 0, paginas: 1 },
+          })))
+      : this.modo() === 'alquilar'
+      ? this.servicio.alquiler({ page: this.pagina, limit: POR_PAGINA })
       : this.servicio.listar({ tipo: (this.filtro() || undefined) as TipoProducto | undefined, q: texto || undefined,
                                page: this.pagina, limit: POR_PAGINA });
 

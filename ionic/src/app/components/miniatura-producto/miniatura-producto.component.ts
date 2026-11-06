@@ -3,7 +3,7 @@ import { COLOR_PLATAFORMA, COLOR_PORTADA, TipoProducto } from '../../models/prod
 
 // Vale para un Producto de la API o para un resumen con nombre e imagen
 interface ProductoMini {
-  id?: number; nombre: string; tipo?: TipoProducto; empresa?: string; plataforma?: string;
+  id?: number; nombre: string; tipo?: TipoProducto; empresa?: string; plataforma?: string | null;
   imagen_url?: string | null; miniatura_url?: string | null;
 }
 
@@ -16,7 +16,7 @@ const EXTENSIONES = ['jpg', 'png', 'webp', 'jpeg'];
     <!-- Portada generada: se ve mientras carga o si no hay foto (la BD manda imagen_url: null) -->
     <div class="arte" [style.background]="color()" aria-hidden="true">
       <span class="letra">{{ producto().nombre[0] }}</span>
-      @if (marca()) { <span class="marca">{{ marca() }}</span> }
+      @if (marca() && !sinMarca()) { <span class="marca">{{ marca() }}</span> }
       <span class="titulo" [style.font-size.cqw]="tamTitulo()">{{ producto().nombre }}</span>
     </div>
     @if (src()) {
@@ -56,7 +56,8 @@ const EXTENSIONES = ['jpg', 'png', 'webp', 'jpeg'];
 })
 export class MiniaturaProductoComponent {
   producto = input.required<ProductoMini>();
-  grande = input(false);         // true = usar la imagen original (ficha) en vez de la miniatura
+  grande = input(false);
+  sinMarca = input(false);       // true = no escribir la plataforma/marca en la portada (ya va en píldoras)         // true = usar la imagen original (ficha) en vez de la miniatura
   cargada = signal(false);
   intento = signal(0);           // 0 = imagen de la API · 1.. = fotos locales de respaldo
 
