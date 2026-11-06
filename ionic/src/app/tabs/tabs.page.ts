@@ -48,7 +48,7 @@ export class TabsPage {
       .easing('cubic-bezier(.34, 1.56, .64, 1)')
       .keyframes([
         { offset: 0, transform: 'scale(1)' },
-        { offset: 0.4, transform: 'scale(1.8)' },
+        { offset: 0.4, transform: 'scale(1.4)' },
         { offset: 1, transform: 'scale(1)' },
       ])
       .play();

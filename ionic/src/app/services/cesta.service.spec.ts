@@ -53,4 +53,10 @@ describe('CestaService', () => {
     cesta.vaciar();
     expect(cesta.unidades()).toBe(0);
   });
+  it('no deja añadir más unidades que el stock', () => {
+    expect(cesta.anadir(zelda, 2)).toBe(true);
+    expect(cesta.anadir(zelda)).toBe(false);          // Zelda tiene stock 2
+    expect(cesta.unidades()).toBe(2);
+    expect(cesta.cambiarCantidad(1, 1)).toBe(false);
+  });
 });

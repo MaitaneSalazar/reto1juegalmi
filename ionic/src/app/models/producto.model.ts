@@ -38,13 +38,20 @@ export const NOMBRE_TIPO: Record<TipoProducto, string> = {
   tablet: 'Tablet',
 };
 
-// Icono provisional de cada tipo (mientras no hay foto o mientras carga)
-export const ICONO_TIPO: Record<TipoProducto, string> = {
-  videojuego: 'disc-outline',
-  consola: 'game-controller-outline',
-  movil: 'phone-portrait-outline',
-  tablet: 'tablet-portrait-outline',
+// Color de la portada generada (cuando la API manda imagen_url: null)
+export const COLOR_PLATAFORMA: Record<string, string> = {
+  PS5: '#375e60', Xbox: '#5c616c', Switch: '#5ea0a2', Multi: '#8a8c84',
 };
+export const COLOR_PORTADA = '#1f2329';          // consolas, móviles, tablets y sin plataforma
+
+// Etiqueta de stock: «Quedan 2», «Última unidad», «Agotado» (en alquiler: «Última copia», «Alquilado»)
+export interface EtiquetaStock { texto: string; tipo: 'aviso' | 'off'; }
+export function etiquetaStock(n: number, alquiler = false): EtiquetaStock | null {
+  if (n <= 0) return { texto: alquiler ? 'Alquilado' : 'Agotado', tipo: 'off' };
+  if (n === 1) return { texto: alquiler ? 'Última copia' : 'Última unidad', tipo: 'aviso' };
+  if (n === 2) return { texto: 'Quedan 2', tipo: 'aviso' };
+  return null;                                   // 3 o más: sin etiqueta
+}
 
 // Un videojuego se puede alquilar si tiene precio por día
 export function esAlquilable(p: Producto): boolean {

@@ -1,33 +1,39 @@
 ion-searchbar { --background: var(--jg-tarjeta); --border-radius: 999px; --box-shadow: none; padding: 0 0 14px; }
 
-.destacado, .producto { border: 0; padding: 0; background: none; font: inherit; color: var(--ion-text-color); text-align: left; }
-
-// Destacado: foto grande con degradado
-.destacado { display: block; width: 100%; margin-bottom: 22px; }
-.escaparate {
-  position: relative; display: flex; align-items: center; justify-content: center;
-  height: 280px; border-radius: 28px; overflow: hidden;
-  background: radial-gradient(circle at 50% 40%, #a9c3c2 0%, #6f8584 100%);
-
-  app-miniatura-producto { --tam: 172px; --radio: 12px; --fondo: rgba(255, 255, 255, .25); --icono: 56px;
-                           height: 236px; box-shadow: 0 16px 40px rgba(0, 0, 0, .25); }
-}
-.pie { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 12px; }
-.nombre { font-size: 16px; font-weight: 500; }
-.destacado app-precio { font-size: 22px; }
+.producto { border: 0; padding: 0; background: none; font: inherit; color: var(--ion-text-color); text-align: left; }
 
 // Rejilla de 2 columnas
 .rejilla { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .producto {
-  display: flex; flex-direction: column; gap: 6px; min-width: 0;
-  .nombre { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 4px; }
+  display: flex; flex-direction: column; gap: 4px; min-width: 0;
+  .nombre { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 6px; }
   app-precio { font-size: 22px; }
 }
 .foto {
   position: relative; display: block; aspect-ratio: 4 / 5;
-  app-miniatura-producto { --tam: 100%; --radio: 22px; --fondo: var(--jg-tarjeta); --icono: 46px; width: 100%; height: 100%; }
+  app-miniatura-producto { --tam: 100%; --radio: 22px; --fondo: var(--jg-tarjeta); width: 100%; height: 100%; }
 }
-.foto .etiqueta-mini, .escaparate .etiqueta-mini { position: absolute; top: 12px; left: 12px; }
 
-.esq-grande { height: 280px; border-radius: 28px; margin-bottom: 22px; }
-.esq-peque { height: 220px; border-radius: 22px; }
+// Etiqueta de stock: «Quedan 2», «Última unidad» (rojo) · «Agotado», «Alquilado» (blanco)
+.stock {
+  position: absolute; top: 10px; left: 10px; z-index: 1;
+  padding: 4px 10px; border-radius: 999px;
+  background: #ffffff; color: #1f2329; font-size: 11px; font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .12);
+  &.aviso { background: #a72144; color: #ffffff; }
+}
+
+// Huesos grises mientras carga
+.hueso { display: flex; flex-direction: column; gap: 6px; }
+.esq-foto { aspect-ratio: 4 / 5; height: auto; border-radius: 22px; margin: 0 0 4px; }
+
+// Micrófono del buscador: turquesa y latiendo mientras escucha
+.microfono.activo {
+  background: var(--jg-acento);
+  color: #1f2329;
+  animation: latido 1s ease-in-out infinite;
+}
+@keyframes latido {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(120, 205, 208, .6); }
+  50%      { box-shadow: 0 0 0 10px rgba(120, 205, 208, 0); }
+}
