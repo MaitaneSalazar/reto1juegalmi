@@ -66,6 +66,23 @@ class CatalogoController extends AbstractController
                 ->setParameter('plataforma', mb_strtolower($plataforma));
         }
 
+
+        // ?empresa=Nintendo → solo los productos de esa empresa
+        $empresa = trim((string) $request->query->get('empresa', ''));
+        if ($empresa !== '' && mb_strtolower($empresa) !== 'todas') {
+            $qb->andWhere('LOWER(e.nombre) = :empresa')->setParameter('empresa', mb_strtolower($empresa));
+        }
+
+        // ?pegi=12 → solo los videojuegos con ese PEGI
+        $pegi = trim((string) $request->query->get('pegi', ''));
+        if ($pegi !== '' && mb_strtolower($pegi) !== 'todos') {
+            if (!in_array((int) $pegi, Videojuego::PEGI, true)) {
+                return RespuestaApi::errorValidacion(['pegi' => 'Valores permitidos: ' . implode(', ', Videojuego::PEGI)]);
+            }
+            $qb->andWhere('p.id IN (SELECT vg.id FROM ' . Videojuego::class . ' vg WHERE vg.pegi = :pegi)')
+                ->setParameter('pegi', (int) $pegi);
+        }
+
         $qb->setFirstResult(($pagina - 1) * $porPagina)->setMaxResults($porPagina);
         $paginador = new Paginator($qb);
 
@@ -115,6 +132,20 @@ class CatalogoController extends AbstractController
             $qb->andWhere('LOWER(v.plataforma) = :plataforma')->setParameter('plataforma', mb_strtolower($plataforma));
         }
 
+
+        $empresa = trim((string) $request->query->get('empresa', ''));
+        if ($empresa !== '' && mb_strtolower($empresa) !== 'todas') {
+            $qb->andWhere('LOWER(e.nombre) = :empresa')->setParameter('empresa', mb_strtolower($empresa));
+        }
+
+        $pegi = trim((string) $request->query->get('pegi', ''));
+        if ($pegi !== '' && mb_strtolower($pegi) !== 'todos') {
+            if (!in_array((int) $pegi, Videojuego::PEGI, true)) {
+                return RespuestaApi::errorValidacion(['pegi' => 'Valores permitidos: ' . implode(', ', Videojuego::PEGI)]);
+            }
+            $qb->andWhere('v.pegi = :pegi')->setParameter('pegi', (int) $pegi);
+        }
+
         $qb->setFirstResult(($pagina - 1) * $porPagina)->setMaxResults($porPagina);
         $paginador = new Paginator($qb);
         $juegos = iterator_to_array($paginador);
@@ -133,6 +164,28 @@ class CatalogoController extends AbstractController
         }
 
         return RespuestaApi::listado($datos, count($paginador), $pagina, $porPagina);
+    }
+
+    /** GET /api/productos/filtros — opciones de los desplegables de filtro de las pantallas 04 y 05 */
+    #[Route('/productos/filtros', name: 'api_productos_filtros', methods: ['GET'])]
+    public function filtros(): JsonResponse
+    {
+        $empresas = $this->em->createQueryBuilder()
+            ->select('DISTINCT e.nombre')->from(Producto::class, 'p')->join('p.empresa', 'e')
+            ->where('p.activo = true')->orderBy('e.nombre', 'ASC')
+            ->getQuery()->getSingleColumnResult();
+
+        $plataformas = $this->em->createQueryBuilder()
+            ->select('DISTINCT v.plataforma')->from(Videojuego::class, 'v')
+            ->where('v.activo = true')->orderBy('v.plataforma', 'ASC')
+            ->getQuery()->getSingleColumnResult();
+
+        return $this->json([
+            'tipos' => array_keys(self::TIPOS),
+            'plataformas' => $plataformas,
+            'empresas' => $empresas,
+            'pegi' => Videojuego::PEGI,
+        ]);
     }
 
     /** GET /api/videojuegos/plataformas — botones de filtro de la pantalla 05 */
