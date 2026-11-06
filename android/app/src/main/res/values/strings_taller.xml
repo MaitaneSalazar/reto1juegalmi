@@ -82,4 +82,14 @@
     <string name="mis_rep_pedir">Pedir una reparación</string>
     <string name="mis_rep_error_titulo">Sin conexión</string>
     <string name="mis_rep_reintentar">Reintentar</string>
+    <string name="seg_averia">Avería</string>
+    <string name="seg_sin_tecnico">Aún sin técnico</string>
+    <string name="seg_sin_tecnico_texto">Te avisaremos cuando lo revisen.</string>
+    <string name="seg_llamar">Llamar al técnico</string>
+    <string name="seg_cancelar">Cancelar solicitud</string>
+    <string name="seg_cancelar_titulo">¿Cancelar la solicitud?</string>
+    <string name="seg_cancelar_texto">Solo se puede cancelar mientras no hayamos empezado a revisarla.</string>
+    <string name="seg_cancelar_si">Sí, cancelar</string>
+    <string name="seg_cancelar_no">No</string>
+    <string name="seg_cancelada">Solicitud cancelada</string>
 </resources>
