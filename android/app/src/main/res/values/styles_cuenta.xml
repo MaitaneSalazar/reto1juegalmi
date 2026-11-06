@@ -24,4 +24,12 @@
         <item name="android:layout_marginBottom">14dp</item>
         <item name="android:background">@color/color_borde_fuerte</item>
     </style>
+    <style name="CampoBloqueado" parent="Campo">
+        <item name="android:background">@drawable/bg_campo_bloqueado</item>
+        <item name="android:textColor">@color/color_texto_tenue</item>
+        <item name="android:drawableEnd">@drawable/ic_candado</item>
+        <item name="android:drawableTint">@color/color_texto_tenue</item>
+        <item name="android:enabled">false</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
 </resources>

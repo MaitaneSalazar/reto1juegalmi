@@ -21,25 +21,36 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+// Petición multipart/form-data para subir una foto. Volley no trae este tipo
 public class SubidaFotoRequest extends Request<JSONObject> {
 
-    private static final String CAMPO = "imagen";
     private static final int TIEMPO_MAXIMO_MS = 30000;
 
+    private final String campo;
     private final String limite = "----JuegAlmi" + System.currentTimeMillis();
     private final File foto;
     private final Map<String, String> cabeceras;
     private final Response.Listener<JSONObject> listener;
 
+    // Fotos de reparaciones: POST y campo "imagen"
     public SubidaFotoRequest(String url, File foto, Map<String, String> cabeceras,
                              Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
-        super(Method.POST, url, errorListener);
+        this(Method.POST, url, "imagen", foto, cabeceras, listener, errorListener);
+    }
+
+    public SubidaFotoRequest(int metodo, String url, String campo, File foto, Map<String, String> cabeceras,
+                             Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
+        super(metodo, url, errorListener);
+        this.campo = campo;
         this.foto = foto;
         this.listener = listener;
 
+        // Las cabeceras de ApiClient llevan "Content-Type: application/json". Aquí hay que quitarla:
+        // si no, Volley la usaría en lugar de la de multipart y la API no encontraría la foto
         this.cabeceras = new HashMap<>(cabeceras);
         this.cabeceras.remove("Content-Type");
 
+        // 30 segundos y SIN reintentos, para no subir la misma foto dos veces
         setRetryPolicy(new DefaultRetryPolicy(TIEMPO_MAXIMO_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
@@ -58,7 +69,7 @@ public class SubidaFotoRequest extends Request<JSONObject> {
         try {
             ByteArrayOutputStream cuerpo = new ByteArrayOutputStream();
             String inicio = "--" + limite + "\r\n"
-                    + "Content-Disposition: form-data; name=\"" + CAMPO + "\"; filename=\"" + foto.getName() + "\"\r\n"
+                    + "Content-Disposition: form-data; name=\"" + campo + "\"; filename=\"" + foto.getName() + "\"\r\n"
                     + "Content-Type: image/jpeg\r\n\r\n";
             cuerpo.write(inicio.getBytes(StandardCharsets.UTF_8));
             cuerpo.write(leerArchivo(foto));

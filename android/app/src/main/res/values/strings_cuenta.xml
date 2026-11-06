@@ -11,4 +11,23 @@
     <string name="datos_foto">Foto de perfil</string>
     <string name="datos_error_titulo">Sin conexión</string>
     <string name="datos_reintentar">Reintentar</string>
+    <string name="editar_titulo">Editar datos</string>
+    <string name="editar_cambiar_foto">Cambiar foto</string>
+    <string name="editar_nombre">Nombre</string>
+    <string name="editar_apellido1">Primer apellido</string>
+    <string name="editar_apellido2">Segundo</string>
+    <string name="editar_opcional">(opcional)</string>
+    <string name="editar_no_editables">El DNI y el email no se pueden cambiar.</string>
+    <string name="editar_contrasena_titulo">Contraseña</string>
+    <string name="editar_contrasena_actual">Contraseña actual</string>
+    <string name="editar_contrasena_nueva">Nueva contraseña</string>
+    <string name="editar_contrasena_pista">Mínimo 6 caracteres</string>
+    <string name="editar_guardar">Guardar cambios</string>
+    <string name="editar_guardando">Guardando…</string>
+    <string name="editar_guardado">Datos guardados</string>
+    <string name="editar_sin_cambios">No has cambiado nada.</string>
+    <string name="editar_obligatorio">Este campo es obligatorio</string>
+    <string name="editar_error_contrasena_actual">Escribe tu contraseña actual</string>
+    <string name="editar_error_contrasena_corta">Mínimo 6 caracteres</string>
+    <string name="editar_error_foto">Los datos se han guardado, pero no se ha podido subir la foto.</string>
 </resources>
