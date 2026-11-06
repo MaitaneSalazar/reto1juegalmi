@@ -81,6 +81,17 @@
             android:contentDescription="@null"
             android:visibility="gone" />
 
+        <!-- LAS PLATAFORMAS DEL JUEGO, LAS PONE EL ADAPTADOR -->
+        <LinearLayout
+            android:id="@+id/llProductoPlataformas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="6dp"
+            android:gravity="end"
+            android:orientation="vertical" />
+
         <!-- AGOTADO, ULTIMA UNIDAD... -->
         <TextView
             android:id="@+id/tvProductoAviso"

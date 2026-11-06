@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- DATOS PERSONALES (17 del mockup). De momento vacía: solo botón de volver y título -->
+<!-- DATOS PERSONALES (17 del mockup) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -9,7 +10,7 @@
     android:orientation="vertical"
     tools:context=".DatosPersonalesActivity">
 
-    <!-- El padding de los lados va aquí dentro: el de "main" lo pone el código para no quedar debajo de las barras del sistema -->
+    <!-- El padding de los lados va aquí dentro: el de "main" lo pone el código -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,24 +20,194 @@
 
         <include layout="@layout/barra_volver" />
 
-        <TextView
-            style="@style/TituloPagina"
-            android:text="@string/menu_datos_personales" />
-
-        <TextView
-            style="@style/TextoPendiente"
-            android:text="@string/pagina_en_construccion" />
-
-        <!-- Hueco que empuja el botón al final de la pantalla -->
-        <View
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnEditarDatos"
-            style="@style/BotonPrincipal"
+            <ScrollView
+                android:id="@+id/svDatos"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp">
+
+                    <FrameLayout
+                        android:layout_width="96dp"
+                        android:layout_height="96dp"
+                        android:layout_marginTop="8dp">
+
+                        <TextView
+                            android:id="@+id/tvDatosIniciales"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bg_avatar_marca"
+                            android:gravity="center"
+                            android:letterSpacing="-0.06"
+                            android:textColor="@color/color_sobre_marca"
+                            android:textSize="38sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/ivDatosFoto"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bg_avatar_marca"
+                            android:contentDescription="@string/datos_foto"
+                            android:scaleType="centerCrop"
+                            android:visibility="gone" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/tvDatosNombre"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:letterSpacing="-0.04"
+                        android:textColor="@color/color_texto"
+                        android:textSize="28sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvDatosClienteDesde"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/color_texto_suave"
+                        android:textSize="15sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:background="@drawable/bg_tarjeta_hoja"
+                        android:orientation="vertical"
+                        android:paddingStart="20dp"
+                        android:paddingTop="16dp"
+                        android:paddingEnd="20dp"
+                        android:paddingBottom="2dp">
+
+                        <TextView
+                            style="@style/DatoEtiqueta"
+                            android:text="@string/datos_nombre_completo" />
+
+                        <TextView
+                            android:id="@+id/tvDatosNombreCompleto"
+                            style="@style/DatoValor" />
+
+                        <View style="@style/DatoSeparador" />
+
+                        <TextView
+                            style="@style/DatoEtiqueta"
+                            android:text="@string/datos_dni" />
+
+                        <TextView
+                            android:id="@+id/tvDatosDni"
+                            style="@style/DatoValor" />
+
+                        <View style="@style/DatoSeparador" />
+
+                        <TextView
+                            style="@style/DatoEtiqueta"
+                            android:text="@string/datos_email" />
+
+                        <TextView
+                            android:id="@+id/tvDatosEmail"
+                            style="@style/DatoValor" />
+
+                        <View style="@style/DatoSeparador" />
+
+                        <TextView
+                            style="@style/DatoEtiqueta"
+                            android:text="@string/datos_telefono" />
+
+                        <TextView
+                            android:id="@+id/tvDatosTelefono"
+                            style="@style/DatoValor" />
+
+                        <View style="@style/DatoSeparador" />
+
+                        <TextView
+                            style="@style/DatoEtiqueta"
+                            android:text="@string/datos_contrasena" />
+
+                        <TextView
+                            style="@style/DatoValor"
+                            android:text="@string/datos_contrasena_oculta"
+                            android:textIsSelectable="false" />
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+
+            <ProgressBar
+                android:id="@+id/pbDatos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="64dp"
+                android:indeterminateTint="@color/color_marca"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/llDatosAviso"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="56dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/datos_error_titulo"
+                    android:textColor="@color/color_texto"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvDatosAvisoTexto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:textColor="@color/color_texto_suave"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDatosReintentar"
+                    style="@style/BotonPrincipal"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:paddingStart="32dp"
+                    android:paddingEnd="32dp"
+                    android:text="@string/datos_reintentar" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="@string/boton_editar_datos" />
+            android:background="@drawable/bg_tarjeta_hoja"
+            android:padding="10dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEditarDatos"
+                style="@style/BotonPrincipal"
+                android:layout_height="52dp"
+                android:text="@string/boton_editar_datos"
+                app:icon="@drawable/ic_editar"
+                app:iconGravity="textStart"
+                app:iconPadding="10dp"
+                app:iconSize="20dp"
+                app:iconTint="@color/color_sobre_marca" />
+        </FrameLayout>
     </LinearLayout>
 </LinearLayout>

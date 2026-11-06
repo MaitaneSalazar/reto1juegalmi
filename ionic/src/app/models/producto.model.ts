@@ -44,6 +44,23 @@ export const COLOR_PLATAFORMA: Record<string, string> = {
 };
 export const COLOR_PORTADA = '#1f2329';          // consolas, móviles, tablets y sin plataforma
 
+// Plataformas en las que se juega: "Multi" = las tres (si algún día la API manda una lista, se usa tal cual)
+export const PLATAFORMAS = ['PS5', 'Xbox', 'Switch'] as const;
+export function plataformasDe(p: { plataforma?: string | null; plataformas?: string[] }): string[] {
+  if (p.plataformas?.length) return p.plataformas;
+  if (!p.plataforma) return [];
+  return p.plataforma.trim().toLowerCase() === 'multi' ? [...PLATAFORMAS] : [p.plataforma.trim()];
+}
+// Xbox verde · PlayStation azul · Switch rojo. Se reconoce como venga escrito
+// ("PS5", "PS4", "PlayStation 5", "ps5", "Nintendo Switch", "Xbox Series"...)
+export function colorPlataforma(plataforma: string): string {
+  const t = plataforma.toLowerCase();
+  if (t.includes('xbox')) return '#107c10';                              // verde
+  if (t.includes('ps') || t.includes('playstation')) return '#0070d1';   // azul
+  if (t.includes('switch') || t.includes('nintendo')) return '#e60012';  // rojo
+  return '#5c616c';                                                      // otra: gris
+}
+
 // Etiqueta de stock: «Quedan 2», «Última unidad», «Agotado» (en alquiler: «Última copia», «Alquilado»)
 export interface EtiquetaStock { texto: string; tipo: 'aviso' | 'off'; }
 export function etiquetaStock(n: number, alquiler = false): EtiquetaStock | null {

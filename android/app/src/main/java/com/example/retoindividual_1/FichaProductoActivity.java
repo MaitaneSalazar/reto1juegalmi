@@ -21,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.example.retoindividual_1.modelos.Cesta;
+import com.example.retoindividual_1.modelos.Plataforma;
 import com.example.retoindividual_1.modelos.Producto;
 import com.example.retoindividual_1.network.ApiClient;
 import com.google.android.material.tabs.TabLayout;
@@ -44,7 +45,7 @@ public class FichaProductoActivity extends PaginaMenuActivity {
     private static final int[] DIAS = {1, 3, 5, 7};
 
     private ImageView ivFoto;
-    private TextView tvPlataforma;
+    private LinearLayout llEtiquetas;
     private ProgressBar pbFicha;
     private TextView tvError;
     private LinearLayout llDatos;
@@ -82,7 +83,7 @@ public class FichaProductoActivity extends PaginaMenuActivity {
         super.onCreate(savedInstanceState);
 
         ivFoto = findViewById(R.id.ivFichaFoto);
-        tvPlataforma = findViewById(R.id.tvFichaPlataforma);
+        llEtiquetas = findViewById(R.id.llFichaEtiquetas);
         pbFicha = findViewById(R.id.pbFicha);
         tvError = findViewById(R.id.tvFichaError);
         llDatos = findViewById(R.id.llFichaDatos);
@@ -191,8 +192,10 @@ public class FichaProductoActivity extends PaginaMenuActivity {
         tvDescripcion.setVisibility(producto.getDescripcion().isEmpty() ? View.GONE : View.VISIBLE);
 
         if (producto.esVideojuego()) {
-            tvPlataforma.setText(producto.getPlataforma());
-            tvPlataforma.setVisibility(View.VISIBLE);
+            //LAS PLATAFORMAS VAN DELANTE DEL RESTO DE ETIQUETAS, CADA UNA CON SU COLOR
+            for (int i = 0; i < producto.getPlataformas().size(); i++) {
+                llEtiquetas.addView(Plataforma.crearEtiqueta(this, producto.getPlataformas().get(i), false), i);
+            }
             tvEtiqueta1.setText(producto.getGenero());
             tvEtiqueta2.setText(getString(R.string.ficha_pegi, producto.getPegi()));
         } else {

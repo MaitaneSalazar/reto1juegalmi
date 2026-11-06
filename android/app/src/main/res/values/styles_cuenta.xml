@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="DatoEtiqueta">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/color_texto_suave</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="DatoValor">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">14dp</item>
+        <item name="android:textColor">@color/color_texto</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textIsSelectable">true</item>
+    </style>
+
+    <style name="DatoSeparador">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginBottom">14dp</item>
+        <item name="android:background">@color/color_borde_fuerte</item>
+    </style>
+    <style name="CampoBloqueado" parent="Campo">
+        <item name="android:background">@drawable/bg_campo_bloqueado</item>
+        <item name="android:textColor">@color/color_texto_tenue</item>
+        <item name="android:drawableEnd">@drawable/ic_candado</item>
+        <item name="android:drawableTint">@color/color_texto_tenue</item>
+        <item name="android:enabled">false</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+</resources>
