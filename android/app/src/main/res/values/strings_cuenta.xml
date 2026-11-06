@@ -30,4 +30,15 @@
     <string name="editar_error_contrasena_actual">Escribe tu contraseña actual</string>
     <string name="editar_error_contrasena_corta">Mínimo 6 caracteres</string>
     <string name="editar_error_foto">Los datos se han guardado, pero no se ha podido subir la foto.</string>
+    <string name="dir_linea2">%1$s %2$s · %3$s</string>
+    <string name="dir_vacia_titulo">Aún no tienes direcciones</string>
+    <string name="dir_vacia_texto">Añade una para que podamos enviarte los pedidos.</string>
+    <string name="dir_editar">Editar dirección</string>
+    <string name="dir_borrar">Borrar dirección</string>
+    <string name="dir_borrar_titulo">¿Borrar esta dirección?</string>
+    <string name="dir_borrar_texto">Los pedidos que ya la usan la conservan.</string>
+    <string name="dir_borrar_si">Borrar</string>
+    <string name="dir_cancelar">Cancelar</string>
+    <string name="dir_borrada">Dirección borrada</string>
+    <string name="dir_error_lectura">No se han podido leer las direcciones.</string>
 </resources>
