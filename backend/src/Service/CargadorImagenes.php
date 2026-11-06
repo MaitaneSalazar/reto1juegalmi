@@ -60,9 +60,15 @@ class CargadorImagenes
         $informe = [];
 
         foreach (self::PRODUCTOS as $nombre => $archivo) {
-            $producto = $this->em->getRepository(Producto::class)->findOneBy(['nombre' => $nombre]);
-            $informe[] = ['Producto', $nombre, $this->asignar($producto, 'productos', $archivo, $simular,
-                fn (string $ruta) => $producto->setImagen($ruta))];
+            // Puede haber varias ediciones con el mismo nombre (p. ej. Minecraft en cada plataforma)
+            $productos = $this->em->getRepository(Producto::class)->findBy(['nombre' => $nombre]);
+            if ($productos === []) {
+                $informe[] = ['Producto', $nombre, $this->asignar(null, 'productos', $archivo, $simular, fn () => null)];
+            }
+            foreach ($productos as $producto) {
+                $informe[] = ['Producto', $nombre, $this->asignar($producto, 'productos', $archivo, $simular,
+                    fn (string $ruta) => $producto->setImagen($ruta))];
+            }
         }
 
         foreach (self::TIENDA as $titulo => $archivo) {

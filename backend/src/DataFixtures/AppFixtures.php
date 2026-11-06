@@ -94,6 +94,8 @@ class AppFixtures extends Fixture
         $v['forza'] = $this->videojuego($empresas['Microsoft'], 'Forza Horizon 5', 'Conducción en mundo abierto por los paisajes de México.', 39.99, 'Xbox', 'Conducción', 3, 1.25, 2, 4);
         $v['halo'] = $this->videojuego($empresas['Microsoft'], 'Halo Infinite', 'El Jefe Maestro vuelve en la entrega más grande de Halo.', 29.99, 'Xbox', 'Shooter', 16, 1.00, 1, 2);
         $v['minecraft'] = $this->videojuego($empresas['Mojang'], 'Minecraft', 'Construye, explora y sobrevive en un mundo de bloques.', 29.99, 'Multi', 'Sandbox', 7, 1.00, 3, 10);
+        $v['minecraft_xbox'] = $this->videojuego($empresas['Mojang'], 'Minecraft', 'Construye, explora y sobrevive en un mundo de bloques.', 29.99, 'Xbox', 'Sandbox', 7, 1.00, 3, 10);
+        $v['minecraft_switch'] = $this->videojuego($empresas['Mojang'], 'Minecraft', 'Construye, explora y sobrevive en un mundo de bloques.', 29.99, 'Switch', 'Sandbox', 7, 1.00, 3, 10);
 
         // ---------- Consolas ----------
         $ps5 = $this->consola($empresas['Sony'], 'PlayStation 5 Slim', 'La PS5 en un formato más compacto, con lector de discos.', 499.99, 1000, 'Blanco', 'Estándar', 5);

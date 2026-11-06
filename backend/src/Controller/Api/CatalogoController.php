@@ -89,7 +89,7 @@ class CatalogoController extends AbstractController
         return $this->json($datos);
     }
 
-    /** GET /api/videojuegos/alquiler?plataforma=PS5&page=1 — pantalla 05 */
+    /** GET /api/videojuegos/alquiler?plataforma=PlayStation&page=1 — pantalla 05 */
     #[Route('/videojuegos/alquiler', name: 'api_videojuegos_alquiler', methods: ['GET'])]
     public function alquiler(Request $request): JsonResponse
     {
