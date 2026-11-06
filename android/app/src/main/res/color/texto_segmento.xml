@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Texto de las sub-pestañas: oscuro la elegida, gris la otra -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/color_texto" android:state_selected="true" />
+    <item android:color="@color/color_texto_suave" />
+</selector>

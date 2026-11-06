@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Textos de la pestaña TALLER. Van en su propio archivo para no tocar strings.xml
+     a la vez que el compañero (así no hay conflictos en Git) -->
+<resources>
+    <string name="nueva_reparacion">Nueva reparación</string>
+    <string name="que_reparamos">¿Qué reparamos?</string>
+
+    <!-- Tipos de dispositivo -->
+    <string name="disp_consola">Consola</string>
+    <string name="disp_movil">Móvil</string>
+    <string name="disp_tablet">Tablet</string>
+    <string name="disp_ordenador">Ordenador</string>
+    <string name="disp_mando">Mando</string>
+    <string name="disp_auriculares">Auriculares</string>
+    <string name="disp_reloj">Reloj</string>
+    <string name="disp_otro">Otro</string>
+
+    <!-- Marca y modelo -->
+    <string name="marca_dispositivo">Marca</string>
+    <string name="marca_ejemplo">Sony</string>
+    <string name="modelo_dispositivo">Modelo</string>
+    <string name="modelo_ejemplo">PlayStation 5</string>
+
+    <!-- Componentes -->
+    <string name="componente_afectado">Componente afectado</string>
+    <string name="comp_pantalla">Pantalla</string>
+    <string name="comp_bateria">Batería</string>
+    <string name="comp_puerto_carga">Puerto de carga</string>
+    <string name="comp_hdmi">HDMI</string>
+    <string name="comp_ventilador">Ventilador</string>
+    <string name="comp_placa_base">Placa base</string>
+    <string name="comp_joystick">Joystick</string>
+    <string name="comp_botones">Botones</string>
+    <string name="comp_lector_discos">Lector de discos</string>
+    <string name="comp_altavoz_micro">Altavoz / micro</string>
+    <string name="comp_camara">Cámara</string>
+    <string name="comp_software">Software</string>
+    <string name="comp_no_lo_se">No lo sé</string>
+
+    <!-- Descripción y envío -->
+    <string name="describe_problema">Describe el problema</string>
+    <string name="describe_problema_ejemplo">Ej.: no da imagen por HDMI desde ayer</string>
+    <string name="enviar_solicitud">Continuar</string>
+    <string name="reparacion_enviada">Solicitud enviada. Te avisaremos cuando la revisemos.</string>
+
+    <!-- Errores -->
+    <string name="error_reparacion_dispositivo">Elige qué tipo de dispositivo es.</string>
+    <string name="error_reparacion_marca">Escribe la marca y el modelo.</string>
+    <string name="error_reparacion_componente">Elige el componente afectado (o «No lo sé»).</string>
+    <string name="error_reparacion_descripcion">Describe el problema con al menos 10 caracteres.</string>
+
+    <!-- Fotos de la reparación -->
+    <string name="foto_titulo">Fotos</string>
+    <string name="foto_opcional">(opcional)</string>
+    <string name="foto_anadir">Añadir</string>
+    <string name="foto_anadir_descripcion">Añadir foto</string>
+    <string name="foto_titulo_dialogo">Añadir una foto</string>
+    <string name="foto_hacer">Hacer una foto</string>
+    <string name="foto_galeria">Elegir de la galería</string>
+    <string name="foto_cancelar">Cancelar</string>
+    <string name="foto_quitar_titulo">¿Quitar esta foto?</string>
+    <string name="foto_quitar">Quitar</string>
+    <string name="foto_reparacion">Foto de la avería</string>
+    <string name="error_max_fotos">Puedes añadir como máximo 5 fotos.</string>
+    <string name="error_foto">No se ha podido cargar la foto.</string>
+    <string name="error_sin_camara">No se ha podido abrir la cámara.</string>
+    <string name="reparacion_enviando">Enviando…</string>
+    <string name="reparacion_enviada_fotos_fallidas">Reparación enviada, pero no se han podido subir %1$d fotos.</string>
+</resources>

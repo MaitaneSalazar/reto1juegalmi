@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo de los chips de componente: oscuro el marcado, blanco los demás -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/color_oscuro" android:state_checked="true" />
+    <item android:color="@color/color_hoja" />
+</selector>

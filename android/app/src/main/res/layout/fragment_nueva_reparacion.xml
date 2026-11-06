@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- NUEVA REPARACIÓN (08 del mockup). Sub-pestaña del Taller: formulario para pedir una reparación.
+     El android:tag de cada opción es el valor que se envía a la API (los mismos que el CHECK de la BBDD) -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:paddingBottom="120dp"
+    tools:context=".NuevaReparacionFragment">
+
+    <!-- El paddingBottom deja sitio para que la barra inferior flotante no tape el botón de enviar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="12dp">
+
+        <!-- PROGRESO: se pone calamina cada parte que está completa (dispositivo, marca y modelo, avería) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/vPaso1"
+                style="@style/PasoProgreso" />
+
+            <View
+                android:id="@+id/vPaso2"
+                style="@style/PasoProgreso" />
+
+            <View
+                android:id="@+id/vPaso3"
+                style="@style/PasoProgreso" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/TituloPagina"
+            android:layout_marginTop="20dp"
+            android:text="@string/que_reparamos" />
+
+        <!-- TIPO DE DISPOSITIVO: 8 opciones en dos filas -->
+        <LinearLayout
+            android:id="@+id/llFilaDispositivos1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-4dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="-4dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                style="@style/OpcionDispositivo"
+                android:tag="consola">
+
+                <ImageView
+                    style="@style/OpcionDispositivoIcono"
+                    android:src="@drawable/ic_consola" />
+
+                <TextView
+                    style="@style/OpcionDispositivoTexto"
+                    android:text="@string/disp_consola" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/OpcionDispositivo"
+                android:tag="movil">
+
+                <ImageView
+                    style="@style/OpcionDispositivoIcono"
+                    android:src="@drawable/ic_movil" />
+
+                <TextView
+                    style="@style/OpcionDispositivoTexto"
+                    android:text="@string/disp_movil" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/OpcionDispositivo"
+                android:tag="tablet">
+
+                <ImageView
+                    style="@style/OpcionDispositivoIcono"
+                    android:src="@drawable/ic_tablet" />
+
+                <TextView
+                    style="@style/OpcionDispositivoTexto"
+                    android:text="@string/disp_tablet" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/OpcionDispositivo"
+                android:tag="ordenador">
+
+                <ImageView
+                    style="@style/OpcionDispositivoIcono"
+                    android:src="@drawable/ic_ordenador" />
+
+                <TextView
+                    style="@style/OpcionDispositivoTexto"
+                    android:text="@string/disp_ordenador" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llFilaDispositivos2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-4dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="-4dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                style="@style/OpcionDispositivo"
+                android:tag="mando">
+
+                <ImageView
+                    style="@style/OpcionDispositivoIcono"
+                    android:src="@drawable/ic_mando" />
+
+                <TextView
+                    style="@style/OpcionDispositivoTexto"
+                    android:text="@string/disp_mando" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/OpcionDispositivo"
+                android:tag="auriculares">
+
+                <ImageView
+                    style="@style/OpcionDispositivoIcono"
+                    android:src="@drawable/ic_auriculares" />
+
+                <TextView
+                    style="@style/OpcionDispositivoTexto"
+                    android:text="@string/disp_auriculares" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/OpcionDispositivo"
+                android:tag="reloj">
+
+                <ImageView
+                    style="@style/OpcionDispositivoIcono"
+                    android:src="@drawable/ic_reloj" />
+
+                <TextView
+                    style="@style/OpcionDispositivoTexto"
+                    android:text="@string/disp_reloj" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/OpcionDispositivo"
+                android:tag="otro">
+
+                <ImageView
+                    style="@style/OpcionDispositivoIcono"
+                    android:src="@drawable/ic_otro" />
+
+                <TextView
+                    style="@style/OpcionDispositivoTexto"
+                    android:text="@string/disp_otro" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- MARCA Y MODELO en la misma fila -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:labelFor="@id/etReparacionMarca"
+                    android:text="@string/marca_dispositivo" />
+
+                <EditText
+                    android:id="@+id/etReparacionMarca"
+                    style="@style/Campo"
+                    android:hint="@string/marca_ejemplo"
+                    android:importantForAutofill="no"
+                    android:inputType="textCapWords" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:labelFor="@id/etReparacionModelo"
+                    android:text="@string/modelo_dispositivo" />
+
+                <EditText
+                    android:id="@+id/etReparacionModelo"
+                    style="@style/Campo"
+                    android:hint="@string/modelo_ejemplo"
+                    android:importantForAutofill="no"
+                    android:inputType="textCapWords" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- COMPONENTE AFECTADO: solo se puede marcar uno (singleSelection) -->
+        <TextView
+            style="@style/Etiqueta"
+            android:layout_marginTop="20dp"
+            android:text="@string/componente_afectado" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/cgComponente"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:chipSpacingHorizontal="8dp"
+            app:chipSpacingVertical="8dp"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPantalla"
+                style="@style/ChipComponente"
+                android:tag="PANTALLA"
+                android:text="@string/comp_pantalla" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipBateria"
+                style="@style/ChipComponente"
+                android:tag="BATERIA"
+                android:text="@string/comp_bateria" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPuertoCarga"
+                style="@style/ChipComponente"
+                android:tag="PUERTO_CARGA"
+                android:text="@string/comp_puerto_carga" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipHdmi"
+                style="@style/ChipComponente"
+                android:tag="HDMI"
+                android:text="@string/comp_hdmi" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipVentilador"
+                style="@style/ChipComponente"
+                android:tag="VENTILADOR"
+                android:text="@string/comp_ventilador" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPlacaBase"
+                style="@style/ChipComponente"
+                android:tag="PLACA_BASE"
+                android:text="@string/comp_placa_base" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipJoystick"
+                style="@style/ChipComponente"
+                android:tag="JOYSTICK"
+                android:text="@string/comp_joystick" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipBotones"
+                style="@style/ChipComponente"
+                android:tag="BOTONES"
+                android:text="@string/comp_botones" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipLectorDiscos"
+                style="@style/ChipComponente"
+                android:tag="LECTOR_DISCOS"
+                android:text="@string/comp_lector_discos" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAltavozMicro"
+                style="@style/ChipComponente"
+                android:tag="ALTAVOZ_MICRO"
+                android:text="@string/comp_altavoz_micro" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCamara"
+                style="@style/ChipComponente"
+                android:tag="CAMARA"
+                android:text="@string/comp_camara" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipSoftware"
+                style="@style/ChipComponente"
+                android:tag="SOFTWARE"
+                android:text="@string/comp_software" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipNoLoSe"
+                style="@style/ChipComponente"
+                android:tag="NO_LO_SE"
+                android:text="@string/comp_no_lo_se" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <!-- DESCRIPCIÓN DE LA AVERÍA -->
+        <TextView
+            style="@style/Etiqueta"
+            android:layout_marginTop="20dp"
+            android:labelFor="@id/etReparacionDescripcion"
+            android:text="@string/describe_problema" />
+
+        <EditText
+            android:id="@+id/etReparacionDescripcion"
+            style="@style/Campo"
+            android:gravity="top|start"
+            android:hint="@string/describe_problema_ejemplo"
+            android:importantForAutofill="no"
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxLines="8"
+            android:minLines="4"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp" />
+
+        <!-- FOTOS (opcional): miniaturas de las fotos y el recuadro "Añadir".
+     Las miniaturas las añade el código delante del recuadro -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Etiqueta"
+                android:layout_width="wrap_content"
+                android:text="@string/foto_titulo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="@string/foto_opcional"
+                android:textColor="@color/color_texto_tenue"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/llFotos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/llAnadirFoto"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:background="@drawable/bg_anadir_foto"
+                    android:clickable="true"
+                    android:contentDescription="@string/foto_anadir_descripcion"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_camara"
+                        app:tint="@color/color_texto_suave" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/foto_anadir"
+                        android:textColor="@color/color_texto_suave"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- MENSAJE DE ERROR: oculto hasta que falte algo -->
+        <TextView
+            android:id="@+id/tvReparacionError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_error"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
+            android:textColor="@color/color_alerta_texto"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEnviarReparacion"
+            style="@style/BotonPrincipal"
+            android:layout_marginTop="24dp"
+            android:text="@string/enviar_solicitud" />
+    </LinearLayout>
+</ScrollView>

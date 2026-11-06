@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- TALLER (08/14 del mockup). De momento: barra superior y botón de prueba -->
+<!-- TALLER (08 y 14 del mockup): barra superior, sub-pestañas y el hueco donde se carga cada una -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,10 +11,30 @@
 
     <include layout="@layout/barra_superior" />
 
-    <!-- PRUEBA: quitar cuando esté la lista de "Mis reparaciones" -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnPruebaSeguimiento"
-        style="@style/BotonPrincipal"
-        android:layout_marginTop="24dp"
-        android:text="@string/prueba_ver_seguimiento" />
+    <!-- SUB-PESTAÑAS: Nueva reparación | Mis reparaciones -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_pildora_pozo"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <TextView
+            android:id="@+id/tvSubNueva"
+            style="@style/Segmento"
+            android:text="@string/nueva_reparacion" />
+
+        <TextView
+            android:id="@+id/tvSubMis"
+            style="@style/Segmento"
+            android:text="@string/menu_mis_reparaciones" />
+    </LinearLayout>
+
+    <!-- Aquí se carga NuevaReparacionFragment o MisReparacionesFragment -->
+    <FrameLayout
+        android:id="@+id/flTaller"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 </LinearLayout>

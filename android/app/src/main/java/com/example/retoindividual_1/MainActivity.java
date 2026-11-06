@@ -125,6 +125,14 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
+    // Abre la pestaña Taller directamente en la sub-pestaña "Mis reparaciones" (desde el menú lateral)
+    private void abrirMisReparaciones() {
+        FragmentManager fm = getSupportFragmentManager();
+        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        fm.beginTransaction().replace(R.id.fcvMain, TallerFragment.crear(true)).commit();
+        marcar(TALLER);
+    }
+
     // ============================ MENÚ LATERAL ============================
 
     // El botón ☰ (ivBarraMenu) está en barra_superior.xml, que va DENTRO de cada Fragment.
@@ -162,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         // Mis reparaciones está en la pestaña Taller (14 del mockup)
         findViewById(R.id.tvMenuReparaciones).setOnClickListener(v -> {
             dlMain.closeDrawer(GravityCompat.START);
-            abrir(TALLER);
+            abrirMisReparaciones();
         });
 
         findViewById(R.id.tvMenuCerrarSesion).setOnClickListener(v -> cerrarSesion());

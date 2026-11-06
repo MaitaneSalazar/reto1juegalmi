@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo de cada miniatura de foto. El código recorta la foto con estas esquinas -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/color_pozo" />
+    <corners android:radius="18dp" />
+</shape>

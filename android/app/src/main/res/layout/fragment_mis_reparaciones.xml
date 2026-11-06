@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- MIS REPARACIONES (14 del mockup). Sub-pestaña del Taller. De momento vacía -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MisReparacionesFragment">
+
+    <TextView
+        style="@style/TextoPendiente"
+        android:text="@string/pagina_en_construccion" />
+
+    <!-- PRUEBA: quitar cuando esté la lista de reparaciones -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPruebaSeguimiento"
+        style="@style/BotonPrincipal"
+        android:layout_marginTop="24dp"
+        android:text="@string/prueba_ver_seguimiento" />
+</LinearLayout>
