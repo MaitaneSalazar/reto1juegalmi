@@ -9,17 +9,18 @@
     } %}
 
     <h1 class="saludo">
-        {% set hora = 'now'|date('G') %}
-        {{ hora < 14 ? 'Buenos días' : (hora < 21 ? 'Buenas tardes' : 'Buenas noches') }}, {{ app.user.nombre }}
+
+        Hola, {{ app.user.nombre }}
     </h1>
+    <p class="resumen-sub">{{ "now"|date("d/m/Y") }} · Esto es lo que hay hoy en la tienda.</p>
 
     <div class="resumen-tarjetas">
-        <a class="tarjeta" href="/admin/reparacion">
+        <a class="tarjeta destacada" href="/admin/reparacion">
             <span class="numero">{{ reparaciones|length }}</span>
             <span class="texto">Reparaciones en curso</span>
             {% if para_recoger %}<span class="detalle">{{ para_recoger }} listas para recoger</span>{% endif %}
         </a>
-        <a class="tarjeta {{ retrasados ? 'aviso' }}" href="/admin/alquiler">
+        <a class="tarjeta oscura {{ retrasados ? 'aviso' }}" href="/admin/alquiler">
             <span class="numero">{{ retrasados|length }}</span>
             <span class="texto">Alquileres retrasados</span>
             <span class="detalle">{{ alquileres_activos }} activos en plazo</span>
@@ -56,7 +57,7 @@
                 <a class="fila" href="/admin/reparacion/{{ r.id }}">
                     <strong>{{ r.marca }} {{ r.modelo }}</strong>
                     <span>{{ r.cliente.nombre }} · {{ r.nombreTrabajadorActual }}</span>
-                    <span class="badge badge-{{ r.estadoActual == 'lista_para_recoger' ? 'success' : 'warning' }}">{{ estados[r.estadoActual] ?? r.estadoActual }}</span>
+                    <span class="badge badge-{{ r.estadoActual == 'lista_para_recoger' ? 'success' : (r.estadoActual == 'en_reparacion' ? 'info' : 'secondary') }}">{{ estados[r.estadoActual] ?? r.estadoActual }}</span>
                 </a>
             {% else %}
                 <p class="text-muted">No hay reparaciones en curso.</p>
@@ -69,7 +70,7 @@
                 <a class="fila" href="/admin/{{ p.tipo }}/{{ p.id }}/edit">
                     <strong>{{ p.nombre }}</strong>
                     <span>{{ p.tipo|capitalize }}</span>
-                    <span class="badge badge-{{ p.stock == 0 ? 'danger' : 'warning' }}">{{ p.stock }} en stock</span>
+                    <span class="badge badge-{{ 'danger' }}">{{ p.stock }} en stock</span>
                 </a>
             {% else %}
                 <p class="text-muted">Todo el catálogo tiene stock suficiente.</p>

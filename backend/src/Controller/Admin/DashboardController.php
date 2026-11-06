@@ -68,7 +68,9 @@ class DashboardController extends AbstractDashboardController
     public function configureAssets(): Assets
     {
         // Estética de los mockups: fondo claro, menú oscuro y turquesa
-        return Assets::new()->addCssFile('css/admin.css');
+        return Assets::new()
+            ->addCssFile('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap')
+            ->addCssFile('css/admin.css');
     }
 
     public function configureMenuItems(): iterable

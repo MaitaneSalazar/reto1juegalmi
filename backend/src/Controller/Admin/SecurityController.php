@@ -17,7 +17,7 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('admin');
         }
 
-        return $this->render('@EasyAdmin/page/login.html.twig', [
+        return $this->render('admin/login.html.twig', [
             'error' => $authenticationUtils->getLastAuthenticationError(),
             'last_username' => $authenticationUtils->getLastUsername(),
             'page_title' => 'JuegAlmi · Acceso de trabajadores',

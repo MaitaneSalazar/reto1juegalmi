@@ -41,8 +41,8 @@ class ReparacionCrudController extends AbstractCrudController
 
     private const COLORES_ESTADO = [
         'recibida' => 'secondary',
-        'diagnostico' => 'info',
-        'en_reparacion' => 'warning',
+        'diagnostico' => 'secondary',
+        'en_reparacion' => 'info',
         'lista_para_recoger' => 'success',
         'entregada' => 'light',
         'cancelada' => 'danger',
