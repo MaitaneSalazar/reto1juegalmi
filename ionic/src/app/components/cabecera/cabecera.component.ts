@@ -1,20 +1,11 @@
-import { Component, inject } from '@angular/core';
-import { IonToolbar, IonButtons, IonMenuButton, IonIcon } from '@ionic/angular';
-import { addIcons } from 'ionicons';
-import { micOutline } from 'ionicons/icons';
-import { VozService } from '../../services/voz.service';
+import { Component } from '@angular/core';
+import { IonToolbar, IonButtons, IonMenuButton } from '@ionic/angular';
 
-// Cabecera común: ☰ + logo J + JuegAlmi + micrófono + hueco a la derecha
+// Cabecera común: ☰ + logo J + JuegAlmi + hueco a la derecha (cada página pone sus botones)
 @Component({
   selector: 'app-cabecera',
   templateUrl: './cabecera.component.html',
   styleUrls: ['./cabecera.component.scss'],
-  imports: [IonToolbar, IonButtons, IonMenuButton, IonIcon],
+  imports: [IonToolbar, IonButtons, IonMenuButton],
 })
-export class CabeceraComponent {
-  voz = inject(VozService);
-
-  constructor() {
-    addIcons({ micOutline });
-  }
-}
+export class CabeceraComponent {}

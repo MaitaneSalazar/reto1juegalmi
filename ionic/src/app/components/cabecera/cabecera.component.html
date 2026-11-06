@@ -4,11 +4,6 @@
   </ion-buttons>
   <div class="marca"><span class="logo">J</span>JuegAlmi</div>
   <ion-buttons slot="end">
-    <!-- Control por voz: se pone turquesa y late mientras escucha -->
-    <button type="button" class="redondo microfono" [class.activo]="voz.escuchando()" (click)="voz.escuchar()"
-            [attr.aria-label]="voz.escuchando() ? 'Escuchando…' : 'Control por voz'">
-      <ion-icon name="mic-outline"></ion-icon>
-    </button>
-    <ng-content></ng-content>             <!-- p. ej. botón de buscar en Tienda -->
+    <ng-content></ng-content>             <!-- p. ej. micrófono y lupa en Tienda -->
   </ion-buttons>
 </ion-toolbar>
