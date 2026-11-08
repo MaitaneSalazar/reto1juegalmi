@@ -32,4 +32,20 @@
         <item name="android:enabled">false</item>
         <item name="android:gravity">center_vertical</item>
     </style>
+
+    <style name="InsigniaMenu">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">22dp</item>
+        <item name="android:layout_gravity">end|center_vertical</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:minWidth">22dp</item>
+        <item name="android:paddingStart">7dp</item>
+        <item name="android:paddingEnd">7dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_insignia_menu</item>
+        <item name="android:textColor">@color/color_texto_suave</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:visibility">gone</item>
+    </style>
 </resources>

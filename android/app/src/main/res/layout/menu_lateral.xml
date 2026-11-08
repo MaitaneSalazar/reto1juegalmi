@@ -22,7 +22,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Logo y marca -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -53,24 +52,43 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- Tarjeta del usuario. El nombre y el email se rellenarán con /api/yo -->
+            <!-- Tarjeta del usuario: se rellena con GET /api/yo. Al pulsarla se abren los datos personales -->
             <LinearLayout
                 android:id="@+id/llMenuUsuario"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_tarjeta_marca"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="16dp">
 
-                <ImageView
+                <FrameLayout
                     android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/bg_avatar"
-                    android:importantForAccessibility="no"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_person"
-                    app:tint="@color/color_marca" />
+                    android:layout_height="44dp">
+
+                    <TextView
+                        android:id="@+id/tvMenuIniciales"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_avatar"
+                        android:gravity="center"
+                        android:textColor="@color/color_marca"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        tools:text="AE" />
+
+                    <ImageView
+                        android:id="@+id/ivMenuFoto"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_avatar"
+                        android:importantForAccessibility="no"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone" />
+                </FrameLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -101,31 +119,63 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Grupo 1: lo que ha hecho el cliente -->
+            <!-- Los números van encima de cada opción, sin recibir el toque: así el clic llega a la opción -->
             <LinearLayout
                 style="@style/GrupoMenu"
                 android:layout_marginTop="12dp">
 
-                <TextView
-                    android:id="@+id/tvMenuPedidos"
-                    style="@style/ItemMenu"
-                    android:drawableStart="@drawable/ic_list_alt"
-                    android:text="@string/menu_mis_pedidos" />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/tvMenuAlquileres"
-                    style="@style/ItemMenu"
-                    android:drawableStart="@drawable/ic_schedule"
-                    android:text="@string/menu_mis_alquileres" />
+                    <TextView
+                        android:id="@+id/tvMenuPedidos"
+                        style="@style/ItemMenu"
+                        android:drawableStart="@drawable/ic_list_alt"
+                        android:text="@string/menu_mis_pedidos" />
 
-                <TextView
-                    android:id="@+id/tvMenuReparaciones"
-                    style="@style/ItemMenu"
-                    android:drawableStart="@drawable/ic_handyman"
-                    android:text="@string/menu_mis_reparaciones" />
+                    <TextView
+                        android:id="@+id/tvMenuContadorPedidos"
+                        style="@style/InsigniaMenu"
+                        tools:text="4"
+                        tools:visibility="visible" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tvMenuAlquileres"
+                        style="@style/ItemMenu"
+                        android:drawableStart="@drawable/ic_schedule"
+                        android:text="@string/menu_mis_alquileres" />
+
+                    <TextView
+                        android:id="@+id/tvMenuContadorAlquileres"
+                        style="@style/InsigniaMenu"
+                        tools:text="1"
+                        tools:visibility="visible" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tvMenuReparaciones"
+                        style="@style/ItemMenu"
+                        android:drawableStart="@drawable/ic_handyman"
+                        android:text="@string/menu_mis_reparaciones" />
+
+                    <TextView
+                        android:id="@+id/tvMenuContadorReparaciones"
+                        style="@style/InsigniaMenu"
+                        tools:text="1"
+                        tools:visibility="visible" />
+                </FrameLayout>
             </LinearLayout>
 
-            <!-- Grupo 2: datos de la cuenta -->
             <LinearLayout
                 style="@style/GrupoMenu"
                 android:layout_marginTop="10dp">
@@ -143,7 +193,6 @@
                     android:text="@string/menu_direcciones" />
             </LinearLayout>
 
-            <!-- Grupo 3: salir -->
             <LinearLayout
                 style="@style/GrupoMenu"
                 android:layout_marginTop="10dp">

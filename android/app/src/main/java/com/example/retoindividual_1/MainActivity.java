@@ -25,6 +25,15 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import com.example.retoindividual_1.network.SessionManager;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.bumptech.glide.Glide;
+import com.example.retoindividual_1.network.ApiClient;
+
+import org.json.JSONObject;
+
+import java.util.Map;
+
 //CONTENEDOR DE LA APP, CADA PESTAÑA DE LA BARRA CARGA SU FRAGMENT EN fcvMain
 
 public class MainActivity extends AppCompatActivity {
@@ -151,6 +160,63 @@ public class MainActivity extends AppCompatActivity {
         }, false);
     }
 
+    // En onResume para que el menú se actualice al volver de cualquier pantalla
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cargarUsuarioMenu();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ApiClient.getInstance(this).getCola().cancelAll(this);
+    }
+
+    private void cargarUsuarioMenu() {
+        ApiClient api = ApiClient.getInstance(this);
+        JsonObjectRequest peticion = new JsonObjectRequest(Request.Method.GET, ApiClient.BASE_URL + "yo", null,
+                this::pintarUsuarioMenu,
+                // Si falla, el menú se queda con "Mi cuenta": no merece la pena molestar con un aviso
+                error -> {
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                return api.getCabeceras();
+            }
+        };
+        peticion.setTag(this);
+        api.getCola().add(peticion);
+    }
+
+    private void pintarUsuarioMenu(JSONObject usuario) {
+        ((TextView) findViewById(R.id.tvMenuNombre)).setText(usuario.optString("nombre_completo"));
+        ((TextView) findViewById(R.id.tvMenuEmail)).setText(usuario.optString("email"));
+        ((TextView) findViewById(R.id.tvMenuIniciales)).setText(usuario.optString("iniciales"));
+
+        ImageView ivFoto = findViewById(R.id.ivMenuFoto);
+        String foto = !usuario.isNull("foto_perfil_miniatura_url") ? usuario.optString("foto_perfil_miniatura_url")
+                : !usuario.isNull("foto_perfil_url") ? usuario.optString("foto_perfil_url")
+                : null;
+        ivFoto.setVisibility(foto == null ? View.GONE : View.VISIBLE);
+        if (foto != null) {
+            ivFoto.setClipToOutline(true);
+            Glide.with(this).load(foto).into(ivFoto);
+        }
+
+        JSONObject contadores = usuario.optJSONObject("contadores");
+        pintarContador(R.id.tvMenuContadorPedidos, contadores, "pedidos");
+        pintarContador(R.id.tvMenuContadorAlquileres, contadores, "alquileres_activos");
+        pintarContador(R.id.tvMenuContadorReparaciones, contadores, "reparaciones_en_curso");
+    }
+
+    // Con 0 (o si no viene, como en los trabajadores) el número no se enseña
+    private void pintarContador(int idVista, JSONObject contadores, String clave) {
+        int valor = contadores == null ? 0 : contadores.optInt(clave);
+        TextView tvContador = findViewById(idVista);
+        tvContador.setText(String.valueOf(valor));
+        tvContador.setVisibility(valor > 0 ? View.VISIBLE : View.GONE);
+    }
     private void configurarMenuLateral() {
         dlMain = findViewById(R.id.dlMain);
 
@@ -166,6 +232,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.tvMenuAlquileres).setOnClickListener(v -> abrirPagina(MisAlquileresActivity.class));
         findViewById(R.id.tvMenuDatos).setOnClickListener(v -> abrirPagina(DatosPersonalesActivity.class));
         findViewById(R.id.tvMenuDirecciones).setOnClickListener(v -> abrirPagina(DireccionesActivity.class));
+        findViewById(R.id.llMenuUsuario).setOnClickListener(v -> abrirPagina(DatosPersonalesActivity.class));
 
         // Mis reparaciones está en la pestaña Taller (14 del mockup)
         findViewById(R.id.tvMenuReparaciones).setOnClickListener(v -> {
