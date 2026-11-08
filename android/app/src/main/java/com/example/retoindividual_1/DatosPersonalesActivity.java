@@ -104,7 +104,10 @@ public class DatosPersonalesActivity extends PaginaMenuActivity {
 
     private void pintar(JSONObject usuario) {
         tvIniciales.setText(usuario.optString("iniciales"));
-        String foto = usuario.isNull("foto_perfil") ? null : usuario.optString("foto_perfil");
+        // foto_perfil es solo la ruta: la dirección completa viene en los campos *_url
+        String foto = !usuario.isNull("foto_perfil_miniatura_url") ? usuario.optString("foto_perfil_miniatura_url")
+                : !usuario.isNull("foto_perfil_url") ? usuario.optString("foto_perfil_url")
+                : null;
         ivFoto.setVisibility(foto == null ? View.GONE : View.VISIBLE);
         if (foto != null) {
             Glide.with(this).load(foto).into(ivFoto);

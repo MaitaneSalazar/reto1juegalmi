@@ -46,11 +46,10 @@ import java.util.concurrent.Executors;
 // EDITAR DATOS PERSONALES (18 del mockup): GET /api/yo para rellenar y PUT /api/yo para guardar
 public class EditarDatosActivity extends PaginaMenuActivity {
 
-    // La guía dice que la foto se cambia en PUT /api/yo con el campo "foto_perfil" (multipart).
-    // Confirmarlo con Aketza: si usa otro método o ruta, solo hay que cambiar estas tres líneas
-    private static final int METODO_FOTO = Request.Method.PUT;
-    private static final String RUTA_FOTO = "yo";
-    private static final String CAMPO_FOTO = "foto_perfil";
+    // Foto de perfil: POST /api/yo/foto con el campo "imagen" (PHP no lee archivos enviados con PUT)
+    private static final int METODO_FOTO = Request.Method.POST;
+    private static final String RUTA_FOTO = "yo/foto";
+    private static final String CAMPO_FOTO = "imagen";
 
     private static final int MIN_CONTRASENA = 6;
     private static final String ESTADO_ORIGINAL = "original";
@@ -220,7 +219,10 @@ public class EditarDatosActivity extends PaginaMenuActivity {
 
     private void pintarAvatar() {
         tvIniciales.setText(valorOriginal("iniciales"));
-        String fotoActual = valorOriginal("foto_perfil");
+        String fotoActual = valorOriginal("foto_perfil_miniatura_url");
+        if (fotoActual.isEmpty()) {
+            fotoActual = valorOriginal("foto_perfil_url");
+        }
         if (fotoNueva != null) {
             ivFoto.setVisibility(View.VISIBLE);
             Glide.with(this).load(fotoNueva).into(ivFoto);
