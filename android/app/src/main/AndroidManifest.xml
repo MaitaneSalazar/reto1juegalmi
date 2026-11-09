@@ -23,16 +23,16 @@
 
         <!-- PANTALLA PRINCIPAL, SE ABRE DESPUES DEL LOGIN -->
         <activity
-            android:name=".MainActivity"
+            android:name=".principal.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".RegistroActivity"
+            android:name=".sesion.RegistroActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
         <!-- EL LOGIN ES LA PRIMERA PANTALLA QUE SE ABRE -->
         <activity
-            android:name=".LoginActivity"
+            android:name=".sesion.LoginActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -42,31 +42,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MisPedidosActivity"
+            android:name=".pedidos.MisPedidosActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".MisAlquileresActivity"
+            android:name=".alquileres.MisAlquileresActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".DatosPersonalesActivity"
+            android:name=".cuenta.DatosPersonalesActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".DireccionesActivity"
+            android:name=".cuenta.DireccionesActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".FichaProductoActivity"
+            android:name=".tienda.FichaProductoActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".EditarDatosActivity"
+            android:name=".cuenta.EditarDatosActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".NuevaDireccionActivity"
+            android:name=".cuenta.NuevaDireccionActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 

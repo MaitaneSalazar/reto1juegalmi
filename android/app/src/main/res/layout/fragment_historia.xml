@@ -9,7 +9,7 @@
     android:paddingTop="12dp"
     android:paddingEnd="20dp"
     android:paddingBottom="120dp"
-    tools:context=".HistoriaFragment">
+    tools:context=".nosotros.HistoriaFragment">
 
     <LinearLayout
         android:id="@+id/llHistoria"

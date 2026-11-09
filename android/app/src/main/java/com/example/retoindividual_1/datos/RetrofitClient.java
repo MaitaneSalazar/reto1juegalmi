@@ -4,25 +4,23 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.example.retoindividual_1.network.ApiClient;
+import com.example.retoindividual_1.BuildConfig;
 import com.example.retoindividual_1.network.Localizador;
 import com.example.retoindividual_1.network.SessionManager;
-
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-//RETROFIT CONTRA LA MISMA API QUE VOLLEY. UNA SOLA INSTANCIA PARA TODA LA APP
+//RETROFIT CONTRA LA API. UNA SOLA INSTANCIA PARA TODA LA APP
 public class RetrofitClient {
 
     private static TiendaApi api;
@@ -32,7 +30,7 @@ public class RetrofitClient {
             SessionManager sesion = new SessionManager(context.getApplicationContext());
             Localizador localizador = Localizador.getInstance(context);
 
-            //IGUAL QUE EN VOLLEY: CADA PETICION LLEVA EL TOKEN Y LA UBICACION (X-Lat, X-Lon)
+            //CADA PETICION LLEVA EL TOKEN Y LA UBICACION (X-Lat, X-Lon)
             OkHttpClient cliente = new OkHttpClient.Builder()
                     .addInterceptor(new Interceptor() {
                         @NonNull
@@ -51,27 +49,18 @@ public class RetrofitClient {
                             return cadena.proceed(peticion.build());
                         }
                     })
+                    //LAS FOTOS TARDAN EN SUBIR, LE DAMOS 30 SEGUNDOS
+                    .writeTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
                     .build();
 
             api = new Retrofit.Builder()
-                    .baseUrl(ApiClient.BASE_URL)
+                    .baseUrl(BuildConfig.API_URL)
                     .client(cliente)
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .build()
                     .create(TiendaApi.class);
         }
         return api;
-    }
-
-    //EL CAMPO "mensaje" DE LOS ERRORES DE LA API, COMO ApiClient.mensajeDeError PERO PARA RETROFIT
-    public static String mensajeDeError(retrofit2.Response<?> respuesta) {
-        try (ResponseBody cuerpo = respuesta.errorBody()) {
-            if (cuerpo != null) {
-                return new JSONObject(cuerpo.string()).optString("mensaje", "Error " + respuesta.code());
-            }
-        } catch (Exception e) {
-            //SI NO ES JSON SE ENSEÑA SOLO EL CODIGO
-        }
-        return "Error " + respuesta.code();
     }
 }

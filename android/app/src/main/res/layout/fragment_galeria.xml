@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GaleriaFragment">
+    tools:context=".nosotros.GaleriaFragment">
 
     <!-- EL PADDING DE ABAJO ES PARA QUE LA BARRA FLOTANTE NO TAPE LA ULTIMA FOTO -->
     <androidx.recyclerview.widget.RecyclerView

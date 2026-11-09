@@ -1,12 +1,12 @@
 package com.example.retoindividual_1.adaptadores;
 
+import com.example.retoindividual_1.nosotros.GaleriaFragment;
+import com.example.retoindividual_1.nosotros.HistoriaFragment;
+import com.example.retoindividual_1.nosotros.UbicacionFragment;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.retoindividual_1.GaleriaFragment;
-import com.example.retoindividual_1.HistoriaFragment;
-import com.example.retoindividual_1.UbicacionFragment;
 
 //LAS 3 PAGINAS DE SOBRE NOSOTROS, EN EL MISMO ORDEN QUE nosotros_pestanas
 public class NosotrosPaginasAdapter extends FragmentStateAdapter {

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ERRORES DE LA CAPA DE DATOS (RETROFIT) -->
+    <string name="datos_sin_conexion">No se puede conectar con el servidor</string>
+    <string name="datos_respuesta_rara">El servidor ha respondido algo que no se entiende</string>
+</resources>

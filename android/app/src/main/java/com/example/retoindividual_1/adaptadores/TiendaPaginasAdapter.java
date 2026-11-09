@@ -1,10 +1,10 @@
 package com.example.retoindividual_1.adaptadores;
 
+import com.example.retoindividual_1.tienda.ListaProductosFragment;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.retoindividual_1.ListaProductosFragment;
 
 import java.util.List;
 

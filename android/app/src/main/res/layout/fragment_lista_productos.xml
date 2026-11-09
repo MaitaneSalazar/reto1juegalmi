@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ListaProductosFragment">
+    tools:context=".tienda.ListaProductosFragment">
 
     <!-- PLATAFORMAS PARA FILTRAR, SOLO EN COMPRAR VIDEOJUEGOS. LAS PONE EL CODIGO -->
     <HorizontalScrollView

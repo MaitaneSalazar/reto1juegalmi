@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:clipToPadding="false"
     android:paddingBottom="120dp"
-    tools:context=".NuevaReparacionFragment">
+    tools:context=".taller.NuevaReparacionFragment">
 
     <!-- El paddingBottom deja sitio para que la barra inferior flotante no tape el botón de enviar -->
     <LinearLayout

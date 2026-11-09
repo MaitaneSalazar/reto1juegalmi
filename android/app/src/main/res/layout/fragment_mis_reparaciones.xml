@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MisReparacionesFragment">
+    tools:context=".taller.MisReparacionesFragment">
 
     <!-- El paddingBottom es para que la barra inferior flotante no tape la última tarjeta -->
     <androidx.recyclerview.widget.RecyclerView

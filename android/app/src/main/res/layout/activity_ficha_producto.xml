@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@color/color_fondo"
     android:orientation="vertical"
-    tools:context=".FichaProductoActivity">
+    tools:context=".tienda.FichaProductoActivity">
 
     <ScrollView
         android:layout_width="match_parent"

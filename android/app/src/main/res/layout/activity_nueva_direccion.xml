@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/color_fondo"
     android:orientation="vertical"
-    tools:context=".NuevaDireccionActivity">
+    tools:context=".cuenta.NuevaDireccionActivity">
 
     <!-- El padding de los lados va aquí dentro: el de "main" lo pone el código -->
     <LinearLayout

@@ -1,7 +1,11 @@
 package com.example.retoindividual_1.adaptadores;
 
+import com.example.retoindividual_1.tienda.FichaProductoActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +20,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.retoindividual_1.FichaProductoActivity;
 import com.example.retoindividual_1.R;
 import com.example.retoindividual_1.modelos.Plataforma;
 import com.example.retoindividual_1.modelos.Producto;
@@ -29,6 +32,15 @@ import java.util.Locale;
 public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ProductoViewHolder> {
 
     private static final NumberFormat EUROS = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("es-ES"));
+
+    //PINTURA QUE QUITA EL COLOR A TODA LA TARJETA (SATURACION 0)
+    private static final Paint GRIS = new Paint();
+
+    static {
+        ColorMatrix sinColor = new ColorMatrix();
+        sinColor.setSaturation(0f);
+        GRIS.setColorFilter(new ColorMatrixColorFilter(sinColor));
+    }
 
     private final List<Producto> productos;
     private final boolean alquiler;
@@ -116,7 +128,14 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         Context context = holder.itemView.getContext();
         int quedan = alquiler ? producto.getCopiasDisponibles() : producto.getStock();
         boolean agotado = quedan <= 0 || !producto.isDisponible();
-        holder.itemView.setAlpha(agotado ? 0.55f : 1f);
+        //AGOTADO SE VE EN GRIS (SIN COLOR) Y NO SE PUEDE PULSAR, COMO UN BOTON DESACTIVADO.
+        //LAS PLATAFORMAS NO SE TOCAN, SIGUEN CON SU COLOR
+        holder.itemView.setEnabled(!agotado);
+        View[] partes = {holder.flSinFoto, holder.ivFoto, holder.tvAviso, holder.tvNombre, holder.tvPrecio, holder.tvPorDia};
+        for (View parte : partes) {
+            parte.setAlpha(agotado ? 0.55f : 1f);
+            parte.setLayerType(agotado ? View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_NONE, agotado ? GRIS : null);
+        }
 
         if (agotado) {
             holder.tvAviso.setText(alquiler ? R.string.tienda_alquilado : R.string.tienda_agotado);

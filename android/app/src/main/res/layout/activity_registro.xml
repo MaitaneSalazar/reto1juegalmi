@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/color_fondo"
     android:orientation="vertical"
-    tools:context=".RegistroActivity">
+    tools:context=".sesion.RegistroActivity">
 
     <!-- BARRA DE ARRIBA -->
     <LinearLayout

@@ -4,7 +4,7 @@
     android:id="@+id/dlMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".principal.MainActivity">
 
     <FrameLayout
         android:id="@+id/main"
@@ -14,7 +14,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fcvMain"
-            android:name="com.example.retoindividual_1.InicioFragment"
+            android:name="com.example.retoindividual_1.inicio.InicioFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
