@@ -34,6 +34,13 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
+import android.Manifest;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+
+import com.example.retoindividual_1.network.Localizador;
+
 //CONTENEDOR DE LA APP, CADA PESTAÑA DE LA BARRA CARGA SU FRAGMENT EN fcvMain
 
 public class MainActivity extends AppCompatActivity {
@@ -51,6 +58,11 @@ public class MainActivity extends AppCompatActivity {
     private int pestanaActual = INICIO;
 
     private DrawerLayout dlMain;
+
+    // Al responder al permiso (sí o no) se intenta empezar; sin permiso, Localizador no hace nada
+    private final ActivityResultLauncher<String[]> pedirUbicacion = registerForActivityResult(
+            new ActivityResultContracts.RequestMultiplePermissions(),
+            resultado -> Localizador.getInstance(this).iniciar());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +101,10 @@ public class MainActivity extends AppCompatActivity {
         }
         marcar(pestanaActual);
         configurarMenuLateral();
+        if (!Localizador.tienePermiso(this)) {
+            pedirUbicacion.launch(new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION});
+        }
     }
 
     @Override
@@ -165,6 +181,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         cargarUsuarioMenu();
+        Localizador.getInstance(this).iniciar();
+    }
+
+    // Mientras la app no se ve, no se pide la ubicación (ahorra batería). Se sigue enviando la última conocida
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Localizador.getInstance(this).detener();
     }
 
     @Override

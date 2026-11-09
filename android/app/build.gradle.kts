@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation("com.android.volley:volley:1.2.1")
     implementation("org.osmdroid:osmdroid-android:6.1.20")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation(libs.glide) //PARA CARGAR LAS IMAGENES POR URL
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

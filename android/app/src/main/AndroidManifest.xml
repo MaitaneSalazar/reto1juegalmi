@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- La app usa la cámara si existe, pero también se puede instalar en dispositivos sin ella -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-feature
         android:name="android.hardware.camera.any"
         android:required="false" />

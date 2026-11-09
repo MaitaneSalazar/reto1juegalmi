@@ -2,10 +2,15 @@ package com.example.retoindividual_1.network;
 
 import android.content.Context;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.HttpResponse;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.Volley;
 import com.example.retoindividual_1.BuildConfig;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,10 +31,33 @@ public class ApiClient {
     private final RequestQueue cola;
     private final SessionManager sesion;
 
-    // Constructor privado: nadie puede hacer "new ApiClient()" desde fuera
+    private final Localizador localizador;
+
     private ApiClient(Context context) {
-        cola = Volley.newRequestQueue(context.getApplicationContext());
         sesion = new SessionManager(context.getApplicationContext());
+        localizador = Localizador.getInstance(context);
+
+        // Todas las peticiones de la app pasan por aquí, aunque la pantalla no use getCabeceras():
+        // así cada consulta a la API lleva el token y la ubicación, y la API la guarda en LOCALIZACION
+        cola = Volley.newRequestQueue(context.getApplicationContext(), new HurlStack() {
+            @Override
+            public HttpResponse executeRequest(Request<?> request, Map<String, String> cabecerasExtra)
+                    throws IOException, AuthFailureError {
+                Map<String, String> cabeceras = new HashMap<>(cabecerasExtra);
+                if (request.getUrl().startsWith(BASE_URL)) {
+                    anadirCabecerasComunes(cabeceras);
+                }
+                return super.executeRequest(request, cabeceras);
+            }
+        });
+    }
+
+    private void anadirCabecerasComunes(Map<String, String> cabeceras) {
+        String token = sesion.getToken();
+        if (token != null) {
+            cabeceras.put("Authorization", "Bearer " + token);
+        }
+        localizador.anadirCabeceras(cabeceras);
     }
 
     // La forma de obtener el ApiClient desde cualquier pantalla
