@@ -65,6 +65,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvCesta"
+                android:layoutAnimation="@anim/lista_entra"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"

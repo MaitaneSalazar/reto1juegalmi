@@ -51,6 +51,8 @@ dependencies {
     implementation("org.osmdroid:osmdroid-android:6.1.20")
     implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation(libs.glide) //PARA CARGAR LAS IMAGENES POR URL
+    implementation(libs.retrofit) //SEGUNDA LIBRERIA DE RED, LA USA EL BUSCADOR
+    implementation(libs.retrofit.scalars)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

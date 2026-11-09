@@ -10,5 +10,6 @@
     <string name="buscar_inicio_texto">Escribe o pulsa el micrófono y di lo que buscas.</string>
     <string name="buscar_vacio_titulo">Sin resultados</string>
     <string name="buscar_vacio_texto">No hay nada que coincida con «%1$s».</string>
+    <string name="buscar_sin_conexion">No se puede conectar con el servidor</string>
     <string name="buscar_error_titulo">Algo ha fallado</string>
 </resources>

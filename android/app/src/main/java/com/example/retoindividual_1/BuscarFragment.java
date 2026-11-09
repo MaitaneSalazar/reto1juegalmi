@@ -32,21 +32,22 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.retoindividual_1.adaptadores.ProductoAdapter;
+import com.example.retoindividual_1.datos.RetrofitClient;
 import com.example.retoindividual_1.modelos.Producto;
-import com.example.retoindividual_1.network.ApiClient;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-//BUSCADOR DE LA TIENDA (LA LUPA), SE PUEDE ESCRIBIR O BUSCAR HABLANDO. USA /productos?q=
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+//BUSCADOR DE LA TIENDA (LA LUPA), SE PUEDE ESCRIBIR O BUSCAR HABLANDO. USA /productos?q= CON RETROFIT
 public class BuscarFragment extends Fragment {
 
     //ESPERAMOS UN POCO DESPUES DE CADA LETRA PARA NO HACER UNA PETICION POR TECLA
@@ -59,6 +60,9 @@ public class BuscarFragment extends Fragment {
     private LinearLayout llAviso;
     private TextView tvAvisoTitulo;
     private TextView tvAvisoTexto;
+
+    //LA BUSQUEDA QUE ESTA EN CAMINO, PARA CANCELARLA SI SE ESCRIBE OTRA COSA
+    private Call<String> llamada;
 
     private final Handler espera = new Handler(Looper.getMainLooper());
     private final Runnable buscarAhora = new Runnable() {
@@ -163,7 +167,9 @@ public class BuscarFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         espera.removeCallbacks(buscarAhora);
-        ApiClient.getInstance(requireContext()).getCola().cancelAll(this);
+        if (llamada != null) {
+            llamada.cancel();
+        }
     }
 
     //ABRIMOS EL RECONOCEDOR DE VOZ DEL MOVIL EN ESPAÑOL. NO HACE FALTA PERMISO DE MICROFONO, LO PIDE EL
@@ -181,7 +187,9 @@ public class BuscarFragment extends Fragment {
 
     private void buscar(String texto) {
         //CANCELAMOS LA BUSQUEDA ANTERIOR PARA QUE NO LLEGUE DESPUES Y PISE ESTA
-        ApiClient.getInstance(requireContext()).getCola().cancelAll(this);
+        if (llamada != null) {
+            llamada.cancel();
+        }
         rvResultados.setAdapter(null);
 
         if (texto.isEmpty()) {
@@ -192,33 +200,47 @@ public class BuscarFragment extends Fragment {
         llAviso.setVisibility(View.GONE);
         pbBuscar.setVisibility(View.VISIBLE);
 
-        JsonObjectRequest peticion = new JsonObjectRequest(Request.Method.GET,
-                ApiClient.BASE_URL + "productos?limit=50&q=" + Uri.encode(texto), null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject respuesta) {
-                        pbBuscar.setVisibility(View.GONE);
-                        JSONArray datos = respuesta.optJSONArray("datos");
-                        List<Producto> productos = new ArrayList<>();
-                        for (int i = 0; datos != null && i < datos.length(); i++) {
-                            productos.add(new Producto(datos.optJSONObject(i)));
-                        }
-                        if (productos.isEmpty()) {
-                            mostrarAviso(getString(R.string.buscar_vacio_titulo), getString(R.string.buscar_vacio_texto, texto));
-                        } else {
-                            rvResultados.setAdapter(new ProductoAdapter(productos, false));
-                        }
+        //RETROFIT HACE LA PETICION EN OTRO HILO Y LLAMA AL CALLBACK EN EL PRINCIPAL
+        llamada = RetrofitClient.getApi(requireContext()).buscar(texto, 50);
+        llamada.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> respuesta) {
+                if (call.isCanceled() || getView() == null) {
+                    return;
+                }
+                pbBuscar.setVisibility(View.GONE);
+                if (!respuesta.isSuccessful() || respuesta.body() == null) {
+                    mostrarAviso(getString(R.string.buscar_error_titulo), RetrofitClient.mensajeDeError(respuesta));
+                    return;
+                }
+                List<Producto> productos = new ArrayList<>();
+                try {
+                    JSONArray datos = new JSONObject(respuesta.body()).optJSONArray("datos");
+                    for (int i = 0; datos != null && i < datos.length(); i++) {
+                        productos.add(new Producto(datos.optJSONObject(i)));
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        pbBuscar.setVisibility(View.GONE);
-                        mostrarAviso(getString(R.string.buscar_error_titulo), ApiClient.mensajeDeError(error));
-                    }
-                });
-        peticion.setTag(this);
-        ApiClient.getInstance(requireContext()).getCola().add(peticion);
+                } catch (JSONException e) {
+                    mostrarAviso(getString(R.string.buscar_error_titulo), getString(R.string.buscar_sin_conexion));
+                    return;
+                }
+                if (productos.isEmpty()) {
+                    mostrarAviso(getString(R.string.buscar_vacio_titulo), getString(R.string.buscar_vacio_texto, texto));
+                } else {
+                    rvResultados.setAdapter(new ProductoAdapter(productos, false));
+                    //LAS TARJETAS ENTRAN UNA DETRAS DE OTRA (res/anim/lista_entra.xml)
+                    rvResultados.scheduleLayoutAnimation();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable error) {
+                if (call.isCanceled() || getView() == null) {
+                    return;
+                }
+                pbBuscar.setVisibility(View.GONE);
+                mostrarAviso(getString(R.string.buscar_error_titulo), getString(R.string.buscar_sin_conexion));
+            }
+        });
     }
 
     private void mostrarAviso(String titulo, String texto) {

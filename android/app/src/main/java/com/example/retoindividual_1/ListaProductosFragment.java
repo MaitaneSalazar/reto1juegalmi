@@ -139,6 +139,8 @@ public class ListaProductosFragment extends Fragment {
                             mostrarAviso(getString(R.string.tienda_vacia_titulo), getString(R.string.tienda_vacia_texto), false);
                         } else {
                             rvProductos.setAdapter(new ProductoAdapter(productos, alquiler));
+                            //LAS TARJETAS ENTRAN UNA DETRAS DE OTRA (res/anim/lista_entra.xml)
+                            rvProductos.scheduleLayoutAnimation();
                         }
                     }
                 },

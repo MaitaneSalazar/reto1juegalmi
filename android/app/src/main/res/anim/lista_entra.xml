@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- LAS TARJETAS DE LA LISTA ENTRAN UNA DETRAS DE OTRA -->
+<layoutAnimation xmlns:android="http://schemas.android.com/apk/res/android"
+    android:animation="@anim/tarjeta_entra"
+    android:animationOrder="normal"
+    android:delay="12%" />

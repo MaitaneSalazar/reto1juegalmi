@@ -64,6 +64,8 @@ public class TiendaFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 getParentFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.entrar_derecha, R.anim.salir_izquierda,
+                                R.anim.entrar_izquierda, R.anim.salir_derecha)
                         .replace(R.id.fcvMain, new BuscarFragment())
                         .addToBackStack(null)
                         .commit();

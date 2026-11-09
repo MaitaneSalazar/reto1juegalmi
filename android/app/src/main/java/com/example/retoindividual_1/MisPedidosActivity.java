@@ -155,6 +155,7 @@ public class MisPedidosActivity extends PaginaMenuActivity {
             }
         });
         rvAnteriores.setAdapter(adaptador);
+        rvAnteriores.scheduleLayoutAnimation();
         tvAnteriores.setVisibility(anteriores.isEmpty() ? View.GONE : View.VISIBLE);
 
         for (int i = 0; i < pedidos.size(); i++) {

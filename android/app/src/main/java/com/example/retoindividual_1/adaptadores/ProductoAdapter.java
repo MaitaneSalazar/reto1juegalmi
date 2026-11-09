@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -102,7 +103,10 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
                 Intent intent = FichaProductoActivity.crearIntent(v.getContext(), producto.getId(), producto.esVideojuego());
                 //SI VENIMOS DE ALQUILAR LA FICHA SE ABRE YA EN ALQUILAR
                 intent.putExtra(FichaProductoActivity.EXTRA_EMPEZAR_ALQUILANDO, alquiler);
-                v.getContext().startActivity(intent);
+                //LA FICHA ENTRA DESDE LA DERECHA
+                ActivityOptionsCompat animacion = ActivityOptionsCompat.makeCustomAnimation(v.getContext(),
+                        R.anim.entrar_derecha, R.anim.salir_izquierda);
+                v.getContext().startActivity(intent, animacion.toBundle());
             }
         });
     }

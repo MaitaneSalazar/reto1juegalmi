@@ -140,6 +140,8 @@ public class MisAlquileresActivity extends PaginaMenuActivity {
             }
         }));
         rvDevueltos.setAdapter(new AlquilerDevueltoAdapter(devueltos));
+        rvActivos.scheduleLayoutAnimation();
+        rvDevueltos.scheduleLayoutAnimation();
         tvDevueltos.setVisibility(devueltos.isEmpty() ? View.GONE : View.VISIBLE);
     }
 

@@ -27,6 +27,7 @@ import com.example.retoindividual_1.modelos.Alquiler;
 import com.example.retoindividual_1.modelos.Producto;
 import com.example.retoindividual_1.modelos.Reparacion;
 import com.example.retoindividual_1.network.ApiClient;
+import com.example.retoindividual_1.utilidades.Animaciones;
 import com.example.retoindividual_1.utilidades.FormatosReparacion;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 
@@ -160,12 +161,13 @@ public class InicioFragment extends Fragment {
 
     private void pintarReparacion(Reparacion reparacion) {
         cpiReparacion.setMax(reparacion.getTotalPasos());
-        cpiReparacion.setProgress(reparacion.getPaso());
+        //EL CIRCULO SE VA LLENANDO HASTA EL PASO EN EL QUE ESTA
+        cpiReparacion.setProgressCompat(reparacion.getPaso(), true);
         tvReparacionPaso.setText(getString(R.string.inicio_paso, reparacion.getPaso(), reparacion.getTotalPasos()));
         tvReparacionTitulo.setText(FormatosReparacion.titulo(requireContext(),
                 reparacion.getTipoDispositivo(), reparacion.getMarca(), reparacion.getModelo()));
         tvReparacionEstado.setText(reparacion.getEstadoTexto());
-        llReparacion.setVisibility(View.VISIBLE);
+        Animaciones.aparecer(llReparacion);
 
         //EL SEGUIMIENTO LO ABRE LA ACTIVITY, COMO DESDE EL TALLER
         llReparacion.setOnClickListener(new View.OnClickListener() {
@@ -207,7 +209,7 @@ public class InicioFragment extends Fragment {
                 .placeholder(R.drawable.placeholder_producto)
                 .error(R.drawable.placeholder_producto)
                 .into(ivAlquiler);
-        llAlquiler.setVisibility(View.VISIBLE);
+        Animaciones.aparecer(llAlquiler);
     }
 
     //LOS ULTIMOS PRODUCTOS DE LA TIENDA EN UNA FILA QUE SE DESLIZA
@@ -222,6 +224,7 @@ public class InicioFragment extends Fragment {
                 }
                 if (!productos.isEmpty()) {
                     rvNovedades.setAdapter(new ProductoAdapter(productos, false));
+                    rvNovedades.scheduleLayoutAnimation();
                     llNovedadesTitulo.setVisibility(View.VISIBLE);
                 }
             }

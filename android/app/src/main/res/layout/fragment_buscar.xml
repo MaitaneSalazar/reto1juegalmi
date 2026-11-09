@@ -91,6 +91,7 @@
         <!-- EL PADDING DE ABAJO ES PARA QUE LA BARRA FLOTANTE NO TAPE LA ULTIMA FILA -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvBuscar"
+            android:layoutAnimation="@anim/lista_entra"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"

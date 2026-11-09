@@ -354,6 +354,7 @@
         <!-- VA FUERA DEL PADDING PARA QUE LAS TARJETAS LLEGUEN AL BORDE AL DESLIZAR -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvInicioNovedades"
+            android:layoutAnimation="@anim/lista_entra"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

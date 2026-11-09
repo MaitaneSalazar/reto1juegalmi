@@ -23,6 +23,7 @@ import com.example.retoindividual_1.modelos.Cesta;
 import com.example.retoindividual_1.modelos.Plataforma;
 import com.example.retoindividual_1.modelos.Producto;
 import com.example.retoindividual_1.network.ApiClient;
+import com.example.retoindividual_1.utilidades.Animaciones;
 import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONObject;
@@ -193,8 +194,9 @@ public class FichaProductoActivity extends PaginaMenuActivity {
 
     private void pintarProducto() {
         pbFicha.setVisibility(View.GONE);
-        llDatos.setVisibility(View.VISIBLE);
-        llPie.setVisibility(View.VISIBLE);
+        //LOS DATOS Y EL PIE ENTRAN SUBIENDO CUANDO LLEGA EL PRODUCTO
+        Animaciones.aparecer(llDatos);
+        Animaciones.aparecer(llPie);
 
         //LA FOTO SE VE ENTERA, SIN RECORTAR. LAS CONSOLAS Y MOVILES VAN SOBRE BLANCO COMO SUS FOTOS
         if (!producto.esVideojuego()) {
@@ -281,6 +283,9 @@ public class FichaProductoActivity extends PaginaMenuActivity {
     private void anadirCesta() {
         boolean anadido = Cesta.anadir(producto, cantidad, alquilando, diasElegidos);
         Toast.makeText(this, anadido ? R.string.ficha_anadido : R.string.ficha_sin_stock, Toast.LENGTH_SHORT).show();
+        if (anadido) {
+            Animaciones.latido(btnFicha);
+        }
         cantidad = 1;
         pintarModo();
     }
