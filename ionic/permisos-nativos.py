@@ -15,10 +15,10 @@ if os.path.exists(manifest):
         nuevos += ('    <queries>\n        <intent>\n'
                    '            <action android:name="android.speech.action.RECOGNIZE_SPEECH" />\n'
                    '        </intent>\n    </queries>\n')
-    # La API de desarrollo va por http (VM de Aketza): se quita cuando la API tenga HTTPS
-    http = 'usesCleartextTraffic' not in xml
+    # La API ya va por HTTPS (AWS): fuera el permiso de http que hacía falta con la VM
+    http = 'usesCleartextTraffic' in xml
     if http:
-        xml = xml.replace('<application', '<application\n        android:usesCleartextTraffic="true"', 1)
+        xml = xml.replace('\n        android:usesCleartextTraffic="true"', '').replace(' android:usesCleartextTraffic="true"', '')
     if nuevos or http:
         xml = xml.replace('</manifest>', nuevos + '</manifest>')
         open(manifest, 'w', encoding='utf-8').write(xml)

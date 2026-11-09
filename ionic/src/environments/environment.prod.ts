@@ -1,5 +1,5 @@
 // Configuración en producción (APK / docker)
 export const environment = {
   production: true,
-  apiUrl: 'http://192.168.2.74:8000/api',   // cambiar por la URL HTTPS de AWS cuando esté desplegada
+  apiUrl: 'https://symfony.44-219-6-54.sslip.io/api',   // API de Aketza en AWS con HTTPS (Learner Lab encendido)
 };
