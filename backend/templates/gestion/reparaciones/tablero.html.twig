@@ -1,0 +1,42 @@
+{% extends 'gestion/base.html.twig' %}
+{% import 'gestion/_macros.html.twig' as m %}
+
+{% block titulo %}Reparaciones{% endblock %}
+
+{% block contenido %}
+    <div class="cabecera">
+        <h1 class="titulo">Reparaciones</h1>
+        <div class="acciones">
+            <form class="buscador" method="get">{{ m.icono('search') }}<input type="search" name="q" value="{{ q }}" placeholder="Buscar"></form>
+            <a class="boton principal" href="{{ path('gestion_reparacion_nueva') }}">{{ m.icono('plus') }} Registrar entrada</a>
+        </div>
+    </div>
+
+    <div class="tablero">
+        {% for clave, nombre in estados %}
+            {% set tarjetas = columnas[clave] %}
+            <section class="columna col-{{ clave }}">
+                <header>
+                    <span>{{ clave == 'entregada' ? 'Entregada hoy' : nombre }}</span>
+                    <span class="cuenta">{{ tarjetas|length }}</span>
+                </header>
+                {% for t in tarjetas %}
+                    {% set r = t.r %}
+                    {% set tecnico = r.trabajadorActual %}
+                    {% set averia = r.descripcionAveria %}
+                    <a class="ficha" href="{{ path('gestion_reparacion', {id: r.id}) }}">
+                        <strong>{{ dispositivos[r.tipoDispositivo] ?? r.tipoDispositivo|capitalize }} · {{ r.marca }} {{ r.modelo }}</strong>
+                        <span class="ficha-averia">{{ averia|length > 42 ? averia|slice(0, 42) ~ '…' : averia }}</span>
+                        <span class="ficha-pie">
+                            <span>Nº {{ '%04d'|format(r.id) }}</span>
+                            <span class="dias{{ t.dias >= dias_aviso and clave in ['recibida', 'diagnostico', 'en_reparacion'] ? ' tarde' }}">{{ t.dias == 0 ? 'Hoy' : t.dias ~ ' d' }}</span>
+                            {% if tecnico %}<span class="mini-avatar" title="{{ tecnico.nombre }}">{{ tecnico|iniciales }}</span>{% endif %}
+                        </span>
+                    </a>
+                {% else %}
+                    <p class="columna-vacia">{{ q ? 'Sin resultados' : 'Nada por aquí' }}</p>
+                {% endfor %}
+            </section>
+        {% endfor %}
+    </div>
+{% endblock %}

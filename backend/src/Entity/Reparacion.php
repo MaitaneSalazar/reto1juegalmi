@@ -48,6 +48,19 @@ class Reparacion
     #[Assert\PositiveOrZero(message: 'El presupuesto no puede ser negativo')]
     private ?string $presupuesto = null;
 
+
+    /** Notas del taller: solo las ve el equipo, nunca el cliente */
+    #[ORM\Column(name: 'notas_internas', type: 'text', nullable: true)]
+    private ?string $notasInternas = null;
+
+    /** null = pendiente de respuesta · true = aceptado · false = rechazado */
+    #[ORM\Column(name: 'presupuesto_aceptado', nullable: true)]
+    private ?bool $presupuestoAceptado = null;
+
+    /** Última vez que la tienda avisó al cliente */
+    #[ORM\Column(name: 'avisado_en', nullable: true)]
+    private ?\DateTimeImmutable $avisadoEn = null;
+
     // CLIENTE 1 — solicita — N REPARACION
     #[ORM\ManyToOne(targetEntity: Cliente::class)]
     #[ORM\JoinColumn(name: 'id_cliente', referencedColumnName: 'id_usuario', nullable: false)]
@@ -173,6 +186,15 @@ class Reparacion
 
         return null;
     }
+
+    public function getNotasInternas(): ?string { return $this->notasInternas; }
+    public function setNotasInternas(?string $notas): static { $this->notasInternas = $notas; return $this; }
+
+    public function getPresupuestoAceptado(): ?bool { return $this->presupuestoAceptado; }
+    public function setPresupuestoAceptado(?bool $aceptado): static { $this->presupuestoAceptado = $aceptado; return $this; }
+
+    public function getAvisadoEn(): ?\DateTimeImmutable { return $this->avisadoEn; }
+    public function setAvisadoEn(?\DateTimeImmutable $fecha): static { $this->avisadoEn = $fecha; return $this; }
 
     // ---------- Solo para la web de trabajadores ----------
 

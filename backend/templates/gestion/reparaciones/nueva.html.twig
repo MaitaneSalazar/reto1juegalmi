@@ -1,0 +1,86 @@
+{% extends 'gestion/base.html.twig' %}
+{% import 'gestion/_macros.html.twig' as m %}
+
+{% block titulo %}Registrar entrada{% endblock %}
+
+{% block contenido %}
+    <a class="miga" href="{{ path('gestion_reparaciones') }}">{{ m.icono('chevron-left') }} Reparaciones</a>
+    <div class="cabecera">
+        <h1 class="titulo">Registrar entrada</h1>
+        <div class="acciones">
+            <a class="boton" href="{{ path('gestion_reparaciones') }}">Cancelar</a>
+            <button class="boton principal" type="submit" form="form-entrada">Registrar</button>
+        </div>
+    </div>
+
+    {% if errores is not empty %}
+        <div class="avisos"><div class="aviso danger">{{ errores['_'] ?? 'Revisa los campos marcados en rojo.' }}</div></div>
+    {% endif %}
+
+    <form id="form-entrada" method="post" novalidate>
+        <input type="hidden" name="_token" value="{{ csrf_token('reparacion') }}">
+        <div class="form-columnas">
+            <div class="form-principal">
+                <section class="tarjeta">
+                    <h3 class="tarjeta-titulo">¿Qué reparamos?</h3>
+                    <div class="tipos-dispositivo">
+                        {% for clave, nombre in dispositivos %}
+                            <label class="{{ (v.tipo_dispositivo ?? '') == clave ? 'activa' }}">
+                                <input type="radio" name="tipo_dispositivo" value="{{ clave }}" {{ (v.tipo_dispositivo ?? '') == clave ? 'checked' }}>
+                                {{ m.icono(iconos[clave]) }}<span>{{ nombre }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                    {{ m.error(errores, 'tipo_dispositivo') }}
+                    <div class="fila fila-2" style="margin-top: 20px">
+                        <label class="campo-form"><span class="campo-nombre">Marca</span><input type="text" name="marca" value="{{ v.marca ?? '' }}">{{ m.error(errores, 'marca') }}</label>
+                        <label class="campo-form"><span class="campo-nombre">Modelo</span><input type="text" name="modelo" value="{{ v.modelo ?? '' }}">{{ m.error(errores, 'modelo') }}</label>
+                    </div>
+                    <label class="campo-form"><span class="campo-nombre">Componente (opcional)</span><input type="text" name="componente" value="{{ v.componente ?? '' }}" placeholder="Joystick, pantalla, batería…"></label>
+                    <label class="campo-form">
+                        <span class="campo-nombre">Avería que describe el cliente</span>
+                        <textarea name="descripcion_averia" rows="4">{{ v.descripcion_averia ?? '' }}</textarea>
+                        {{ m.error(errores, 'descripcion_averia') }}
+                    </label>
+                </section>
+            </div>
+
+            <aside class="tarjeta form-imagen">
+                <h3 class="tarjeta-titulo">Cliente y taller</h3>
+                <label class="campo-form">
+                    <span class="campo-nombre">Cliente</span>
+                    <select name="cliente">
+                        <option value="">Elige el cliente…</option>
+                        {% for c in clientes %}
+                            <option value="{{ c.id }}" {{ (v.cliente ?? '') ~ '' == c.id ~ '' ? 'selected' }}>{{ c.nombre }} {{ c.apellido1 }} · {{ c.dni }}</option>
+                        {% endfor %}
+                    </select>
+                    {{ m.error(errores, 'cliente') }}
+                </label>
+                <label class="campo-form">
+                    <span class="campo-nombre">Técnico (opcional)</span>
+                    <select name="tecnico">
+                        <option value="">Sin asignar</option>
+                        {% for t in trabajadores %}
+                            <option value="{{ t.id }}" {{ (v.tecnico ?? '') ~ '' == t.id ~ '' ? 'selected' }}>{{ t.nombre }} {{ t.apellido1 }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label class="campo-form">
+                    <span class="campo-nombre">Presupuesto (opcional)</span>
+                    <span class="con-prefijo"><span class="prefijo">€</span><input type="text" name="presupuesto" inputmode="decimal" value="{{ v.presupuesto ?? '' }}"></span>
+                    {{ m.error(errores, 'presupuesto') }}
+                </label>
+                <p class="dato-pequeno">La reparación empieza como «Recibida» y el cliente la verá en su app.</p>
+            </aside>
+        </div>
+    </form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.querySelectorAll('.tipos-dispositivo input').forEach(r => r.addEventListener('change', () => {
+        document.querySelectorAll('.tipos-dispositivo label').forEach(l => l.classList.toggle('activa', l.querySelector('input').checked));
+    }));
+</script>
+{% endblock %}

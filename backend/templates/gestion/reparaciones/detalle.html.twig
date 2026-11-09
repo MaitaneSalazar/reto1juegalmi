@@ -1,0 +1,221 @@
+{% extends 'gestion/base.html.twig' %}
+{% import 'gestion/_macros.html.twig' as m %}
+
+{% block titulo %}Reparación Nº {{ '%04d'|format(reparacion.id) }}{% endblock %}
+
+{% block contenido %}
+    {% set dispositivo = dispositivos[reparacion.tipoDispositivo] ?? reparacion.tipoDispositivo|capitalize %}
+    {% set cliente = reparacion.cliente %}
+    {% set token = csrf_token('reparacion') %}
+
+    <a class="miga" href="{{ path('gestion_reparaciones') }}">{{ m.icono('chevron-left') }} Reparaciones</a>
+    <div class="cabecera">
+        <div>
+            <h1 class="titulo">{{ dispositivo }} · {{ reparacion.marca }} {{ reparacion.modelo }}</h1>
+            <p class="subtitulo">
+                Nº {{ '%04d'|format(reparacion.id) }} · entrada el {{ entrada ? entrada|date('d/m/Y H:i') : '—' }}
+                {% if estado == 'cancelada' %}<span class="etiqueta roja">Cancelada</span>{% endif %}
+            </p>
+        </div>
+        <div class="acciones">
+            <a class="boton" href="{{ path('gestion_reparacion_resguardo', {id: reparacion.id}) }}" target="_blank">{{ m.icono('printer') }} Resguardo</a>
+            {% if siguiente %}
+                <button class="boton principal" type="button" data-abrir="dialogo-avanzar">
+                    {{ siguiente == 'entregada' ? 'Finalizar · entregada' : 'Pasar a «' ~ estados[siguiente] ~ '»' }}
+                </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <section class="pasos-banda">
+        {% for clave, nombre in estados %}
+            <div class="paso{{ loop.index0 <= indice ? ' hecho' }}{{ loop.index0 == indice ? ' actual' }}">
+                <div class="barra"></div>
+                <strong>{{ nombre }}</strong>
+                <small>{{ fechas[clave] is defined ? fechas[clave]|date('d/m H:i') }}</small>
+            </div>
+        {% endfor %}
+    </section>
+
+    <div class="detalle-grid">
+        <div class="detalle-principal">
+            <section class="tarjeta">
+                <h3 class="tarjeta-titulo">Avería</h3>
+                <p class="averia-texto">{{ reparacion.descripcionAveria }}</p>
+                <div class="chips">
+                    {% if reparacion.componente %}<span class="chip">{{ reparacion.componente }}</span>{% endif %}
+                    <span class="chip">{{ dispositivo }}</span>
+                </div>
+            </section>
+
+            <section class="tarjeta">
+                <h3 class="tarjeta-titulo">Fotos</h3>
+                <div class="galeria">
+                    {% for foto in reparacion.fotos %}
+                        <a class="foto-galeria" href="{{ foto.ruta }}" target="_blank">
+                            {{ m.foto(foto.ruta, 'foto-cuadro') }}
+                            <span>{{ foto.delTaller ? 'Del taller' : 'Del cliente' }} · {{ foto.fechaSubida|date('d/m') }}</span>
+                        </a>
+                    {% endfor %}
+                    <form class="foto-nueva" method="post" action="{{ path('gestion_reparacion_foto', {id: reparacion.id}) }}" enctype="multipart/form-data">
+                        <input type="hidden" name="_token" value="{{ token }}">
+                        <label>
+                            {{ m.icono('camera') }}<span>Añadir foto del taller</span>
+                            <input type="file" name="imagen" accept="image/jpeg,image/png,image/webp" onchange="this.form.submit()">
+                        </label>
+                    </form>
+                </div>
+            </section>
+
+            <section class="tarjeta">
+                <h3 class="tarjeta-titulo">Notas internas</h3>
+                <form method="post" action="{{ path('gestion_reparacion_notas', {id: reparacion.id}) }}">
+                    <input type="hidden" name="_token" value="{{ token }}">
+                    <label class="campo-form">
+                        <textarea name="notas" rows="4" placeholder="Solo las ve el equipo de la tienda: piezas pedidas, pruebas hechas…">{{ reparacion.notasInternas }}</textarea>
+                    </label>
+                    <div class="derecha"><button class="boton" type="submit">Guardar notas</button></div>
+                </form>
+            </section>
+
+            <section class="tarjeta">
+                <h3 class="tarjeta-titulo">Historial</h3>
+                <ol class="linea-tiempo">
+                    {% for paso in reparacion.historial %}
+                        <li class="{{ loop.last ? 'actual' }}">
+                            <strong>{{ estados[paso.estado] ?? 'Cancelada' }}</strong>
+                            <span class="fecha">{{ paso.fechaHora|date('d/m/Y H:i') }}</span>
+                            {% if paso.descripcion %}<p>{{ paso.descripcion }}</p>{% endif %}
+                        </li>
+                    {% endfor %}
+                </ol>
+            </section>
+        </div>
+
+        <aside class="detalle-lado">
+            <section class="tarjeta">
+                <span class="etiqueta-suave">Cliente</span>
+                <h3 class="nombre-grande">{{ cliente.nombre }} {{ cliente.apellido1 }} {{ cliente.apellido2 }}</h3>
+                <p class="dato">{{ cliente.telefono ?: cliente.email }}</p>
+                <button class="boton ancho" type="button" data-abrir="dialogo-avisar">Avisar al cliente</button>
+                {% if reparacion.avisadoEn %}<p class="dato-pequeno">Último aviso: {{ reparacion.avisadoEn|date('d/m/Y H:i') }}</p>{% endif %}
+            </section>
+
+            <section class="tarjeta">
+                <div class="entrada-salida">
+                    <div><span class="etiqueta-suave">Entrada</span><strong>{{ entrada ? entrada|date('d/m H:i') : '—' }}</strong></div>
+                    <div><span class="etiqueta-suave">Salida</span><strong>{{ salida ? salida|date('d/m H:i') : '—' }}</strong></div>
+                </div>
+                {% if not cerrada %}
+                    <p class="dato-pequeno">La salida se guarda al pulsar «Finalizar».</p>
+                    <form method="post" action="{{ path('gestion_reparacion_cancelar', {id: reparacion.id}) }}" onsubmit="return confirm('¿Cancelar esta reparación? No se borra: queda en el historial.')">
+                        <input type="hidden" name="_token" value="{{ token }}">
+                        <button class="enlace-peligro" type="submit">Cancelar reparación</button>
+                    </form>
+                {% endif %}
+            </section>
+
+            <section class="tarjeta oscura presupuesto">
+                <div class="presupuesto-cabecera">
+                    <span>Presupuesto</span>
+                    {% if reparacion.presupuesto is not null %}
+                        {% if reparacion.presupuestoAceptado is same as(true) %}<span class="etiqueta blanca">Aceptado</span>
+                        {% elseif reparacion.presupuestoAceptado is same as(false) %}<span class="etiqueta roja">Rechazado</span>
+                        {% else %}<span class="etiqueta gris">Pendiente</span>{% endif %}
+                    {% endif %}
+                </div>
+                <div class="presupuesto-importe">{{ reparacion.presupuesto is not null ? m.precio(reparacion.presupuesto) : 'Sin presupuesto' }}</div>
+                <button class="enlace-claro" type="button" data-abrir="dialogo-presupuesto">{{ reparacion.presupuesto is not null ? 'Editar' : 'Añadir presupuesto' }}</button>
+            </section>
+
+            <section class="tarjeta">
+                <div class="tecnico-cabecera">
+                    <span class="etiqueta-suave">Técnico</span>
+                    <button class="enlace" type="button" data-abrir="dialogo-tecnico">{{ m.icono('plus') }} Asignar</button>
+                </div>
+                {% if asignacion %}
+                    <div class="persona">
+                        <span class="avatar">{{ asignacion.trabajador|iniciales }}</span>
+                        <div><strong>{{ asignacion.trabajador.nombre }} {{ asignacion.trabajador.apellido1 }}</strong><span>Desde {{ asignacion.fechaInicio|date('d/m/Y') }}</span></div>
+                    </div>
+                {% else %}
+                    <p class="dato">Sin asignar</p>
+                {% endif %}
+            </section>
+        </aside>
+    </div>
+
+    {# ---------- Ventanas ---------- #}
+    {% if siguiente %}
+        <dialog class="dialogo" id="dialogo-avanzar">
+            <form method="post" action="{{ path('gestion_reparacion_avanzar', {id: reparacion.id}) }}">
+                <div class="dialogo-cabecera"><h3>Pasar a «{{ estados[siguiente] }}»</h3><button type="button" class="cerrar" data-cerrar>{{ m.icono('x') }}</button></div>
+                <label class="campo-form">
+                    <span class="campo-nombre">Mensaje para el cliente (opcional)</span>
+                    <textarea name="nota" rows="3" placeholder="Lo verá en la app, en el seguimiento de la reparación"></textarea>
+                </label>
+                <input type="hidden" name="_token" value="{{ token }}">
+                <div class="dialogo-pie"><button type="button" class="boton" data-cerrar>Cancelar</button><button type="submit" class="boton principal">Confirmar</button></div>
+            </form>
+        </dialog>
+    {% endif %}
+
+    <dialog class="dialogo" id="dialogo-avisar">
+        <div class="dialogo-cabecera"><h3>Avisar a {{ cliente.nombre }}</h3><button type="button" class="cerrar" data-cerrar>{{ m.icono('x') }}</button></div>
+        <div class="aviso-previo">{{ aviso|nl2br }}</div>
+        <p class="dato-pequeno">{{ cliente.email }}{{ cliente.telefono ? ' · ' ~ cliente.telefono }}</p>
+        <form method="post" action="{{ path('gestion_reparacion_avisar', {id: reparacion.id}) }}" class="dialogo-pie">
+            <input type="hidden" name="_token" value="{{ token }}">
+            {% if mailto %}<a class="boton" href="{{ mailto }}">{{ m.icono('mail') }} Abrir el correo</a>{% endif %}
+            <button type="submit" class="boton principal">Marcar como avisado</button>
+        </form>
+    </dialog>
+
+    <dialog class="dialogo" id="dialogo-presupuesto">
+        <form method="post" action="{{ path('gestion_reparacion_presupuesto', {id: reparacion.id}) }}">
+            <div class="dialogo-cabecera"><h3>Presupuesto</h3><button type="button" class="cerrar" data-cerrar>{{ m.icono('x') }}</button></div>
+            <div class="fila fila-2">
+                <label class="campo-form">
+                    <span class="campo-nombre">Importe</span>
+                    <span class="con-prefijo"><span class="prefijo">€</span><input type="text" name="importe" inputmode="decimal" value="{{ reparacion.presupuesto is not null ? reparacion.presupuesto|number_format(2, ',', '') }}"></span>
+                </label>
+                <label class="campo-form">
+                    <span class="campo-nombre">Respuesta del cliente</span>
+                    <select name="aceptado">
+                        <option value="" {{ reparacion.presupuestoAceptado is null ? 'selected' }}>Pendiente</option>
+                        <option value="1" {{ reparacion.presupuestoAceptado is same as(true) ? 'selected' }}>Aceptado</option>
+                        <option value="0" {{ reparacion.presupuestoAceptado is same as(false) ? 'selected' }}>Rechazado</option>
+                    </select>
+                </label>
+            </div>
+            <p class="dato-pequeno">Déjalo vacío para quitar el presupuesto.</p>
+            <input type="hidden" name="_token" value="{{ token }}">
+            <div class="dialogo-pie"><button type="button" class="boton" data-cerrar>Cancelar</button><button type="submit" class="boton principal">Guardar</button></div>
+        </form>
+    </dialog>
+
+    <dialog class="dialogo" id="dialogo-tecnico">
+        <form method="post" action="{{ path('gestion_reparacion_tecnico', {id: reparacion.id}) }}">
+            <div class="dialogo-cabecera"><h3>Asignar técnico</h3><button type="button" class="cerrar" data-cerrar>{{ m.icono('x') }}</button></div>
+            <label class="campo-form">
+                <span class="campo-nombre">Técnico</span>
+                <select name="tecnico">
+                    {% for t in trabajadores %}
+                        <option value="{{ t.id }}" {{ asignacion and asignacion.trabajador.id == t.id ? 'selected' }}>{{ t.nombre }} {{ t.apellido1 }} · {{ t.cargo }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <p class="dato-pequeno">La asignación anterior se cierra y queda en el historial.</p>
+            <input type="hidden" name="_token" value="{{ token }}">
+            <div class="dialogo-pie"><button type="button" class="boton" data-cerrar>Cancelar</button><button type="submit" class="boton principal">Asignar</button></div>
+        </form>
+    </dialog>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.querySelectorAll('[data-abrir]').forEach(b => b.addEventListener('click', () => document.getElementById(b.dataset.abrir).showModal()));
+    document.querySelectorAll('[data-cerrar]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
+    document.querySelectorAll('dialog').forEach(d => d.addEventListener('click', e => { if (e.target === d) d.close(); }));
+</script>
+{% endblock %}

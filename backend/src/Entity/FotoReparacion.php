@@ -21,6 +21,10 @@ class FotoReparacion
     #[ORM\Column(name: 'fecha_subida')]
     private \DateTimeImmutable $fechaSubida;
 
+    /** false = la subió el cliente desde la app · true = la hizo el taller desde la web */
+    #[ORM\Column(name: 'del_taller', options: ['default' => false])]
+    private bool $delTaller = false;
+
     // REPARACION 1 — adjunta — N FOTO_REPARACION
     #[ORM\ManyToOne(targetEntity: Reparacion::class, inversedBy: 'fotos')]
     #[ORM\JoinColumn(name: 'id_reparacion', referencedColumnName: 'id_reparacion', nullable: false, onDelete: 'CASCADE')]
@@ -38,6 +42,9 @@ class FotoReparacion
 
     public function getFechaSubida(): \DateTimeImmutable { return $this->fechaSubida; }
     public function setFechaSubida(\DateTimeImmutable $fechaSubida): static { $this->fechaSubida = $fechaSubida; return $this; }
+
+    public function isDelTaller(): bool { return $this->delTaller; }
+    public function setDelTaller(bool $delTaller): static { $this->delTaller = $delTaller; return $this; }
 
     public function getReparacion(): ?Reparacion { return $this->reparacion; }
     public function setReparacion(?Reparacion $reparacion): static { $this->reparacion = $reparacion; return $this; }
