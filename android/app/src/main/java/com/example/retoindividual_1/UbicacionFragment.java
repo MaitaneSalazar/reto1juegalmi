@@ -24,7 +24,8 @@ import com.example.retoindividual_1.network.ApiClient;
 import org.json.JSONObject;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.config.IConfigurationProvider;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
+import org.osmdroid.util.MapTileIndex;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
@@ -39,6 +40,17 @@ public class UbicacionFragment extends Fragment {
     private static final GeoPoint BILBAO = new GeoPoint(43.2630, -2.9350);
     private static final double ZOOM = 17.0;
 
+    //MAPAS DE ESRI (WORLD STREET MAP): NO PIDEN CLAVE DE API NI BLOQUEAN APPS PEQUEÑAS.
+    //OPENSTREETMAP DEVOLVIA "ACCESS BLOCKED" Y CARTO AHORA PIDE CLAVE
+    private static final OnlineTileSourceBase ESRI_CALLES = new OnlineTileSourceBase("EsriCalles", 0, 19, 256, "",
+            new String[]{"https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/"},
+            "Tiles © Esri") {
+        @Override
+        public String getTileURLString(long indice) {
+            //ESRI PIDE LAS COORDENADAS EN ORDEN ZOOM/Y/X (OPENSTREETMAP USA ZOOM/X/Y)
+            return getBaseUrl() + MapTileIndex.getZoom(indice) + "/" + MapTileIndex.getY(indice) + "/" + MapTileIndex.getX(indice);
+        }
+    };
     private ProgressBar pbUbicacion;
     private TextView tvError;
     private LinearLayout llDatos;
@@ -51,10 +63,10 @@ public class UbicacionFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //TIENE QUE IR ANTES DE CREAR EL MAPA. OPENSTREETMAP BLOQUEA LAS APPS QUE NO SE IDENTIFICAN,
+        //TIENE QUE IR ANTES DE CREAR EL MAPA. LOS SERVIDORES DE MAPAS PIDEN QUE LA APP SE IDENTIFIQUE,
         //Y LAS TESELAS SE GUARDAN EN LA CACHE DE LA APP, ASI NO HACE FALTA PERMISO DE ALMACENAMIENTO
         IConfigurationProvider configuracion = Configuration.getInstance();
-        configuracion.setUserAgentValue(requireContext().getPackageName());
+        configuracion.setUserAgentValue("JuegAlmi/1.0 (reto DAM, Centro ALMI)");
         File base = new File(requireContext().getCacheDir(), "osmdroid");
         configuracion.setOsmdroidBasePath(base);
         configuracion.setOsmdroidTileCache(new File(base, "teselas"));
@@ -84,11 +96,10 @@ public class UbicacionFragment extends Fragment {
     }
 
     private void configurarMapa() {
-        mvMapa.setTileSource(TileSourceFactory.MAPNIK);
+        mvMapa.setTileSource(ESRI_CALLES);
         mvMapa.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         mvMapa.setMultiTouchControls(false);
-        //LA LICENCIA DE OPENSTREETMAP OBLIGA A ENSEÑAR "© OpenStreetMap contributors"
-        mvMapa.getOverlays().add(new CopyrightOverlay(requireContext()));
+        //LAS CONDICIONES DE ESRI OBLIGAN A ENSEÑAR "Tiles © Esri"mvMapa.getOverlays().add(new CopyrightOverlay(requireContext()));
         mvMapa.getController().setZoom(ZOOM);
         mvMapa.getController().setCenter(BILBAO);
     }
