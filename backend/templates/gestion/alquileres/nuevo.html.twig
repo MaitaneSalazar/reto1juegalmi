@@ -1,0 +1,90 @@
+{% extends 'gestion/base.html.twig' %}
+{% import 'gestion/_macros.html.twig' as m %}
+
+{% block titulo %}Nuevo alquiler{% endblock %}
+
+{% block contenido %}
+    <a class="miga" href="{{ path('gestion_alquileres') }}">{{ m.icono('chevron-left') }} Alquileres</a>
+    <div class="cabecera">
+        <h1 class="titulo">Nuevo alquiler</h1>
+        <div class="acciones">
+            <a class="boton" href="{{ path('gestion_alquileres') }}">Cancelar</a>
+            <button class="boton principal" type="submit" form="form-alquiler">Alquilar</button>
+        </div>
+    </div>
+
+    {% if errores is not empty %}
+        <div class="avisos"><div class="aviso danger">{{ errores['_'] ?? errores['juegos'] ?? 'Revisa los campos marcados en rojo.' }}</div></div>
+    {% endif %}
+
+    <form id="form-alquiler" method="post" novalidate>
+        <input type="hidden" name="_token" value="{{ csrf_token('alquiler') }}">
+        <div class="form-columnas">
+            <section class="tarjeta">
+                <h3 class="tarjeta-titulo">Videojuegos</h3>
+                <div class="elegir-juegos">
+                    {% for c in copias %}
+                        {% set j = c.juego %}
+                        <label class="juego{{ c.libres == 0 ? ' agotado' }}{{ j.id in v.juegos ? ' elegido' }}">
+                            <input type="checkbox" name="juegos[]" value="{{ j.id }}" data-precio="{{ j.precioAlquilerDia }}"
+                                   {{ j.id in v.juegos ? 'checked' }} {{ c.libres == 0 ? 'disabled' }}>
+                            {{ m.foto(j.imagen, 'portada-img') }}
+                            <span class="etiqueta {{ c.libres == 0 ? 'roja' : 'blanca' }}">{{ c.libres == 0 ? 'Sin copias' : c.libres ~ ' libre' ~ (c.libres > 1 ? 's') }}</span>
+                            <strong>{{ j.nombre }}</strong>
+                            <small>{{ j.plataforma }} · {{ j.precioAlquilerDia|number_format(2, ',', '.') }} € / día</small>
+                        </label>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <aside class="tarjeta form-imagen">
+                <h3 class="tarjeta-titulo">Cliente y días</h3>
+                <label class="campo-form">
+                    <span class="campo-nombre">Cliente</span>
+                    <select name="cliente">
+                        <option value="">Elige el cliente…</option>
+                        {% for c in clientes %}
+                            <option value="{{ c.id }}" {{ (v.cliente ?? '') ~ '' == c.id ~ '' ? 'selected' }}>{{ c.nombre }} {{ c.apellido1 }} · {{ c.dni }}</option>
+                        {% endfor %}
+                    </select>
+                    {{ m.error(errores, 'cliente') }}
+                </label>
+                <div class="campo-form">
+                    <span class="campo-nombre">Días</span>
+                    <div class="dias-rapidos">
+                        {% for d in [1, 3, 5, 7] %}<button type="button" data-dias="{{ d }}"><strong>{{ d }}</strong><small>{{ d == 1 ? 'día' : 'días' }}</small></button>{% endfor %}
+                    </div>
+                    <input type="number" name="dias" id="dias" min="1" max="{{ dias_max }}" value="{{ v.dias }}" style="margin-top: 10px">
+                    {{ m.error(errores, 'dias') }}
+                </div>
+                <div class="total-alquiler">
+                    <div><span class="etiqueta-suave">Total</span><strong id="total">0,00 €</strong></div>
+                    <div class="dcha"><span class="etiqueta-suave">Devolución</span><strong id="devolucion">—</strong></div>
+                </div>
+            </aside>
+        </div>
+    </form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(() => {
+    const dias = document.getElementById('dias');
+    const euros = n => n.toFixed(2).replace('.', ',') + ' €';
+    function calcular() {
+        const d = Math.max(1, Math.min({{ dias_max }}, parseInt(dias.value, 10) || 1));
+        let porDia = 0;
+        document.querySelectorAll('.elegir-juegos input:checked').forEach(c => porDia += parseFloat(c.dataset.precio || 0));
+        document.getElementById('total').textContent = euros(porDia * d);
+        const fin = new Date(); fin.setDate(fin.getDate() + d);
+        document.getElementById('devolucion').textContent = fin.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+        document.querySelectorAll('.dias-rapidos button').forEach(b => b.classList.toggle('activa', parseInt(b.dataset.dias, 10) === d));
+        document.querySelectorAll('.elegir-juegos label').forEach(l => l.classList.toggle('elegido', l.querySelector('input').checked));
+    }
+    document.querySelectorAll('.dias-rapidos button').forEach(b => b.addEventListener('click', () => { dias.value = b.dataset.dias; calcular(); }));
+    document.querySelectorAll('.elegir-juegos input').forEach(c => c.addEventListener('change', calcular));
+    dias.addEventListener('input', calcular);
+    calcular();
+})();
+</script>
+{% endblock %}

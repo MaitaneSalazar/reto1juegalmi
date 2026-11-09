@@ -460,3 +460,36 @@ fieldset.campos-tipo { border: 0; padding: 0; margin: 20px 0 0; min-width: 0; }
     .detalle-grid { grid-template-columns: 1fr; }
     .tipos-dispositivo { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* =====================================================================
+   W3 · Alquileres
+   ===================================================================== */
+.gris { color: var(--gris); }
+.tabla td .boton { height: 34px; }
+.portadas { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; }
+.portada { position: relative; display: flex; flex-direction: column; gap: 8px; }
+.portada .etiqueta { position: absolute; top: 10px; left: 10px; }
+.portada-img { width: 100%; aspect-ratio: 3 / 4; border-radius: 18px; object-fit: cover; height: auto; }
+.portada-img.sin-foto { min-height: 160px; }
+.portada-nombre { font-size: .88rem; font-weight: 500; }
+.portada-nombre small { display: block; color: var(--gris); font-weight: 400; }
+
+.elegir-juegos { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+.elegir-juegos .juego { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 6px; border-radius: 20px; border: 2px solid transparent; cursor: pointer; }
+.elegir-juegos .juego input { position: absolute; opacity: 0; }
+.elegir-juegos .juego .etiqueta { position: absolute; top: 16px; left: 16px; }
+.elegir-juegos .juego strong { font-weight: 600; font-size: .9rem; margin-top: 4px; }
+.elegir-juegos .juego small { color: var(--gris); font-size: .78rem; }
+.elegir-juegos .juego.elegido { border-color: var(--turquesa); background: var(--turquesa-claro); }
+.elegir-juegos .juego.agotado { opacity: .45; cursor: not-allowed; }
+.dias-rapidos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.dias-rapidos button { display: flex; flex-direction: column; align-items: center; padding: 10px 0; border-radius: 16px; border: 0; background: #fff; box-shadow: inset 0 0 0 1px var(--linea); cursor: pointer; font: inherit; }
+.dias-rapidos button strong { font-size: 1.3rem; font-weight: 800; }
+.dias-rapidos button small { color: var(--gris); font-size: .72rem; }
+.dias-rapidos button.activa { background: var(--oscuro); color: #fff; box-shadow: none; }
+.dias-rapidos button.activa small { color: #b9bfc5; }
+.total-alquiler { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; padding: 18px; border-radius: 18px; background: var(--fondo); }
+.total-alquiler strong { font-size: 1.6rem; font-weight: 800; letter-spacing: -.04em; }
+.total-alquiler .dcha { text-align: right; }
+
+@media (max-width: 1100px) { .portadas { grid-template-columns: repeat(3, minmax(0, 1fr)); } }

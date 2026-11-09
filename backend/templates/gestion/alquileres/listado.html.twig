@@ -1,0 +1,98 @@
+{% extends 'gestion/base.html.twig' %}
+{% import 'gestion/_macros.html.twig' as m %}
+
+{% block titulo %}Alquileres{% endblock %}
+
+{% block contenido %}
+    {% set token = csrf_token('alquiler') %}
+    {% set volver = path('gestion_alquileres', {ver: pestana, q: q ?: null}) %}
+
+    <div class="cabecera">
+        <h1 class="titulo">Alquileres</h1>
+        <a class="boton principal" href="{{ path('gestion_alquiler_nuevo') }}">{{ m.icono('plus') }} Nuevo alquiler</a>
+    </div>
+
+    <section class="tarjeta tabla-tarjeta">
+        <div class="tabla-barra">
+            <nav class="pestanas">
+                <a class="{{ pestana == 'activos' ? 'activa' }}" href="{{ path('gestion_alquileres', {ver: 'activos', q: q ?: null}) }}">Activos · {{ cuentas.activos }}</a>
+                <a class="{{ pestana == 'vencidos' ? 'activa' }}" href="{{ path('gestion_alquileres', {ver: 'vencidos', q: q ?: null}) }}">Vencidos · {{ cuentas.vencidos }}</a>
+                <a class="{{ pestana == 'devueltos' ? 'activa' }}" href="{{ path('gestion_alquileres', {ver: 'devueltos', q: q ?: null}) }}">Devueltos</a>
+            </nav>
+            <form class="buscador" method="get">
+                <input type="hidden" name="ver" value="{{ pestana }}">
+                {{ m.icono('search') }}<input type="search" name="q" value="{{ q }}" placeholder="Buscar">
+            </form>
+        </div>
+
+        {% if filas is empty %}
+            <p class="vacio tabla-vacia">{{ q ? 'No hay alquileres que coincidan con «' ~ q ~ '».' : (pestana == 'vencidos' ? 'Ningún alquiler vencido. ¡Todo en plazo!' : 'No hay alquileres aquí.') }}</p>
+        {% else %}
+            <table class="tabla">
+                <thead>
+                    <tr><th>Nº</th><th>Cliente</th><th>Videojuego</th><th>Inicio</th><th>Fin previsto</th><th>Estado</th><th class="dcha">Importe</th><th></th></tr>
+                </thead>
+                <tbody>
+                    {% for f in filas %}
+                        {% set a = f.a %}
+                        {% set primero = f.juegos|first %}
+                        <tr>
+                            <td class="gris">#{{ '%04d'|format(a.id) }}</td>
+                            <td>{{ a.cliente.nombre }} {{ a.cliente.apellido1 }}</td>
+                            <td>
+                                <div class="celda-producto">
+                                    {{ m.foto(primero ? primero.imagen : null) }}
+                                    <span>{{ primero ? primero.nombre }}{% if f.juegos|length > 1 %} <span class="gris">+{{ f.juegos|length - 1 }}</span>{% endif %}</span>
+                                </div>
+                            </td>
+                            <td class="gris">{{ a.fechaInicio|date('d/m') }}</td>
+                            <td class="{{ f.estado == 'retrasado' ? 'num-rojo' : 'gris' }}">{{ a.fechaFinPrevista ? a.fechaFinPrevista|date('d/m') }}</td>
+                            <td><span class="etiqueta {{ f.estado == 'retrasado' ? 'roja' : 'gris' }}">{{ f.texto }}</span></td>
+                            <td class="dcha">{{ m.precio(a.importe) }}</td>
+                            <td class="acciones-fila">
+                                {% if f.estado != 'devuelto' %}
+                                    <form method="post" action="{{ path('gestion_alquiler_devolver', {id: a.id}) }}" onsubmit="return confirm('¿Marcar como devuelto el alquiler #{{ '%04d'|format(a.id) }}?')">
+                                        <input type="hidden" name="_token" value="{{ token }}">
+                                        <input type="hidden" name="volver" value="{{ volver }}">
+                                        <button class="boton{{ f.estado == 'retrasado' ? ' peligro' }}" type="submit">{{ m.icono('undo-2') }} Devolver</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </section>
+
+    <h2 class="seccion">Copias libres</h2>
+    <div class="portadas">
+        {% for c in copias %}
+            <div class="portada">
+                {{ m.foto(c.juego.imagen, 'portada-img') }}
+                <span class="etiqueta {{ c.libres == 0 ? 'roja' : 'blanca' }}">{{ c.libres }} / {{ c.total }}</span>
+                <span class="portada-nombre">{{ c.juego.nombre }} <small>{{ c.juego.plataforma }}</small></span>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if avisar %}
+        <dialog class="dialogo" id="dialogo-avisar">
+            <div class="dialogo-cabecera"><h3>Avisar a {{ avisar.cliente.nombre }}</h3><button type="button" class="cerrar" data-cerrar>{{ m.icono('x') }}</button></div>
+            <p>Alquiler #{{ '%04d'|format(avisar.id) }} · fin previsto el {{ avisar.fechaFinPrevista|date('d/m/Y') }}.</p>
+            <p class="dato-pequeno">{{ avisar.cliente.email }}{{ avisar.cliente.telefono ? ' · ' ~ avisar.cliente.telefono }}</p>
+            <div class="dialogo-pie">
+                <button type="button" class="boton" data-cerrar>Cerrar</button>
+                {% if mailto %}<a class="boton principal" href="{{ mailto }}">{{ m.icono('mail') }} Abrir el correo</a>{% endif %}
+            </div>
+        </dialog>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.querySelectorAll('[data-cerrar]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
+    document.querySelectorAll('dialog').forEach(d => d.addEventListener('click', e => { if (e.target === d) d.close(); }));
+    {% if avisar %}document.getElementById('dialogo-avisar').showModal();{% endif %}
+</script>
+{% endblock %}
