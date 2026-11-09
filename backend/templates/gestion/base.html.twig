@@ -34,11 +34,6 @@
                 {% if is_granted('ROLE_ADMIN') %}
                     {{ m.menu('/gestion/trabajadores', 'Trabajadores', 'users', ruta starts with '/gestion/trabajadores') }}
                     {{ m.menu('/gestion/departamentos', 'Departamentos', 'building-2', ruta starts with '/gestion/departamentos') }}
-                    {{ m.menu('/gestion/clientes', 'Clientes', 'contact', ruta starts with '/gestion/clientes') }}
-                {% endif %}
-                {{ m.menu('/gestion/empresas', 'Empresas', 'factory', ruta starts with '/gestion/empresas') }}
-                {% if is_granted('ROLE_ADMIN') %}
-                    {{ m.menu('/gestion/tienda', 'Tienda', 'store', ruta starts with '/gestion/tienda') }}
                 {% endif %}
             </nav>
 
@@ -80,5 +75,6 @@
 <script src="{{ asset('js/lucide.min.js') }}"></script>
 <script>lucide.createIcons();</script>
 {% block scripts %}{% endblock %}
+    <script>window.addEventListener('pageshow', e => { if (e.persisted) location.reload(); });</script>
 </body>
 </html>

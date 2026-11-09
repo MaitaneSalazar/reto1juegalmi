@@ -1,0 +1,64 @@
+{% extends 'gestion/base.html.twig' %}
+{% import 'gestion/_macros.html.twig' as m %}
+
+{% block titulo %}Ajustes{% endblock %}
+
+{% block contenido %}
+    {% set token = csrf_token('ajustes') %}
+    <div class="cabecera">
+        <h1 class="titulo">Ajustes</h1>
+    </div>
+
+    {% if errores['_'] is defined %}
+        <div class="avisos"><div class="aviso danger">{{ errores['_'] }}</div></div>
+    {% endif %}
+
+    <div class="form-columnas">
+        <div class="form-principal">
+            <section class="tarjeta">
+                <h3 class="tarjeta-titulo">Mis datos</h3>
+                <form method="post" action="{{ path('gestion_ajustes') }}" novalidate>
+                    <input type="hidden" name="_token" value="{{ token }}">
+                    <div class="fila fila-3">
+                        <label class="campo-form"><span class="campo-nombre">Nombre</span><input type="text" name="nombre" value="{{ v.nombre }}">{{ m.error(errores, 'nombre') }}</label>
+                        <label class="campo-form"><span class="campo-nombre">Primer apellido</span><input type="text" name="apellido1" value="{{ v.apellido1 }}">{{ m.error(errores, 'apellido1') }}</label>
+                        <label class="campo-form"><span class="campo-nombre">Segundo apellido</span><input type="text" name="apellido2" value="{{ v.apellido2 }}"></label>
+                    </div>
+                    <div class="fila fila-3">
+                        <label class="campo-form"><span class="campo-nombre">Teléfono</span><input type="text" name="telefono" value="{{ v.telefono }}">{{ m.error(errores, 'telefono') }}</label>
+                    </div>
+                    <div class="derecha"><button class="boton principal" type="submit">Guardar mis datos</button></div>
+                </form>
+            </section>
+
+            <section class="tarjeta">
+                <h3 class="tarjeta-titulo">Cambiar contraseña</h3>
+                <form method="post" action="{{ path('gestion_ajustes_contrasena') }}" novalidate>
+                    <input type="hidden" name="_token" value="{{ token }}">
+                    <div class="fila fila-3">
+                        <label class="campo-form"><span class="campo-nombre">Contraseña actual</span><input type="password" name="actual" autocomplete="current-password">{{ m.error(errores, 'actual') }}</label>
+                        <label class="campo-form"><span class="campo-nombre">Nueva</span><input type="password" name="nueva" autocomplete="new-password">{{ m.error(errores, 'nueva') }}</label>
+                        <label class="campo-form"><span class="campo-nombre">Repite la nueva</span><input type="password" name="repetida" autocomplete="new-password">{{ m.error(errores, 'repetida') }}</label>
+                    </div>
+                    <div class="derecha"><button class="boton" type="submit">Cambiar contraseña</button></div>
+                </form>
+            </section>
+        </div>
+
+        <aside class="tarjeta form-imagen">
+            <div class="perfil-ajustes">
+                <span class="avatar grande">{{ yo|iniciales }}</span>
+                <strong>{{ yo.nombre }} {{ yo.apellido1 }}</strong>
+                <span class="etiqueta turquesa">{{ yo.esAdmin ? 'Administrador' : 'Trabajador' }}</span>
+            </div>
+            <dl class="datos-fijos">
+                <dt>Email</dt><dd>{{ yo.email }}</dd>
+                <dt>DNI</dt><dd class="mono">{{ yo.dni }}</dd>
+                <dt>Cargo</dt><dd>{{ yo.cargo }}</dd>
+                <dt>Departamento</dt><dd>{{ departamento ?? '—' }}</dd>
+                <dt>Contratación</dt><dd>{{ yo.fechaContratacion ? yo.fechaContratacion|date('d/m/Y') : '—' }}</dd>
+            </dl>
+            <p class="dato-pequeno">Para cambiar estos datos, pídeselo a un administrador.</p>
+        </aside>
+    </div>
+{% endblock %}

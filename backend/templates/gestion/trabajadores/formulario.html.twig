@@ -1,0 +1,70 @@
+{% extends 'gestion/base.html.twig' %}
+{% import 'gestion/_macros.html.twig' as m %}
+
+{% block titulo %}{{ es_nuevo ? 'Añadir trabajador' : 'Editar trabajador' }}{% endblock %}
+
+{% block contenido %}
+    <a class="miga" href="{{ path('gestion_trabajadores') }}">{{ m.icono('chevron-left') }} Trabajadores</a>
+    <div class="cabecera">
+        <h1 class="titulo">{{ es_nuevo ? 'Añadir trabajador' : trabajador.nombre ~ ' ' ~ trabajador.apellido1 }}</h1>
+        <div class="acciones">
+            <a class="boton" href="{{ path('gestion_trabajadores') }}">Cancelar</a>
+            <button class="boton principal" type="submit" form="form-trabajador">Guardar</button>
+        </div>
+    </div>
+
+    {% if errores is not empty %}
+        <div class="avisos"><div class="aviso danger">{{ errores['_'] ?? errores['es_admin'] ?? 'Revisa los campos marcados en rojo.' }}</div></div>
+    {% endif %}
+
+    <form id="form-trabajador" method="post" novalidate>
+        <input type="hidden" name="_token" value="{{ csrf_token('trabajador') }}">
+        <div class="form-columnas">
+            <div class="form-principal">
+                <section class="tarjeta">
+                    <h3 class="tarjeta-titulo">Datos personales</h3>
+                    <div class="fila fila-3">
+                        <label class="campo-form"><span class="campo-nombre">Nombre</span><input type="text" name="nombre" value="{{ v.nombre ?? '' }}">{{ m.error(errores, 'nombre') }}</label>
+                        <label class="campo-form"><span class="campo-nombre">Primer apellido</span><input type="text" name="apellido1" value="{{ v.apellido1 ?? '' }}">{{ m.error(errores, 'apellido1') }}</label>
+                        <label class="campo-form"><span class="campo-nombre">Segundo apellido</span><input type="text" name="apellido2" value="{{ v.apellido2 ?? '' }}"></label>
+                    </div>
+                    <div class="fila fila-3">
+                        <label class="campo-form"><span class="campo-nombre">DNI</span><input type="text" name="dni" value="{{ v.dni ?? '' }}" placeholder="12345678Z">{{ m.error(errores, 'dni') }}</label>
+                        <label class="campo-form"><span class="campo-nombre">Email</span><input type="email" name="email" value="{{ v.email ?? '' }}">{{ m.error(errores, 'email') }}</label>
+                        <label class="campo-form"><span class="campo-nombre">Teléfono</span><input type="text" name="telefono" value="{{ v.telefono ?? '' }}">{{ m.error(errores, 'telefono') }}</label>
+                    </div>
+                </section>
+
+                <section class="tarjeta">
+                    <h3 class="tarjeta-titulo">Puesto</h3>
+                    <div class="fila fila-3">
+                        <label class="campo-form"><span class="campo-nombre">Cargo</span><input type="text" name="cargo" value="{{ v.cargo ?? '' }}" placeholder="Técnico de reparación">{{ m.error(errores, 'cargo') }}</label>
+                        <label class="campo-form"><span class="campo-nombre">Contratación</span><input type="date" name="fecha_contratacion" value="{{ v.fecha_contratacion ?? '' }}">{{ m.error(errores, 'fecha_contratacion') }}</label>
+                        <label class="campo-form">
+                            <span class="campo-nombre">Departamento</span>
+                            <select name="departamento">
+                                <option value="">Sin cambios</option>
+                                {% for d in departamentos %}<option value="{{ d.id }}" {{ (v.departamento ?? '') ~ '' == d.id ~ '' ? 'selected' }}>{{ d.nombre }}</option>{% endfor %}
+                            </select>
+                        </label>
+                    </div>
+                    <div class="fila fila-2">
+                        <label class="interruptor-linea"><input type="checkbox" name="es_admin" value="1" {{ (v.es_admin ?? false) ? 'checked' }}><span class="interruptor-falso"></span> Administrador (gestiona trabajadores, departamentos, clientes y tienda)</label>
+                        <label class="interruptor-linea"><input type="checkbox" name="activo" value="1" {{ (v.activo ?? false) ? 'checked' }}><span class="interruptor-falso"></span> Activo (puede entrar en la web)</label>
+                    </div>
+                </section>
+            </div>
+
+            <aside class="tarjeta form-imagen">
+                <h3 class="tarjeta-titulo">Acceso</h3>
+                <label class="campo-form">
+                    <span class="campo-nombre">{{ es_nuevo ? 'Contraseña' : 'Contraseña nueva' }}</span>
+                    <input type="password" name="contrasena" autocomplete="new-password">
+                    {{ m.error(errores, 'contrasena') }}
+                </label>
+                <p class="dato-pequeno">{{ es_nuevo ? 'Mínimo 6 caracteres. Se guarda con hash: nadie puede verla.' : 'Déjala vacía para no cambiarla.' }}</p>
+                <p class="dato-pequeno">Entrará en la web con su email.</p>
+            </aside>
+        </div>
+    </form>
+{% endblock %}

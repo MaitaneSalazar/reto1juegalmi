@@ -1,0 +1,46 @@
+{% extends 'gestion/base.html.twig' %}
+{% import 'gestion/_macros.html.twig' as m %}
+
+{% block titulo %}Trabajadores{% endblock %}
+
+{% block contenido %}
+    {% set token = csrf_token('trabajador') %}
+    <div class="cabecera">
+        <h1 class="titulo">Trabajadores</h1>
+        <a class="boton principal" href="{{ path('gestion_trabajador_nuevo') }}">{{ m.icono('plus') }} Añadir trabajador</a>
+    </div>
+
+    <section class="tarjeta tabla-tarjeta">
+        <table class="tabla">
+            <thead>
+                <tr><th>Nombre</th><th>DNI</th><th>Cargo</th><th>Departamento</th><th>Contratación</th><th>Rol</th><th class="centro">Activo</th><th></th></tr>
+            </thead>
+            <tbody>
+                {% for t in trabajadores %}
+                    <tr class="{{ not t.activo ? 'inactivo' }}">
+                        <td>
+                            <div class="celda-persona">
+                                <span class="avatar claro">{{ t|iniciales }}</span>
+                                <span><strong>{{ t.nombre }} {{ t.apellido1 }}</strong><small>{{ t.email }}</small></span>
+                            </div>
+                        </td>
+                        <td class="gris mono">{{ t.dni }}</td>
+                        <td>{{ t.cargo }}</td>
+                        <td class="gris">{{ departamentos[t.id] ?? '—' }}</td>
+                        <td class="gris">{{ t.fechaContratacion ? t.fechaContratacion|date('d/m/Y') : '—' }}</td>
+                        <td><span class="etiqueta turquesa">{{ t.esAdmin ? 'Administrador' : 'Trabajador' }}</span></td>
+                        <td class="centro">
+                            <form method="post" action="{{ path('gestion_trabajador_activo', {id: t.id}) }}" class="form-activo"
+                                  onsubmit="return {{ t.activo ? "confirm('¿Desactivar a " ~ t.nombre ~ "? No podrá entrar en la web.')" : 'true' }}">
+                                <input type="hidden" name="_token" value="{{ token }}">
+                                <input type="hidden" name="activo" value="{{ t.activo ? 0 : 1 }}">
+                                <button type="submit" class="interruptor{{ t.activo ? ' on' }}" title="{{ t.activo ? 'Desactivar' : 'Activar' }}"><span></span></button>
+                            </form>
+                        </td>
+                        <td class="acciones-fila"><a class="icono-boton" href="{{ path('gestion_trabajador_editar', {id: t.id}) }}" title="Editar">{{ m.icono('pencil') }}</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

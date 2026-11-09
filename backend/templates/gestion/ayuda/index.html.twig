@@ -1,0 +1,54 @@
+{% extends 'gestion/base.html.twig' %}
+{% import 'gestion/_macros.html.twig' as m %}
+
+{% block titulo %}Ayuda{% endblock %}
+
+{% block contenido %}
+    <div class="cabecera">
+        <h1 class="titulo">Ayuda</h1>
+    </div>
+
+    <div class="ayuda-grid">
+        <a class="tarjeta ayuda-tarjeta" href="#productos">{{ m.icono('clipboard-check') }}<strong>Productos y stock</strong><span>Catálogo, precios y entradas de stock</span></a>
+        <a class="tarjeta ayuda-tarjeta" href="#reparaciones">{{ m.icono('wrench') }}<strong>Reparaciones</strong><span>Del mostrador a la entrega</span></a>
+        <a class="tarjeta ayuda-tarjeta" href="#alquileres">{{ m.icono('clock') }}<strong>Alquileres</strong><span>Alquilar, ampliar y devolver</span></a>
+        <a class="tarjeta ayuda-tarjeta" href="#pedidos">{{ m.icono('receipt-text') }}<strong>Pedidos</strong><span>Preparar, enviar y cancelar</span></a>
+    </div>
+
+    <section class="tarjeta ayuda-seccion" id="productos">
+        <h3 class="tarjeta-titulo">{{ m.icono('clipboard-check') }} Productos y stock</h3>
+        <details><summary>¿Cómo meto stock cuando llega mercancía?</summary><p>En Productos, pulsa «Añadir stock» en el producto, escribe cuántas unidades han llegado y, si quieres, una nota (por ejemplo, el nº de albarán). Queda apuntado quién lo hizo y cuándo.</p></details>
+        <details><summary>¿Qué significa «Stock bajo»?</summary><p>Que quedan 2 unidades o menos. Esos productos salen en rojo en el listado y en el Resumen.</p></details>
+        <details><summary>¿Puedo borrar un producto?</summary><p>No se borra: se desactiva con el interruptor. Deja de verse en las apps, pero sus pedidos y alquileres antiguos se conservan.</p></details>
+    </section>
+
+    <section class="tarjeta ayuda-seccion" id="reparaciones">
+        <h3 class="tarjeta-titulo">{{ m.icono('wrench') }} Reparaciones</h3>
+        <details><summary>¿Cómo registro una reparación en el mostrador?</summary><p>«Nueva reparación»: elige el cliente, el dispositivo y describe la avería. Al guardarla, imprime el resguardo y dáselo al cliente.</p></details>
+        <details><summary>¿Cómo avanza una reparación?</summary><p>Recibida → Diagnóstico → En reparación → Lista para recoger → Entregada. En el detalle, «Avanzar» la pasa al siguiente paso y queda en el historial con la fecha y quién lo hizo.</p></details>
+        <details><summary>¿Para qué son las notas internas?</summary><p>Para el equipo del taller. El cliente no las ve en la app.</p></details>
+        <details><summary>¿Cómo aviso al cliente de que ya está lista?</summary><p>Cuando esté en «Lista para recoger», pulsa «Avisar»: se abre el correo preparado y queda apuntado que se le avisó.</p></details>
+    </section>
+
+    <section class="tarjeta ayuda-seccion" id="alquileres">
+        <h3 class="tarjeta-titulo">{{ m.icono('clock') }} Alquileres</h3>
+        <details><summary>¿Cómo hago un alquiler?</summary><p>«Nuevo alquiler»: elige el cliente, los juegos y los días (de 1 a 30). Solo se pueden elegir juegos con copias libres.</p></details>
+        <details><summary>Un cliente no ha devuelto a tiempo, ¿qué hago?</summary><p>En la pestaña «Vencidos» tienes tres opciones: «Avisar» (abre el correo preparado), «Ampliar plazo» (los días se cuentan desde hoy) o «Devolver» si ya lo ha traído.</p></details>
+    </section>
+
+    <section class="tarjeta ayuda-seccion" id="pedidos">
+        <h3 class="tarjeta-titulo">{{ m.icono('receipt-text') }} Pedidos</h3>
+        <details><summary>¿En qué orden se gestionan?</summary><p>Pendiente → Preparando → Enviado → Entregado. El cliente ve cada cambio en la app.</p></details>
+        <details><summary>¿Puedo cancelar un pedido?</summary><p>Solo mientras está pendiente o preparando. Al cancelarlo, el stock de sus productos vuelve a sumarse.</p></details>
+    </section>
+
+    <section class="tarjeta ayuda-seccion">
+        <h3 class="tarjeta-titulo">{{ m.icono('circle-help') }} Mi cuenta y problemas</h3>
+        <details><summary>¿Cómo cambio mi contraseña?</summary><p>En «Ajustes», abajo a la izquierda del menú.</p></details>
+        <details><summary>No me deja entrar</summary><p>Comprueba el email y la contraseña. Si tu cuenta está desactivada o has olvidado la contraseña, pide a un administrador que lo revise.</p></details>
+        <p class="dato-pequeno ayuda-contacto">
+            Administradores:
+            {% for a in admins %}{{ a.nombre }} {{ a.apellido1 }} ({{ a.email }}){{ not loop.last ? ', ' }}{% else %}—{% endfor %}
+        </p>
+    </section>
+{% endblock %}

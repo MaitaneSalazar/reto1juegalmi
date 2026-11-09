@@ -51,11 +51,17 @@
                             <td class="dcha">{{ m.precio(a.importe) }}</td>
                             <td class="acciones-fila">
                                 {% if f.estado != 'devuelto' %}
-                                    <form method="post" action="{{ path('gestion_alquiler_devolver', {id: a.id}) }}" onsubmit="return confirm('¿Marcar como devuelto el alquiler #{{ '%04d'|format(a.id) }}?')">
-                                        <input type="hidden" name="_token" value="{{ token }}">
-                                        <input type="hidden" name="volver" value="{{ volver }}">
-                                        <button class="boton{{ f.estado == 'retrasado' ? ' peligro' }}" type="submit">{{ m.icono('undo-2') }} Devolver</button>
-                                    </form>
+                                    <div class="acciones-alquiler">
+                                        {% if f.estado == 'retrasado' %}
+                                            <a class="boton" href="{{ path('gestion_alquileres', {ver: pestana, q: q ?: null, avisar: a.id}) }}">{{ m.icono('mail') }} Avisar</a>
+                                        {% endif %}
+                                        <button class="boton" type="button" data-ampliar="{{ path('gestion_alquiler_ampliar', {id: a.id}) }}" data-numero="#{{ '%04d'|format(a.id) }}" data-fin="{{ a.fechaFinPrevista ? a.fechaFinPrevista|date('d/m/Y') }}" data-vencido="{{ f.estado == 'retrasado' ? 1 : 0 }}">{{ m.icono('calendar-plus') }} Ampliar plazo</button>
+                                        <form method="post" action="{{ path('gestion_alquiler_devolver', {id: a.id}) }}" onsubmit="return confirm('¿Marcar como devuelto el alquiler #{{ '%04d'|format(a.id) }}?')">
+                                            <input type="hidden" name="_token" value="{{ token }}">
+                                            <input type="hidden" name="volver" value="{{ volver }}">
+                                            <button class="boton{{ f.estado == 'retrasado' ? ' peligro' }}" type="submit">{{ m.icono('undo-2') }} Devolver</button>
+                                        </form>
+                                    </div>
                                 {% endif %}
                             </td>
                         </tr>
@@ -76,6 +82,20 @@
         {% endfor %}
     </div>
 
+    <dialog class="dialogo" id="dialogo-ampliar">
+        <form method="post" id="form-ampliar">
+            <div class="dialogo-cabecera"><h3>Ampliar plazo · <span id="ampliar-numero"></span></h3><button type="button" class="cerrar" data-cerrar>{{ m.icono('x') }}</button></div>
+            <p id="ampliar-texto" class="dato-pequeno"></p>
+            <label class="campo-form">
+                <span class="campo-nombre">Días más</span>
+                <input type="number" name="dias" value="3" min="1" max="30" required>
+            </label>
+            <input type="hidden" name="_token" value="{{ csrf_token('alquiler') }}">
+            <input type="hidden" name="volver" value="{{ path('gestion_alquileres', {ver: pestana, q: q ?: null}) }}">
+            <div class="dialogo-pie"><button type="button" class="boton" data-cerrar>Cancelar</button><button type="submit" class="boton principal">Ampliar</button></div>
+        </form>
+    </dialog>
+
     {% if avisar %}
         <dialog class="dialogo" id="dialogo-avisar">
             <div class="dialogo-cabecera"><h3>Avisar a {{ avisar.cliente.nombre }}</h3><button type="button" class="cerrar" data-cerrar>{{ m.icono('x') }}</button></div>
@@ -93,6 +113,14 @@
 <script>
     document.querySelectorAll('[data-cerrar]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
     document.querySelectorAll('dialog').forEach(d => d.addEventListener('click', e => { if (e.target === d) d.close(); }));
+    document.querySelectorAll("[data-ampliar]").forEach(b => b.addEventListener("click", () => {
+        document.getElementById("form-ampliar").action = b.dataset.ampliar;
+        document.getElementById("ampliar-numero").textContent = b.dataset.numero;
+        document.getElementById("ampliar-texto").textContent = b.dataset.vencido === "1"
+            ? "Está vencido (fin el " + b.dataset.fin + "). Los días se cuentan desde hoy."
+            : "Termina el " + b.dataset.fin + ". Los días se suman a esa fecha.";
+        document.getElementById("dialogo-ampliar").showModal();
+    }));
     {% if avisar %}document.getElementById('dialogo-avisar').showModal();{% endif %}
 </script>
 {% endblock %}

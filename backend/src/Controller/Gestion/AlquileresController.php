@@ -112,6 +112,29 @@ class AlquileresController extends AbstractController
         return $this->redirect($this->volver($request));
     }
 
+    #[Route('/{id}/ampliar', name: 'gestion_alquiler_ampliar', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function ampliar(Alquiler $alquiler, Request $request): Response
+    {
+        $dias = $request->request->getInt('dias');
+        if (!$this->isCsrfTokenValid('alquiler', (string) $request->request->get('_token'))) {
+            $this->addFlash('danger', 'El formulario ha caducado. Vuelve a intentarlo.');
+        } elseif ($alquiler->getEstado() === 'devuelto') {
+            $this->addFlash('warning', 'Este alquiler ya está devuelto.');
+        } elseif ($dias < 1 || $dias > self::DIAS_MAX) {
+            $this->addFlash('danger', 'Elige entre 1 y ' . self::DIAS_MAX . ' días.');
+        } else {
+            // Si ya está vencido se cuenta desde hoy; si no, desde la fecha de fin que tenía
+            $ahora = new \DateTimeImmutable();
+            $fin = $alquiler->getFechaFinPrevista();
+            $base = $fin !== null && $fin > $ahora ? $fin : $ahora;
+            $alquiler->setFechaFinPrevista($base->modify('+' . $dias . ' days'));
+            $this->em->flush();
+            $this->addFlash('success', sprintf('Alquiler #%04d ampliado: nueva devolución el %s.', $alquiler->getId(), $alquiler->getFechaFinPrevista()->format('d/m/Y')));
+        }
+
+        return $this->redirect($this->volver($request));
+    }
+
     #[Route('/nuevo', name: 'gestion_alquiler_nuevo', methods: ['GET', 'POST'])]
     public function nuevo(Request $request): Response
     {

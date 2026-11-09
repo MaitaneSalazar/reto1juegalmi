@@ -1,0 +1,125 @@
+{% extends 'gestion/base.html.twig' %}
+{% import 'gestion/_macros.html.twig' as m %}
+
+{% block titulo %}Departamentos{% endblock %}
+
+{% block contenido %}
+    {% set token = csrf_token('departamento') %}
+    <div class="cabecera">
+        <h1 class="titulo">Departamentos</h1>
+        <button class="boton principal" type="button" data-abrir="dialogo-nuevo">{{ m.icono('plus') }} Nuevo departamento</button>
+    </div>
+
+    <div class="departamentos-grid">
+        <nav class="lista-departamentos">
+            {% for d in departamentos %}
+                {% set n = d.nombre|lower %}
+                {% set icono = 'consola' in n ? 'gamepad-2' : ('telefon' in n ? 'smartphone' : 'building-2') %}
+                <a class="departamento{{ elegido and elegido.id == d.id ? ' activo' }}{{ not d.activo ? ' inactivo' }}" href="{{ path('gestion_departamentos', {id: d.id}) }}">
+                    {{ m.icono(icono) }}<span>{{ d.nombre }}</span><strong>{{ cuentas[d.id] ?? 0 }}</strong>
+                </a>
+            {% endfor %}
+        </nav>
+
+        {% if elegido %}
+            <div class="detalle-departamento">
+                <section class="tarjeta">
+                    <div class="tarjeta-cabecera">
+                        <h3 class="tarjeta-titulo">Datos del departamento{{ not elegido.activo ? ' · desactivado' }}</h3>
+                        <form method="post" action="{{ path('gestion_departamento_activo', {id: elegido.id}) }}"
+                              onsubmit="return {{ elegido.activo ? "confirm('¿Desactivar este departamento? No se borra.')" : 'true' }}">
+                            <input type="hidden" name="_token" value="{{ token }}">
+                            <button class="{{ elegido.activo ? 'enlace-peligro' : 'enlace' }}" type="submit">{{ elegido.activo ? 'Desactivar' : 'Activar' }}</button>
+                        </form>
+                    </div>
+                    <form method="post" action="{{ path('gestion_departamento_guardar', {id: elegido.id}) }}">
+                        <input type="hidden" name="_token" value="{{ token }}">
+                        <div class="fila fila-datos">
+                            <label class="campo-form"><span class="campo-nombre">Nombre</span><input type="text" name="nombre" value="{{ elegido.nombre }}"></label>
+                            <label class="campo-form"><span class="campo-nombre">Descripción</span><input type="text" name="descripcion" value="{{ elegido.descripcion }}"></label>
+                            <label class="campo-form"><span class="campo-nombre">Teléfono</span><input type="text" name="telefono" value="{{ elegido.telefono }}"></label>
+                        </div>
+                        <div class="derecha"><button class="boton" type="submit">Guardar</button></div>
+                    </form>
+                </section>
+
+                <section class="tarjeta tabla-tarjeta">
+                    <div class="tabla-barra">
+                        <h3 class="tarjeta-titulo sin-margen">Trabajadores del departamento</h3>
+                        <button class="boton" type="button" data-abrir="dialogo-asignar">{{ m.icono('plus') }} Asignar trabajador</button>
+                    </div>
+                    {% if actuales is empty %}
+                        <p class="vacio tabla-vacia">Ahora no hay nadie en este departamento.</p>
+                    {% else %}
+                        <table class="tabla">
+                            <thead><tr><th>Trabajador</th><th>Cargo</th><th>Desde</th><th>Hasta</th><th></th></tr></thead>
+                            <tbody>
+                                {% for a in actuales %}
+                                    <tr>
+                                        <td><div class="celda-persona"><span class="avatar claro">{{ a.trabajador|iniciales }}</span><strong>{{ a.trabajador.nombre }} {{ a.trabajador.apellido1 }}</strong></div></td>
+                                        <td>{{ a.trabajador.cargo }}</td>
+                                        <td class="gris">{{ a.fechaInicio|date('d/m/Y') }}</td>
+                                        <td><span class="etiqueta turquesa">Actualmente</span></td>
+                                        <td class="acciones-fila">
+                                            <form method="post" action="{{ path('gestion_departamento_finalizar', {id: a.id}) }}" onsubmit="return confirm('¿Finalizar la etapa de {{ a.trabajador.nombre }} en este departamento?')">
+                                                <input type="hidden" name="_token" value="{{ token }}">
+                                                <button class="boton" type="submit">Finalizar</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </section>
+
+                <section class="tarjeta">
+                    <h3 class="tarjeta-titulo">Historial</h3>
+                    {% for h in historial %}
+                        <div class="fila-historial">
+                            <span class="avatar claro">{{ h.a.trabajador|iniciales }}</span>
+                            <strong>{{ h.a.trabajador.nombre }} {{ h.a.trabajador.apellido1 }}</strong>
+                            <span class="gris">{{ h.paso_a ? 'Pasó a ' ~ h.paso_a : 'Dejó el departamento' }}</span>
+                            <span class="gris mono">{{ h.a.fechaInicio|date('d/m/Y') }} – {{ h.a.fechaFin|date('d/m/Y') }}</span>
+                            <span class="etiqueta gris">Finalizado</span>
+                        </div>
+                    {% else %}
+                        <p class="vacio">Todavía no hay etapas terminadas.</p>
+                    {% endfor %}
+                </section>
+            </div>
+
+            <dialog class="dialogo" id="dialogo-asignar">
+                <form method="post" action="{{ path('gestion_departamento_asignar', {id: elegido.id}) }}">
+                    <div class="dialogo-cabecera"><h3>Asignar a «{{ elegido.nombre }}»</h3><button type="button" class="cerrar" data-cerrar>{{ m.icono('x') }}</button></div>
+                    <label class="campo-form">
+                        <span class="campo-nombre">Trabajador</span>
+                        <select name="trabajador">{% for t in disponibles %}<option value="{{ t.id }}">{{ t.nombre }} {{ t.apellido1 }} · {{ t.cargo }}</option>{% endfor %}</select>
+                    </label>
+                    <p class="dato-pequeno">Si estaba en otro departamento, esa etapa se cierra hoy y queda en el historial.</p>
+                    <input type="hidden" name="_token" value="{{ token }}">
+                    <div class="dialogo-pie"><button type="button" class="boton" data-cerrar>Cancelar</button><button type="submit" class="boton principal">Asignar</button></div>
+                </form>
+            </dialog>
+        {% endif %}
+    </div>
+
+    <dialog class="dialogo" id="dialogo-nuevo">
+        <form method="post" action="{{ path('gestion_departamento_nuevo') }}">
+            <div class="dialogo-cabecera"><h3>Nuevo departamento</h3><button type="button" class="cerrar" data-cerrar>{{ m.icono('x') }}</button></div>
+            <label class="campo-form"><span class="campo-nombre">Nombre</span><input type="text" name="nombre" required></label>
+            <label class="campo-form"><span class="campo-nombre">Descripción</span><input type="text" name="descripcion"></label>
+            <label class="campo-form"><span class="campo-nombre">Teléfono</span><input type="text" name="telefono"></label>
+            <input type="hidden" name="_token" value="{{ token }}">
+            <div class="dialogo-pie"><button type="button" class="boton" data-cerrar>Cancelar</button><button type="submit" class="boton principal">Crear</button></div>
+        </form>
+    </dialog>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.querySelectorAll('[data-abrir]').forEach(b => b.addEventListener('click', () => document.getElementById(b.dataset.abrir).showModal()));
+    document.querySelectorAll('[data-cerrar]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
+    document.querySelectorAll('dialog').forEach(d => d.addEventListener('click', e => { if (e.target === d) d.close(); }));
+</script>
+{% endblock %}
