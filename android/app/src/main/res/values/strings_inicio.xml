@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="inicio_hola">Hola, %1$s</string>
+    <string name="inicio_hola_sin_nombre">Hola</string>
+    <string name="inicio_novedades">Novedades</string>
+    <string name="inicio_ver_todo">Ver todo</string>
+    <string name="inicio_paso">%1$d/%2$d</string>
+</resources>

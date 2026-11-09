@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MIS PEDIDOS -->
+    <string name="ped_numero">Pedido #%1$d</string>
+    <string name="ped_anteriores">Anteriores</string>
+    <string name="ped_resumen">#%1$d · %2$s · %3$s</string>
+    <string name="ped_mas">%1$s +%2$d</string>
+    <string name="ped_por_cantidad">x%1$d</string>
+    <string name="ped_mas_productos">Y más productos</string>
+    <string name="ped_mas_simbolo">+</string>
+    <string name="ped_cancelar">Cancelar pedido</string>
+    <string name="ped_cancelar_titulo">¿Cancelar el pedido?</string>
+    <string name="ped_cancelar_texto">El pedido #%1$d se cancelará y no se te cobrará.</string>
+    <string name="ped_cancelar_si">Cancelar pedido</string>
+    <string name="ped_volver">Volver</string>
+    <string name="ped_cancelado_ok">Pedido cancelado</string>
+    <string name="ped_vacio_titulo">Sin pedidos</string>
+    <string name="ped_vacio_texto">Todavía no has hecho ningún pedido. Puedes hacerlo desde la tienda.</string>
+    <string name="ped_error_titulo">Algo ha fallado</string>
+    <string name="ped_reintentar">Reintentar</string>
+    <!-- LOS PASOS DEL PEDIDO, EN EL MISMO ORDEN QUE ESTADOS EN MisPedidosActivity -->
+    <string-array name="ped_pasos">
+        <item>Pendiente</item>
+        <item>Pagado</item>
+        <item>Enviado</item>
+        <item>Entregado</item>
+    </string-array>
+    <string name="ped_estado_cancelado">Cancelado</string>
+
+    <!-- CESTA -->
+    <string name="cesta_titulo">Cesta</string>
+    <string name="cesta_envio">Envío</string>
+    <string name="cesta_gratis">Gratis</string>
+    <string name="cesta_total">Total</string>
+    <string name="cesta_confirmar">Confirmar pedido</string>
+    <string name="cesta_cambiar">Cambiar</string>
+    <string name="cesta_anadir_direccion">Añade una dirección de envío</string>
+    <string name="cesta_anadir">Añadir</string>
+    <string name="cesta_elegir_direccion">¿A dónde lo enviamos?</string>
+    <string name="cesta_vacia_titulo">Tu cesta está vacía</string>
+    <string name="cesta_vacia_texto">Añade productos desde la tienda y aparecerán aquí.</string>
+    <string name="cesta_sin_stock">No quedan más unidades</string>
+    <string name="cesta_sin_direccion">Elige una dirección de envío</string>
+    <string name="cesta_pedido_ok">Pedido hecho</string>
+    <string name="cesta_sumar">Una más</string>
+    <string name="cesta_restar">Una menos</string>
+    <plurals name="cesta_alquiler_dias">
+        <item quantity="one">Alquiler · %1$d día</item>
+        <item quantity="other">Alquiler · %1$d días</item>
+    </plurals>
+    <string name="cesta_alquiler_ok">Alquiler hecho</string>
+</resources>

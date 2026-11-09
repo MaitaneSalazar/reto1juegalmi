@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- RECUADRO CON UN + CUANDO EL PEDIDO TIENE MAS DE 3 PRODUCTOS. SOLO AVISA, NO SE PUEDE PULSAR -->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="48dp"
+    android:layout_height="64dp"
+    android:layout_marginEnd="8dp"
+    android:contentDescription="@string/ped_mas_productos"
+    app:cardBackgroundColor="@color/color_pozo"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="0dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:importantForAccessibility="no"
+        android:text="@string/ped_mas_simbolo"
+        android:textColor="@color/color_texto_suave"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+</androidx.cardview.widget.CardView>

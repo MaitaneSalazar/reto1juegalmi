@@ -42,6 +42,11 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
     public ProductoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View vista = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_producto, parent, false);
+        //EN UNA FILA QUE SE DESLIZA (NOVEDADES DEL INICIO) LA TARJETA TIENE ANCHO FIJO
+        RecyclerView.LayoutManager distribucion = ((RecyclerView) parent).getLayoutManager();
+        if (distribucion != null && distribucion.canScrollHorizontally()) {
+            vista.getLayoutParams().width = parent.getResources().getDimensionPixelSize(R.dimen.inicio_ancho_novedad);
+        }
         return new ProductoViewHolder(vista);
     }
 

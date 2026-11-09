@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -26,13 +25,10 @@ import com.example.retoindividual_1.modelos.Producto;
 import com.example.retoindividual_1.network.ApiClient;
 import com.google.android.material.tabs.TabLayout;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.Map;
 
 //FICHA DE UN PRODUCTO, SE PIDE A LA API POR SU ID
 public class FichaProductoActivity extends PaginaMenuActivity {
@@ -60,10 +56,12 @@ public class FichaProductoActivity extends PaginaMenuActivity {
     private TextView tvPrecio;
     private TextView tvPrecioDetalle;
     private Button btnFicha;
+    private TextView tvCantidad;
 
     private Producto producto;
     private boolean alquilando;
     private int diasElegidos = 3;
+    private int cantidad = 1;
 
     //ASI SE ABRE LA FICHA DESDE CUALQUIER SITIO SIN EQUIVOCARSE CON LOS EXTRAS
     public static Intent crearIntent(Context context, int idProducto, boolean seAlquila) {
@@ -99,6 +97,7 @@ public class FichaProductoActivity extends PaginaMenuActivity {
         tvPrecio = findViewById(R.id.tvFichaPrecio);
         tvPrecioDetalle = findViewById(R.id.tvFichaPrecioDetalle);
         btnFicha = findViewById(R.id.btnFicha);
+        tvCantidad = findViewById(R.id.tvFichaCantidad);
 
         boolean seAlquila = getIntent().getBooleanExtra(EXTRA_SE_ALQUILA, false);
         alquilando = seAlquila && getIntent().getBooleanExtra(EXTRA_EMPEZAR_ALQUILANDO, false);
@@ -134,14 +133,36 @@ public class FichaProductoActivity extends PaginaMenuActivity {
             });
         }
 
+        //MENOS Y MAS, NUNCA BAJA DE 1 NI PASA DE LO QUE QUEDA
+        findViewById(R.id.ivFichaMenos).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cantidad > 1) {
+                    cantidad--;
+                    pintarModo();
+                }
+            }
+        });
+        findViewById(R.id.ivFichaMas).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (producto == null) {
+                    return;
+                }
+                if (cantidad < quedan()) {
+                    cantidad++;
+                    pintarModo();
+                } else {
+                    Toast.makeText(FichaProductoActivity.this, R.string.ficha_sin_stock, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        //COMPRANDO O ALQUILANDO, TODO VA A LA CESTA
         btnFicha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (alquilando) {
-                    alquilar();
-                } else {
-                    anadirCesta();
-                }
+                anadirCesta();
             }
         });
 
@@ -228,65 +249,40 @@ public class FichaProductoActivity extends PaginaMenuActivity {
             tvDias[i].setTextColor(ContextCompat.getColor(this, elegido ? R.color.color_fondo : R.color.color_texto));
         }
 
-        if (alquilando) {
-            tvPrecio.setText(EUROS.format(producto.getPrecioAlquilerDia() * diasElegidos));
-            tvPrecioDetalle.setText(getResources().getQuantityString(R.plurals.ficha_dias, diasElegidos, diasElegidos));
-            tvPrecioDetalle.setVisibility(View.VISIBLE);
-            boolean hayCopias = producto.getCopiasDisponibles() > 0;
-            btnFicha.setEnabled(hayCopias);
-            btnFicha.setText(hayCopias ? R.string.ficha_alquilar : R.string.ficha_sin_copias);
-        } else {
-            tvPrecio.setText(EUROS.format(producto.getPrecioVenta()));
-            tvPrecioDetalle.setVisibility(View.GONE);
-            boolean hayStock = producto.getStock() > 0;
-            btnFicha.setEnabled(hayStock);
-            btnFicha.setText(hayStock ? R.string.ficha_anadir : R.string.ficha_agotado);
+        //AL CAMBIAR DE MODO PUEDE QUE QUEDEN MENOS, LA CANTIDAD SE AJUSTA
+        int quedan = quedan();
+        cantidad = Math.max(1, Math.min(cantidad, quedan));
+        tvCantidad.setText(String.valueOf(cantidad));
+
+        double unidad = alquilando ? producto.getPrecioAlquilerDia() * diasElegidos : producto.getPrecioVenta();
+        tvPrecio.setText(EUROS.format(unidad * cantidad));
+        String detalle = alquilando ? getResources().getQuantityString(R.plurals.ficha_dias, diasElegidos, diasElegidos) : "";
+        if (cantidad > 1) {
+            detalle = getString(R.string.ficha_por_unidades, cantidad, EUROS.format(unidad)) + (detalle.isEmpty() ? "" : " · " + detalle);
         }
+        tvPrecioDetalle.setText(detalle);
+        tvPrecioDetalle.setVisibility(detalle.isEmpty() ? View.GONE : View.VISIBLE);
+
+        btnFicha.setEnabled(quedan > 0);
+        if (quedan > 0) {
+            btnFicha.setText(R.string.ficha_anadir);
+        } else if (Cesta.Linea.limite(producto, alquilando) > 0) {
+            btnFicha.setText(R.string.ficha_todo_en_cesta);
+        } else {
+            btnFicha.setText(alquilando ? R.string.ficha_sin_copias : R.string.ficha_agotado);
+        }
+    }
+
+    //LAS QUE SE PUEDEN AÑADIR TODAVIA: EL STOCK (O LAS COPIAS) MENOS LAS QUE YA ESTAN EN LA CESTA
+    private int quedan() {
+        return Cesta.Linea.limite(producto, alquilando) - Cesta.enCesta(producto, alquilando);
     }
 
     private void anadirCesta() {
-        boolean anadido = Cesta.anadir(producto);
+        boolean anadido = Cesta.anadir(producto, cantidad, alquilando, diasElegidos);
         Toast.makeText(this, anadido ? R.string.ficha_anadido : R.string.ficha_sin_stock, Toast.LENGTH_SHORT).show();
-    }
-
-    //EL ALQUILER VA DIRECTO A LA API, NO PASA POR LA CESTA
-    private void alquilar() {
-        JSONObject cuerpo = new JSONObject();
-        try {
-            cuerpo.put("dias", diasElegidos);
-            cuerpo.put("videojuegos", new JSONArray().put(producto.getId()));
-        } catch (JSONException e) {
-            return;
-        }
-
-        //DESACTIVAMOS EL BOTON PARA QUE NO SE MANDE DOS VECES
-        btnFicha.setEnabled(false);
-
-        JsonObjectRequest peticion = new JsonObjectRequest(Request.Method.POST, ApiClient.BASE_URL + "alquileres", cuerpo,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject respuesta) {
-                        Toast.makeText(FichaProductoActivity.this,
-                                getResources().getQuantityString(R.plurals.ficha_alquilado, diasElegidos, diasElegidos),
-                                Toast.LENGTH_LONG).show();
-                        finish();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        btnFicha.setEnabled(true);
-                        Toast.makeText(FichaProductoActivity.this, ApiClient.mensajeDeError(error), Toast.LENGTH_LONG).show();
-                    }
-                }) {
-            //EL TOKEN DE LA SESION VA EN LAS CABECERAS
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                return ApiClient.getInstance(FichaProductoActivity.this).getCabeceras();
-            }
-        };
-        peticion.setTag(this);
-        ApiClient.getInstance(this).getCola().add(peticion);
+        cantidad = 1;
+        pintarModo();
     }
 
     @Override

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -18,6 +17,7 @@ import com.example.retoindividual_1.R;
 import com.example.retoindividual_1.modelos.Alquiler;
 import com.example.retoindividual_1.modelos.Producto;
 import com.example.retoindividual_1.utilidades.FormatosReparacion;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
 
@@ -76,6 +76,13 @@ public class AlquilerActivoAdapter extends RecyclerView.Adapter<AlquilerActivoAd
         holder.tvInicio.setText(FormatosReparacion.fechaCorta(alquiler.getFechaInicio()));
         holder.tvFin.setText(context.getString(R.string.alq_devolver_antes, FormatosReparacion.fechaCorta(alquiler.getFechaFinPrevista())));
 
+        //ATRASADO: BOTON EN ROJO PARA QUE SE VEA QUE HAY QUE DEVOLVERLO YA. SI NO, GRIS SUAVE COMO EN EL MOCKUP
+        int fondo = alquiler.estaRetrasado() ? R.color.color_alerta : R.color.color_pozo;
+        int texto = alquiler.estaRetrasado() ? R.color.white : R.color.color_texto;
+        holder.btnDevolver.setBackgroundTintList(ContextCompat.getColorStateList(context, fondo));
+        holder.btnDevolver.setTextColor(ContextCompat.getColor(context, texto));
+        holder.btnDevolver.setIconTint(ContextCompat.getColorStateList(context, texto));
+
         holder.btnDevolver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,7 +104,7 @@ public class AlquilerActivoAdapter extends RecyclerView.Adapter<AlquilerActivoAd
         ProgressBar pbAlquiler;
         TextView tvInicio;
         TextView tvFin;
-        Button btnDevolver;
+        MaterialButton btnDevolver;
 
         AlquilerActivoViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MIS PEDIDOS. De momento vacía: solo botón de volver y título -->
+<!-- MIS PEDIDOS (15 DEL MOCKUP): EL ULTIMO EN GRANDE CON SUS PASOS Y LOS ANTERIORES EN LISTA -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -9,22 +10,197 @@
     android:orientation="vertical"
     tools:context=".MisPedidosActivity">
 
-    <!-- El padding de los lados va aquí dentro: el de "main" lo pone el código -->
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp">
+        android:layout_height="match_parent">
 
-        <include layout="@layout/barra_volver" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="24dp">
 
-        <TextView
-            style="@style/TituloPagina"
-            android:text="@string/menu_mis_pedidos" />
+            <include layout="@layout/barra_volver" />
 
-        <TextView
-            style="@style/TextoPendiente"
-            android:text="@string/pagina_en_construccion" />
-    </LinearLayout>
+            <TextView
+                style="@style/TituloPagina"
+                android:layout_marginBottom="20dp"
+                android:text="@string/menu_mis_pedidos" />
+
+            <ProgressBar
+                android:id="@+id/pbPedidos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="32dp"
+                android:indeterminateTint="@color/color_marca" />
+
+            <!-- AVISO CUANDO NO HAY PEDIDOS O NO HAY CONEXION -->
+            <LinearLayout
+                android:id="@+id/llPedidosAviso"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvPedidosAvisoTitulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_texto"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvPedidosAvisoTexto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:textColor="@color/color_texto_suave"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPedidosReintentar"
+                    style="@style/BotonPrincipal"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:paddingStart="32dp"
+                    android:paddingEnd="32dp"
+                    android:text="@string/ped_reintentar" />
+            </LinearLayout>
+
+            <!-- EL ULTIMO PEDIDO, EN GRANDE -->
+            <LinearLayout
+                android:id="@+id/llUltimo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_tarjeta_hoja"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvUltimoNumero"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/color_texto"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvUltimoFecha"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/color_texto_suave"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <!-- LOS 4 PASOS, LOS PONE EL CODIGO -->
+                <LinearLayout
+                    android:id="@+id/llUltimoPasos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal" />
+
+                <!-- SI ESTA CANCELADO NO HAY PASOS, SOLO ESTO -->
+                <TextView
+                    android:id="@+id/tvUltimoCancelado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_pildora_alerta"
+                    android:paddingStart="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="4dp"
+                    android:text="@string/ped_estado_cancelado"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvUltimoNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/color_texto_suave"
+                    android:textSize="13sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="bottom"
+                    android:orientation="horizontal">
+
+                    <!-- UNA FOTO POR PRODUCTO, LAS PONE EL CODIGO -->
+                    <HorizontalScrollView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="12dp"
+                        android:layout_weight="1"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:id="@+id/llUltimoFotos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" />
+                    </HorizontalScrollView>
+
+                    <TextView
+                        android:id="@+id/tvUltimoTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/color_texto"
+                        android:textSize="28sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- SOLO SALE SI LA API DICE QUE SE PUEDE CANCELAR -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnUltimoCancelar"
+                    style="@style/BotonPrincipal"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/ped_cancelar"
+                    android:textColor="@color/color_texto"
+                    android:visibility="gone"
+                    app:backgroundTint="@color/color_pozo" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvPedidosAnteriores"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:layout_marginBottom="12dp"
+                android:text="@string/ped_anteriores"
+                android:textColor="@color/color_texto"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPedidosAnteriores"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_pedido" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

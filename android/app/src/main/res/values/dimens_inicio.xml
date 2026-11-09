@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ANCHO DE CADA TARJETA EN LAS NOVEDADES DEL INICIO -->
+    <dimen name="inicio_ancho_novedad">160dp</dimen>
+</resources>

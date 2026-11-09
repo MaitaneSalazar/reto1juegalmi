@@ -1,8 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- PANTALLA DE LA CESTA, DE MOMENTO VACIA -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- CESTA (07 DEL MOCKUP): LOS PRODUCTOS, LA DIRECCION DE ENVIO Y EL TOTAL CON CONFIRMAR PEDIDO -->
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".CestaFragment" />
+    tools:context=".CestaFragment">
+
+    <!-- EL PADDING DE ABAJO ES PARA QUE LA BARRA FLOTANTE NO TAPE EL BOTON -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="120dp">
+
+        <include layout="@layout/barra_superior" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="20dp"
+            android:letterSpacing="-0.05"
+            android:text="@string/cesta_titulo"
+            android:textColor="@color/color_texto"
+            android:textSize="44sp"
+            android:textStyle="bold" />
+
+        <!-- CESTA VACIA -->
+        <LinearLayout
+            android:id="@+id/llCestaVacia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cesta_vacia_titulo"
+                android:textColor="@color/color_texto"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="@string/cesta_vacia_texto"
+                android:textColor="@color/color_texto_suave"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llCestaContenido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCesta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_cesta" />
+
+            <!-- DIRECCION DE ENVIO, SALE DE /domicilios -->
+            <LinearLayout
+                android:id="@+id/llCestaDireccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_tarjeta_hoja"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="20dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="16dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_location"
+                    app:tint="@color/color_texto_suave" />
+
+                <TextView
+                    android:id="@+id/tvCestaDireccion"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/color_texto"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tvCestaCambiar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/cesta_cambiar"
+                    android:textColor="@color/color_texto"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <!-- TOTAL Y CONFIRMAR, EN LA TARJETA OSCURA -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_tarjeta_hoja"
+                android:backgroundTint="@color/color_oscuro"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/cesta_envio"
+                        android:textColor="@color/color_texto_tenue"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cesta_gratis"
+                        android:textColor="@color/color_fondo"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="bottom"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="6dp"
+                        android:layout_weight="1"
+                        android:text="@string/cesta_total"
+                        android:textColor="@color/color_texto_tenue"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvCestaTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:letterSpacing="-0.03"
+                        android:textColor="@color/color_fondo"
+                        android:textSize="36sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCestaConfirmar"
+                    style="@style/BotonPrincipal"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/cesta_confirmar" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

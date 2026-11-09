@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.volley.Request;
@@ -28,6 +29,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TiendaFragment extends Fragment {
+
+    //AVISO QUE DEJA EL INICIO PARA ABRIR LA TIENDA EN ALQUILAR
+    public static final String MODO = "modo_tienda";
+    public static final String EMPEZAR_ALQUILANDO = "empezar_alquilando";
 
     //LO QUE ESPERA LA API EN ?tipo= , EN EL MISMO ORDEN QUE tienda_filtros_comprar
     private static final List<String> TIPOS = Arrays.asList("todo", "videojuego", "consola", "movil", "tablet");
@@ -75,6 +80,17 @@ public class TiendaFragment extends Fragment {
         });
 
         cambiarModo(false);
+
+        //SI SE VIENE DESDE "ALQUILAR" DEL INICIO, LA TIENDA SE ABRE YA EN ALQUILAR
+        getParentFragmentManager().setFragmentResultListener(MODO, getViewLifecycleOwner(), new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String clave, @NonNull Bundle resultado) {
+                TabLayout.Tab tabAlquilar = tlModo.getTabAt(1);
+                if (resultado.getBoolean(EMPEZAR_ALQUILANDO) && tabAlquilar != null) {
+                    tabAlquilar.select();
+                }
+            }
+        });
     }
 
     @Override
