@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'pedido')]
 class Pedido
 {
-    public const ESTADOS = ['pendiente', 'pagado', 'enviado', 'entregado', 'cancelado'];
+    public const ESTADOS = ['pendiente', 'preparando', 'enviado', 'entregado', 'cancelado'];
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

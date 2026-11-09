@@ -1,0 +1,92 @@
+{% extends 'gestion/base.html.twig' %}
+{% import 'gestion/_macros.html.twig' as m %}
+
+{% block titulo %}Pedidos{% endblock %}
+
+{% block contenido %}
+    {% set colores = {pendiente: 'oscura', preparando: 'turquesa', enviado: 'turquesa', entregado: 'gris', cancelado: 'roja'} %}
+    {% set pasos = ['pendiente', 'preparando', 'enviado', 'entregado'] %}
+    {% set pestanas = {todos: 'Todos', pendiente: 'Pendiente', preparando: 'Preparando', enviado: 'Enviado', entregado: 'Entregado'} %}
+
+    <div class="cabecera"><h1 class="titulo">Pedidos</h1></div>
+
+    <div class="pedidos-grid">
+        <section class="tarjeta tabla-tarjeta">
+            <div class="tabla-barra">
+                <nav class="pestanas">
+                    {% for clave, texto in pestanas %}
+                        <a class="{{ ver == clave ? 'activa' }}" href="{{ path('gestion_pedidos', {ver: clave != 'todos' ? clave : null}) }}">{{ texto }}</a>
+                    {% endfor %}
+                </nav>
+            </div>
+
+            {% if pedidos is empty %}
+                <p class="vacio tabla-vacia">No hay pedidos aquí.</p>
+            {% else %}
+                <table class="tabla tabla-clicable">
+                    <thead><tr><th>Nº</th><th>Fecha</th><th>Cliente</th><th class="dcha">Total</th><th>Estado</th></tr></thead>
+                    <tbody>
+                        {% for p in pedidos %}
+                            {% set url = path('gestion_pedidos', {ver: ver != 'todos' ? ver : null, id: p.id}) %}
+                            <tr class="{{ elegido and elegido.id == p.id ? 'elegida' }}" onclick="location.href='{{ url }}'">
+                                <td><a href="{{ url }}">#{{ p.id }}</a></td>
+                                <td class="gris">{{ p.fecha|date('d/m') }}</td>
+                                <td>{{ p.cliente ? p.cliente.nombre ~ ' ' ~ p.cliente.apellido1 }}</td>
+                                <td class="dcha">{{ m.precio(p.total) }}</td>
+                                <td><span class="etiqueta {{ colores[p.estado] ?? 'gris' }}">{{ estados[p.estado] ?? p.estado }}</span></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </section>
+
+        {% if elegido %}
+            {% set dir = elegido.domicilio ? elegido.domicilio.direccion : null %}
+            {% set paso = elegido.estado in pasos ? pasos|keys|filter(i => pasos[i] == elegido.estado)|first : -1 %}
+            <aside class="tarjeta panel-pedido">
+                <div class="panel-cabecera">
+                    <h2>#{{ elegido.id }}</h2>
+                    <span class="etiqueta {{ colores[elegido.estado] ?? 'gris' }}">{{ estados[elegido.estado] ?? elegido.estado }}</span>
+                </div>
+                <strong class="panel-cliente">{{ elegido.cliente ? elegido.cliente.nombre ~ ' ' ~ elegido.cliente.apellido1 ~ ' ' ~ elegido.cliente.apellido2 }}</strong>
+                <p class="dato">{% if dir %}{{ dir.calle }} {{ dir.numero }}{{ dir.piso ? ', ' ~ dir.piso }} · {{ dir.codigoPostal }} {{ dir.ciudad }}{% endif %}</p>
+
+                <div class="panel-lineas">
+                    {% for l in elegido.lineas %}
+                        <div class="panel-linea">
+                            {{ m.foto(l.producto.imagen, 'foto-linea') }}
+                            <span>{{ l.producto.nombre }} <span class="gris">× {{ l.cantidad }}</span></span>
+                            <span class="dcha">{{ l.subtotal|number_format(2, ',', '.') }} €</span>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="panel-total"><span>Total</span>{{ m.precio(elegido.total) }}</div>
+
+                {% if elegido.estado != 'cancelado' %}
+                    <div class="panel-pasos">
+                        {% for p in pasos %}
+                            <div class="{{ loop.index0 <= paso ? 'hecho' }}"><span class="barra"></span><small>{{ estados[p] }}</small></div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% if siguiente %}
+                    <form method="post" action="{{ path('gestion_pedido_avanzar', {id: elegido.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('pedido') }}">
+                        <input type="hidden" name="ver" value="{{ ver }}">
+                        <button class="boton principal grande" type="submit">Marcar como «{{ estados[siguiente] }}»</button>
+                    </form>
+                {% endif %}
+                {% if se_puede_cancelar %}
+                    <form method="post" action="{{ path('gestion_pedido_cancelar', {id: elegido.id}) }}" onsubmit="return confirm('¿Cancelar el pedido #{{ elegido.id }}? Se devuelve el stock.')">
+                        <input type="hidden" name="_token" value="{{ csrf_token('pedido') }}">
+                        <input type="hidden" name="ver" value="{{ ver }}">
+                        <button class="enlace-peligro centro-bloque" type="submit">Cancelar pedido</button>
+                    </form>
+                {% endif %}
+            </aside>
+        {% endif %}
+    </div>
+{% endblock %}

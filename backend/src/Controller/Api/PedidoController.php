@@ -144,7 +144,7 @@ class PedidoController extends AbstractController
         return $this->json($this->presenter->detalle($pedido), Response::HTTP_CREATED);
     }
 
-    /** PUT /api/pedidos/{id}/cancelar — solo si está pendiente o pagado; devuelve el stock */
+    /** PUT /api/pedidos/{id}/cancelar — solo si está pendiente o preparando; devuelve el stock */
     #[Route('/{id}/cancelar', name: 'api_pedido_cancelar', requirements: ['id' => '\d+'], methods: ['PUT'])]
     public function cancelar(#[CurrentUser] Usuario $usuario, int $id): JsonResponse
     {
@@ -153,7 +153,7 @@ class PedidoController extends AbstractController
             return RespuestaApi::error(404, 'El pedido no existe');
         }
 
-        if (!in_array($pedido->getEstado(), ['pendiente', 'pagado'], true)) {
+        if (!in_array($pedido->getEstado(), ['pendiente', 'preparando'], true)) {
             return RespuestaApi::error(409, 'Este pedido ya no se puede cancelar (está ' . $pedido->getEstado() . ')');
         }
 

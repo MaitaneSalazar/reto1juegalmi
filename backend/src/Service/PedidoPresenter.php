@@ -31,7 +31,7 @@ class PedidoPresenter
             // Para la miniatura de la tarjeta
             'primer_producto' => $primera ? $primera->getProducto()->getNombre() : null,
             'imagen_url' => $primera ? $this->productos->url($primera->getProducto()->getImagen()) : null,
-            'se_puede_cancelar' => in_array($pedido->getEstado(), ['pendiente', 'pagado'], true),
+            'se_puede_cancelar' => in_array($pedido->getEstado(), ['pendiente', 'preparando'], true),
         ];
     }
 

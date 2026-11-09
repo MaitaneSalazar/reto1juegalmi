@@ -47,7 +47,7 @@ class DashboardController extends AbstractDashboardController
             'para_recoger' => count(array_filter($reparaciones, fn (Reparacion $r) => $r->getEstadoActual() === 'lista_para_recoger')),
             'alquileres_activos' => count(array_filter($alquileres, fn (Alquiler $a) => $a->getEstado() === 'activo')),
             'retrasados' => $retrasados,
-            'por_enviar' => $this->em->getRepository(Pedido::class)->count(['estado' => ['pendiente', 'pagado']]),
+            'por_enviar' => $this->em->getRepository(Pedido::class)->count(['estado' => ['pendiente', 'preparando']]),
             'stock_bajo' => $this->em->getRepository(Producto::class)->createQueryBuilder('p')
                 ->where('p.activo = true')->andWhere('p.stock <= :minimo')
                 ->setParameter('minimo', self::STOCK_BAJO)

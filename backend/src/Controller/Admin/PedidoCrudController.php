@@ -23,7 +23,7 @@ class PedidoCrudController extends AbstractCrudController
 {
     private const ESTADOS = [
         'Pendiente' => 'pendiente',
-        'Pagado' => 'pagado',
+        'Preparando' => 'preparando',
         'Enviado' => 'enviado',
         'Entregado' => 'entregado',
         'Cancelado' => 'cancelado',
@@ -31,7 +31,7 @@ class PedidoCrudController extends AbstractCrudController
 
     private const COLORES = [
         'pendiente' => 'secondary',
-        'pagado' => 'info',
+        'preparando' => 'info',
         'enviado' => 'success',
         'entregado' => 'light',
         'cancelado' => 'danger',
