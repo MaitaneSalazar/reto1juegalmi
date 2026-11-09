@@ -1,0 +1,1681 @@
+{
+  "info": {
+    "_postman_id": "f8e95ebb-e260-42c3-b07e-d7b423e09c9c",
+    "name": "JuegAlmi API",
+    "description": "Todas las rutas de la API de JuegAlmi.\n\n1. Cambia `base_url` en las variables si la API no está en la VM de Aketza.\n2. Ejecuta primero «1 · Sesión → Login» (guarda el token).\n3. Con el Runner se puede lanzar todo en orden: crea un pedido, un alquiler y una reparación de prueba y luego los cancela/devuelve.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Ubicación del móvil, como mandan las apps (opcional)",
+          "pm.request.headers.upsert({ key: 'X-Lat', value: pm.collectionVariables.get('lat') });",
+          "pm.request.headers.upsert({ key: 'X-Lon', value: pm.collectionVariables.get('lon') });"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://symfony.44-219-6-54.sslip.io/api"
+    },
+    {
+      "key": "email_cliente",
+      "value": "demo@juegalmi.es"
+    },
+    {
+      "key": "email_trabajador",
+      "value": "iker@juegalmi.es"
+    },
+    {
+      "key": "password",
+      "value": "1234"
+    },
+    {
+      "key": "lat",
+      "value": "43.2614"
+    },
+    {
+      "key": "lon",
+      "value": "-2.9273"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "id_producto",
+      "value": ""
+    },
+    {
+      "key": "id_videojuego",
+      "value": ""
+    },
+    {
+      "key": "id_domicilio",
+      "value": ""
+    },
+    {
+      "key": "id_pedido",
+      "value": ""
+    },
+    {
+      "key": "id_alquiler",
+      "value": ""
+    },
+    {
+      "key": "id_reparacion",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "0 · Conexión",
+      "item": [
+        {
+          "name": "Estado de la API",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/estado",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "estado"
+              ]
+            },
+            "description": "Prueba de conexión, sin token.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "pm.test('Estado ok', () => pm.expect(pm.response.json().estado).to.eql('ok'));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "1 · Sesión",
+      "item": [
+        {
+          "name": "Login (Ane, clienta)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "login"
+              ]
+            },
+            "description": "Guarda el token en la variable {{token}}. Ejecútalo antes que el resto.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email_cliente}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "const r = pm.response.json();",
+                  "pm.collectionVariables.set('token', r.token);",
+                  "pm.test('Trae token y usuario', () => { pm.expect(r.token).to.be.a('string'); pm.expect(r.usuario.email).to.eql(pm.collectionVariables.get('email_cliente')); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Registro (usuario nuevo al azar)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/registro",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "registro"
+              ]
+            },
+            "description": "Genera un DNI con su letra y un email nuevos en cada envío. No cambia el token guardado.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Prueba\",\n  \"apellido1\": \"Postman\",\n  \"apellido2\": \"\",\n  \"dni\": \"{{dni_nuevo}}\",\n  \"telefono\": \"600000000\",\n  \"email\": \"{{email_nuevo}}\",\n  \"password\": \"abcd1234\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const n = Math.floor(10000000 + Math.random() * 89999999);",
+                  "pm.variables.set('dni_nuevo', n + 'TRWAGMYFPDXBNJZSQVHLCKE'[n % 23]);",
+                  "pm.variables.set('email_nuevo', 'postman.' + Date.now() + '@juegalmi.es');"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.expect(pm.response.code).to.be.oneOf([201]));",
+                  "pm.test('Trae token', () => pm.expect(pm.response.json().token).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mis datos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/yo",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "yo"
+              ]
+            },
+            "description": "Datos del usuario y contadores."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "pm.test('Es un cliente con contadores', () => pm.expect(pm.response.json()).to.have.property('contadores'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cambiar mis datos",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/yo",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "yo"
+              ]
+            },
+            "description": "Solo los campos que cambian: nombre, apellido1, apellido2, telefono, foto_perfil. Contraseña: {\"password_actual\", \"password_nueva\"}.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefono\": \"600123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Subir foto de perfil",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/yo/foto",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "yo",
+                "foto"
+              ]
+            },
+            "description": "multipart/form-data con el campo «imagen». Usa foto-prueba.png (está junto a la colección).",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "imagen",
+                  "type": "file",
+                  "src": "foto-prueba.png"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.eql(200));",
+                  "pm.test('Trae la URL de la foto', () => pm.expect(pm.response.json().foto_perfil_url).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2 · Catálogo y tienda (sin token)",
+      "item": [
+        {
+          "name": "Productos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/productos?page=1&limit=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos"
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "videojuego",
+                  "description": "videojuego, consola, movil, tablet o todo",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "",
+                  "description": "texto a buscar",
+                  "disabled": true
+                },
+                {
+                  "key": "plataforma",
+                  "value": "Xbox",
+                  "description": "PlayStation, Switch, Xbox o todas",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                }
+              ]
+            },
+            "description": "Listado paginado. Guarda el primer producto con stock en {{id_producto}}.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "const r = pm.response.json();",
+                  "pm.test('Paginado', () => pm.expect(r).to.have.keys('datos', 'paginacion'));",
+                  "const p = r.datos.find(x => x.disponible);",
+                  "if (p) pm.collectionVariables.set('id_producto', p.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Productos de una plataforma",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/productos?plataforma=Switch",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos"
+              ],
+              "query": [
+                {
+                  "key": "plataforma",
+                  "value": "Switch",
+                  "description": ""
+                }
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "pm.test('Todos son de Switch', () => pm.response.json().datos.forEach(p => pm.expect(p.plataforma).to.eql('Switch')));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Filtros del catálogo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/productos/filtros",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos",
+                "filtros"
+              ]
+            },
+            "description": "Valores para montar los desplegables de filtros en las apps.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.eql(200));",
+                  "pm.test('Trae tipos, plataformas, empresas y pegi', () => { const j = pm.response.json(); ['tipos','plataformas','empresas','pegi'].forEach(k => pm.expect(j).to.have.property(k)); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Productos de una empresa",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/productos?empresa=Nintendo",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos"
+              ],
+              "query": [
+                {
+                  "key": "empresa",
+                  "value": "Nintendo"
+                }
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.eql(200));",
+                  "pm.test('Todos son de Nintendo', () => pm.response.json().datos.forEach(p => pm.expect(p.empresa.toLowerCase()).to.eql('nintendo')));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Videojuegos PEGI 18",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/productos?pegi=18",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos"
+              ],
+              "query": [
+                {
+                  "key": "pegi",
+                  "value": "18"
+                }
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.eql(200));",
+                  "pm.test('Si traen pegi, es 18', () => pm.response.json().datos.forEach(p => { if (p.pegi !== undefined) pm.expect(Number(p.pegi)).to.eql(18); }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ficha de un producto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/productos/{{id_producto}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos",
+                "{{id_producto}}"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Videojuegos de alquiler",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/videojuegos/alquiler?plataforma=todas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "videojuegos",
+                "alquiler"
+              ],
+              "query": [
+                {
+                  "key": "plataforma",
+                  "value": "todas",
+                  "description": "PlayStation, Switch, Xbox o todas"
+                }
+              ]
+            },
+            "description": "Guarda el primer juego con copias libres en {{id_videojuego}}.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "const j = pm.response.json().datos.find(x => x.copias_disponibles > 0);",
+                  "if (j) pm.collectionVariables.set('id_videojuego', j.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Plataformas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/videojuegos/plataformas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "videojuegos",
+                "plataformas"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "pm.test('PlayStation, Switch y Xbox', () => pm.expect(pm.response.json()).to.eql(['PlayStation', 'Switch', 'Xbox']));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Tienda",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tienda",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tienda"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Fotos de la tienda",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tienda/fotos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tienda",
+                "fotos"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Departamentos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/departamentos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "departamentos"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3 · Domicilios",
+      "item": [
+        {
+          "name": "Mis domicilios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/domicilios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "domicilios"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Nuevo domicilio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/domicilios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "domicilios"
+              ]
+            },
+            "description": "Guarda su id en {{id_domicilio}}.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"calle\": \"Calle de Prueba\",\n  \"numero\": \"1\",\n  \"piso\": \"2ºA\",\n  \"codigo_postal\": \"48001\",\n  \"ciudad\": \"Bilbao\",\n  \"provincia\": \"Bizkaia\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.expect(pm.response.code).to.be.oneOf([201]));",
+                  "pm.collectionVariables.set('id_domicilio', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Editar domicilio (crea uno nuevo)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/domicilios/{{id_domicilio}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "domicilios",
+                "{{id_domicilio}}"
+              ]
+            },
+            "description": "Da de baja el anterior y devuelve uno nuevo con sustituye_a. Actualiza {{id_domicilio}}.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"piso\": \"4ºC\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200 o 201', () => pm.expect(pm.response.code).to.be.oneOf([200, 201]));",
+                  "const r = pm.response.json();",
+                  "pm.test('Trae sustituye_a', () => pm.expect(r).to.have.property('sustituye_a'));",
+                  "pm.collectionVariables.set('id_domicilio', r.id);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4 · Pedidos",
+      "item": [
+        {
+          "name": "Hacer un pedido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/pedidos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pedidos"
+              ]
+            },
+            "description": "Descuenta el stock. Guarda su id en {{id_pedido}}. Al final de la carpeta se cancela para devolver el stock.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_domicilio\": \"{{id_domicilio}}\",\n  \"lineas\": [\n    {\n      \"id_producto\": \"{{id_producto}}\",\n      \"cantidad\": 1\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Postman manda las variables como texto: las pasamos a número",
+                  "const b = JSON.parse(pm.request.body.raw.replace(/\"\\{\\{(\\w+)\\}\\}\"/g, (m, v) => pm.collectionVariables.get(v)));",
+                  "pm.request.body.raw = JSON.stringify(b);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.expect(pm.response.code).to.be.oneOf([201]));",
+                  "pm.collectionVariables.set('id_pedido', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mis pedidos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/pedidos?page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pedidos"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Detalle de un pedido",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/pedidos/{{id_pedido}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pedidos",
+                "{{id_pedido}}"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "pm.test('Trae líneas y domicilio', () => { const r = pm.response.json(); pm.expect(r).to.have.property('lineas'); pm.expect(r).to.have.property('domicilio'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cancelar el pedido",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/pedidos/{{id_pedido}}/cancelar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pedidos",
+                "{{id_pedido}}",
+                "cancelar"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "pm.test('Cancelado', () => pm.expect(pm.response.json().estado).to.eql('cancelado'));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "5 · Alquileres",
+      "item": [
+        {
+          "name": "Alquilar un videojuego",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/alquileres",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "alquileres"
+              ]
+            },
+            "description": "Guarda su id en {{id_alquiler}}. Al final de la carpeta se devuelve.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dias\": 3,\n  \"videojuegos\": [\n    \"{{id_videojuego}}\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const b = JSON.parse(pm.request.body.raw.replace(/\"\\{\\{(\\w+)\\}\\}\"/g, (m, v) => pm.collectionVariables.get(v)));",
+                  "pm.request.body.raw = JSON.stringify(b);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.expect(pm.response.code).to.be.oneOf([201]));",
+                  "pm.collectionVariables.set('id_alquiler', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mis alquileres",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/alquileres?page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "alquileres"
+              ],
+              "query": [
+                {
+                  "key": "estado",
+                  "value": "activo",
+                  "description": "activo, retrasado o devuelto",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Detalle de un alquiler",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/alquileres/{{id_alquiler}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "alquileres",
+                "{{id_alquiler}}"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Devolver el alquiler",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/alquileres/{{id_alquiler}}/devolver",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "alquileres",
+                "{{id_alquiler}}",
+                "devolver"
+              ]
+            },
+            "description": "Sin cuerpo devuelve todos los juegos. Con {\"videojuegos\": [ids]} solo esos."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "pm.test('Devuelto', () => pm.expect(pm.response.json().estado).to.eql('devuelto'));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "6 · Reparaciones",
+      "item": [
+        {
+          "name": "Pedir una reparación",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reparaciones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reparaciones"
+              ]
+            },
+            "description": "tipo_dispositivo: consola, movil, tablet, ordenador, mando, auriculares, reloj u otro. Guarda su id en {{id_reparacion}}.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo_dispositivo\": \"mando\",\n  \"marca\": \"Sony\",\n  \"modelo\": \"DualShock 4\",\n  \"componente\": \"Botón X\",\n  \"descripcion_averia\": \"El botón X no responde (prueba de Postman).\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.expect(pm.response.code).to.be.oneOf([201]));",
+                  "pm.collectionVariables.set('id_reparacion', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Subir una foto",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reparaciones/{{id_reparacion}}/fotos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reparaciones",
+                "{{id_reparacion}}",
+                "fotos"
+              ]
+            },
+            "description": "Elige el archivo en Body → form-data → imagen antes de enviar. En el Runner se salta si no hay archivo.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "imagen",
+                  "type": "file",
+                  "src": [],
+                  "description": "Elige una imagen JPG, PNG o WEBP de tu ordenador"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 422) { pm.test('Sin archivo elegido: se salta', () => true); } else { pm.test('Responde 201', () => pm.expect(pm.response.code).to.be.oneOf([201])); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mis reparaciones",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reparaciones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reparaciones"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seguimiento de una reparación",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reparaciones/{{id_reparacion}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reparaciones",
+                "{{id_reparacion}}"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "pm.test('Recibida, paso 1 de 5', () => { const r = pm.response.json(); pm.expect(r.estado).to.eql('recibida'); pm.expect(r.total_pasos).to.eql(5); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cancelar la reparación",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reparaciones/{{id_reparacion}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reparaciones",
+                "{{id_reparacion}}"
+              ]
+            },
+            "description": "Solo mientras está recibida."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "pm.test('Cancelada', () => pm.expect(pm.response.json().estado).to.eql('cancelada'));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "7 · Limpieza",
+      "item": [
+        {
+          "name": "Dar de baja el domicilio de prueba",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/domicilios/{{id_domicilio}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "domicilios",
+                "{{id_domicilio}}"
+              ]
+            },
+            "description": "No se borra: queda con fecha de baja."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect(pm.response.code).to.be.oneOf([200]));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "8 · Errores (deben fallar)",
+      "item": [
+        {
+          "name": "401 · Contraseña incorrecta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "login"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email_cliente}}\",\n  \"password\": \"mala\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 401', () => pm.expect(pm.response.code).to.be.oneOf([401]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "401 · Sin token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/yo",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "yo"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 401', () => pm.expect(pm.response.code).to.be.oneOf([401]));",
+                  "pm.test('Trae mensaje', () => pm.expect(pm.response.json().mensaje).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "422 · DNI repetido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/registro",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "registro"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"X\",\n  \"apellido1\": \"Y\",\n  \"dni\": \"12345678Z\",\n  \"email\": \"otro.{{$timestamp}}@juegalmi.es\",\n  \"password\": \"abcd1234\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 422', () => pm.expect(pm.response.code).to.be.oneOf([422]));",
+                  "pm.test('El mensaje dice el motivo', () => pm.expect(pm.response.json().mensaje).to.include('DNI'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "404 · Producto que no existe",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/productos/999999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos",
+                "999999"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 404', () => pm.expect(pm.response.code).to.be.oneOf([404]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "422 · PEGI que no existe",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/productos?pegi=5",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos"
+              ],
+              "query": [
+                {
+                  "key": "pegi",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 422', () => pm.expect(pm.response.code).to.eql(422));",
+                  "pm.test('Trae el motivo', () => pm.expect(pm.response.json().mensaje).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "409 · Cancelar un pedido ya cancelado",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/pedidos/{{id_pedido}}/cancelar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pedidos",
+                "{{id_pedido}}",
+                "cancelar"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 409', () => pm.expect(pm.response.code).to.be.oneOf([409]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "403 · Un trabajador pide sus pedidos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/pedidos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pedidos"
+              ]
+            },
+            "description": "Hace login como Iker y usa su token solo en esta llamada.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.sendRequest({ url: pm.variables.get('base_url') + '/login', method: 'POST',",
+                  "  header: { 'Content-Type': 'application/json' },",
+                  "  body: { mode: 'raw', raw: JSON.stringify({ email: pm.collectionVariables.get('email_trabajador'), password: pm.collectionVariables.get('password') }) }",
+                  "}, (err, res) => pm.request.headers.upsert({ key: 'Authorization', value: 'Bearer ' + res.json().token }));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 403', () => pm.expect(pm.response.code).to.be.oneOf([403]));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
