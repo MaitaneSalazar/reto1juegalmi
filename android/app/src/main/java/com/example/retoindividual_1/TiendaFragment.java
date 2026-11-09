@@ -56,7 +56,19 @@ public class TiendaFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         //EN LA TIENDA SI SE ENSEÑA LA LUPA DE BUSCAR
-        view.findViewById(R.id.ivBarraBuscar).setVisibility(View.VISIBLE);
+        View ivBuscar = view.findViewById(R.id.ivBarraBuscar);
+        ivBuscar.setVisibility(View.VISIBLE);
+
+        //LA LUPA ABRE EL BUSCADOR ENCIMA DE LA TIENDA, Y CON ATRAS SE VUELVE A ELLA
+        ivBuscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.fcvMain, new BuscarFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
 
         tvTitulo = view.findViewById(R.id.tvTiendaTitulo);
         tlModo = view.findViewById(R.id.tlTiendaModo);

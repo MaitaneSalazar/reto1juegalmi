@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- BUSCADOR DE LA TIENDA: CAMPO DE TEXTO CON MICROFONO Y LOS RESULTADOS EN 2 COLUMNAS -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_fondo"
+    android:orientation="vertical"
+    tools:context=".BuscarFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <include layout="@layout/barra_volver" />
+
+        <TextView
+            style="@style/TituloPagina"
+            android:text="@string/buscar_titulo" />
+
+        <!-- EL CAMPO: LUPA, TEXTO, EQUIS PARA BORRAR Y MICROFONO -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_campo"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="14dp"
+            android:paddingEnd="6dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_search"
+                app:tint="@color/color_texto_suave" />
+
+            <EditText
+                android:id="@+id/etBuscar"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/buscar_pista"
+                android:imeOptions="actionSearch"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textColor="@color/color_texto"
+                android:textColorHint="@color/color_texto_tenue"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:id="@+id/ivBuscarBorrar"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/buscar_borrar"
+                android:padding="9dp"
+                android:src="@drawable/ic_cerrar"
+                android:visibility="gone"
+                app:tint="@color/color_texto_suave" />
+
+            <ImageView
+                android:id="@+id/ivBuscarVoz"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="2dp"
+                android:background="@drawable/bg_circulo_hoja"
+                android:backgroundTint="@color/color_marca"
+                android:contentDescription="@string/buscar_voz"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:padding="9dp"
+                android:src="@drawable/ic_microfono"
+                app:tint="@color/color_sobre_marca" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:layout_weight="1">
+
+        <!-- EL PADDING DE ABAJO ES PARA QUE LA BARRA FLOTANTE NO TAPE LA ULTIMA FILA -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvBuscar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingStart="14dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="120dp"
+            tools:listitem="@layout/item_producto" />
+
+        <ProgressBar
+            android:id="@+id/pbBuscar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="48dp"
+            android:indeterminateTint="@color/color_marca"
+            android:visibility="gone" />
+
+        <!-- AVISO: ANTES DE BUSCAR, SIN RESULTADOS O SIN CONEXION -->
+        <LinearLayout
+            android:id="@+id/llBuscarAviso"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
+
+            <TextView
+                android:id="@+id/tvBuscarAvisoTitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/buscar_inicio_titulo"
+                android:textColor="@color/color_texto"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvBuscarAvisoTexto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="@string/buscar_inicio_texto"
+                android:textColor="@color/color_texto_suave"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>
