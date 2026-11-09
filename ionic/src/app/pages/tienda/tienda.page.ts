@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonSearchbar, IonChip, IonIcon,
-         IonSkeletonText, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent } from '@ionic/angular';
+         IonSkeletonText, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { searchOutline, closeOutline, micOutline } from 'ionicons/icons';
 import { CabeceraComponent } from '../../components/cabecera/cabecera.component';
@@ -31,6 +31,7 @@ export class TiendaPage {
   private servicio = inject(ProductoService);
   private router = inject(Router);
   voz = inject(VozService);
+  private toast = inject(ToastController);
 
   modo = signal<Modo>('comprar');
   filtro = signal('');
@@ -86,12 +87,23 @@ export class TiendaPage {
     if (!this.buscando() && this.texto()) this.buscar('');   // al cerrar se limpia
   }
 
-  // Micrófono: lo que se dice se escribe en el buscador y se busca
+  // Micrófono: «ir a la cesta», «mis pedidos»... cambian de pantalla; cualquier otra cosa se busca
   async buscarPorVoz(): Promise<void> {
     const texto = await this.voz.escuchar();
     if (!texto) return;
+    const orden = this.voz.orden(texto);
+    if (orden) {
+      this.avisoVoz(`Abriendo ${orden.texto}`);
+      this.router.navigate([orden.ruta], { queryParams: orden.query });
+      return;
+    }
     this.buscando.set(true);
     this.buscar(texto);
+  }
+
+  private async avisoVoz(mensaje: string): Promise<void> {
+    const t = await this.toast.create({ message: '🎤 ' + mensaje, duration: 1500, position: 'top', color: 'dark' });
+    await t.present();
   }
 
   buscar(texto: string | null | undefined): void {

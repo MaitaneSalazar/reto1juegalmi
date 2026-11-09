@@ -15,15 +15,15 @@ npx ng test                   # modo vigilancia: repite al guardar
 | `models/producto.model.spec.ts` | Etiquetas de stock («Quedan 2», «Última unidad/copia», «Agotado/Alquilado») plataformas de cada juego y su color (PlayStation azul, Xbox verde, Switch rojo) | 9 |
 | `services/sesion.service.spec.ts` | Foto de perfil: `POST /api/yo/foto` con el campo «imagen» (HTTP simulado) | 1 |
 | `components/precio/precio.component.spec.ts` | Precio con céntimos pequeños: 59,99 €, 35,00 €, punto de miles, sufijo "/ día" | 4 |
-| `services/voz.service.spec.ts` | Buscador por voz de la Tienda: texto a buscar, quitar «buscar» y signos, frase vacía, navegador sin voz | 5 |
+| `services/voz.service.spec.ts` | Voz de la Tienda: texto a buscar, órdenes («ir a la cesta», «mis pedidos», «quiero alquilar»), «buscar …» siempre busca, navegador sin voz | 9 |
 | `pipes/euros.pipe.spec.ts` | Formato en euros y valor vacío | 2 |
-| **Total** | | **39** |
+| **Total** | | **43** |
 
 Técnicas usadas:
 - **TestBed** de Angular para crear servicios y componentes como en la app.
 - **Dobles de prueba** (`vi.fn()`) para los avisos (`ToastController`): se comprueba que la app avisa sin mostrar nada en pantalla.
 - `localStorage.clear()` antes de cada prueba para que no dependan unas de otras.
 
-Resultado esperado: `Test Files 7 passed (7) · Tests 39 passed (39)`.
+Resultado esperado: `Test Files 7 passed (7) · Tests 43 passed (43)`.
 
 Pruebas manuales en dispositivo (no automatizables aquí): cámara, GPS, voz real y agitar el móvil → ver checklist de la defensa.

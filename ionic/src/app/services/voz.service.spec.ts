@@ -38,4 +38,23 @@ describe('VozService (buscador por voz de la Tienda)', () => {
     expect(toast.create).toHaveBeenCalled();
     expect(voz.escuchando()).toBe(false);
   });
+
+  it('«Ir a la cesta» abre la cesta', () => {
+    expect(voz.orden('Ir a la cesta')?.ruta).toBe('/cesta');
+  });
+
+  it('«Abre mis pedidos» y «mis alquileres» (con o sin tildes)', () => {
+    expect(voz.orden('Abre mis pedidos')?.ruta).toBe('/cuenta/pedidos');
+    expect(voz.orden('Mis alquileres')?.ruta).toBe('/cuenta/alquileres');
+    expect(voz.orden('¿Dónde estáis?')?.ruta).toBe('/nosotros');
+  });
+
+  it('«Quiero alquilar» pasa la Tienda a modo alquiler', () => {
+    expect(voz.orden('Quiero alquilar')).toMatchObject({ ruta: '/tienda', query: { modo: 'alquilar' } });
+  });
+
+  it('un nombre de producto o «buscar …» no es una orden: se busca', () => {
+    expect(voz.orden('Zelda')).toBeNull();
+    expect(voz.orden('Buscar cesta de regalo')).toBeNull();
+  });
 });

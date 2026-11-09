@@ -3,7 +3,25 @@ import { Capacitor } from '@capacitor/core';
 import { SpeechRecognition } from '@capacitor-community/speech-recognition';
 import { ToastController } from '@ionic/angular';
 
-// Buscador por voz de la Tienda: escucha una frase y devuelve el texto a buscar
+// Orden de voz que lleva a otra parte de la app
+export interface OrdenVoz { ruta: string; query?: Record<string, string>; texto: string; }
+
+// Palabras clave → pantalla (de la más concreta a la más general; sin tildes)
+const ORDENES: { claves: string[]; orden: OrdenVoz }[] = [
+  { claves: ['mis pedidos', 'pedidos'],                      orden: { ruta: '/cuenta/pedidos', texto: 'Mis pedidos' } },
+  { claves: ['mis alquileres', 'alquileres'],                orden: { ruta: '/cuenta/alquileres', texto: 'Mis alquileres' } },
+  { claves: ['mis reparaciones', 'reparaciones'],            orden: { ruta: '/taller', query: { vista: 'mis' }, texto: 'Mis reparaciones' } },
+  { claves: ['direcciones', 'direccion de envio'],           orden: { ruta: '/cuenta/direcciones', texto: 'Direcciones' } },
+  { claves: ['mis datos', 'datos personales', 'perfil'],     orden: { ruta: '/cuenta/datos-personales', texto: 'Datos personales' } },
+  { claves: ['cesta', 'carrito'],                            orden: { ruta: '/cesta', texto: 'Cesta' } },
+  { claves: ['taller', 'reparar', 'reparacion'],             orden: { ruta: '/taller', texto: 'Taller' } },
+  { claves: ['nosotros', 'donde estais', 'ubicacion', 'horario'], orden: { ruta: '/nosotros', texto: 'Sobre nosotros' } },
+  { claves: ['alquilar', 'modo alquiler'],                   orden: { ruta: '/tienda', query: { modo: 'alquilar' }, texto: 'Alquilar' } },
+  { claves: ['comprar', 'modo compra'],                      orden: { ruta: '/tienda', query: { modo: 'comprar' }, texto: 'Comprar' } },
+  { claves: ['inicio', 'portada'],                           orden: { ruta: '/inicio', texto: 'Inicio' } },
+];
+
+// Micrófono de la Tienda: busca productos o lleva a otra parte de la app («ir a la cesta»)
 @Injectable({ providedIn: 'root' })
 export class VozService {
   private toast = inject(ToastController);
@@ -33,6 +51,14 @@ export class VozService {
       .replace(/[¿?¡!.,]/g, '')                    // sin signos
       .replace(/^\s*(buscar|busca|busco)\s+/, '')  // sin la palabra "buscar" del principio
       .trim();
+  }
+
+  // «Ir a la cesta», «abre mis pedidos», «modo alquiler»... → orden; si no es una orden → null (se busca)
+  orden(frase: string): OrdenVoz | null {
+    if (/^\s*(buscar|busca|busco)\b/i.test(frase)) return null;            // «buscar …» siempre busca
+    const t = ' ' + frase.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')   // sin tildes
+      .replace(/[¿?¡!.,]/g, '').trim() + ' ';
+    return ORDENES.find(o => o.claves.some(c => t.includes(' ' + c + ' ')))?.orden ?? null;
   }
 
   // ----- Móvil (Android / iOS): plugin de Capacitor
