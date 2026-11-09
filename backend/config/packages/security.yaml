@@ -61,8 +61,6 @@ security:
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/gestion/acceso$, roles: PUBLIC_ACCESS }
         - { path: ^/gestion, roles: ROLE_TRABAJADOR }
-        - { path: ^/admin/login$, roles: PUBLIC_ACCESS }
-        - { path: ^/admin, roles: ROLE_TRABAJADOR }
 
 when@test:
     security:
