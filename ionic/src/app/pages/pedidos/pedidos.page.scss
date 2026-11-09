@@ -21,7 +21,32 @@
 .pie { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
 .minis { display: flex; align-items: flex-end; gap: 10px; }
 .minis app-miniatura-producto { --tam: 52px; --radio: 10px; height: 64px; }
-.mas { color: var(--jg-texto-sec); font-size: 13px; }
+.mini { position: relative; display: block; }
+.cantidad {
+  position: absolute; right: -6px; top: -6px; padding: 1px 6px; border-radius: 999px;
+  background: #1f2329; color: #ffffff; font-size: 11px;
+}
+.mas {
+  align-self: center; min-width: 36px; height: 36px; padding: 0 8px; border-radius: 10px;
+  display: grid; place-items: center; background: var(--jg-acento-suave); font-size: 14px; font-weight: 700;
+}
+.ver-mas {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 8px 14px;
+  border: 0; border-radius: 999px; background: var(--jg-acento-suave);
+  color: var(--ion-text-color); font: inherit; font-size: 14px; font-weight: 600; white-space: nowrap;
+}
+
+// Lista completa al pulsar «Ver más»
+.detalle {
+  list-style: none; margin: 16px 0 0; padding: 12px 0 0; border-top: 1px solid var(--jg-borde);
+  display: flex; flex-direction: column; gap: 12px;
+  li { display: flex; align-items: center; gap: 12px; }
+  app-miniatura-producto { --tam: 48px; --radio: 10px; }
+  .textos { flex-grow: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  strong { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  small { color: var(--jg-texto-sec); font-size: 13px; }
+  app-precio { font-size: 17px; }
+}
 
 // Cancelar: borde rojo suave, ancho completo
 .cancelar {

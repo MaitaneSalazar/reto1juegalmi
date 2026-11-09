@@ -18,8 +18,9 @@ export interface PedidoResumen {
 // Pedido completo (GET /api/pedidos/{id})
 export interface Pedido extends PedidoResumen {
   domicilio: Domicilio;
-  lineas: { id: number; producto: Producto; cantidad: number; precio_unitario: number; subtotal: number }[];
+  lineas: LineaPedido[];
 }
+export interface LineaPedido { id: number; producto: Producto; cantidad: number; precio_unitario: number; subtotal: number; }
 
 // Línea de la cesta (antes de confirmar el pedido; vive solo en la app)
 export interface LineaCesta {

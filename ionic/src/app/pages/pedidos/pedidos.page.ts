@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonSkeletonText,
+import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonSkeletonText, IonIcon,
          AlertController, ToastController } from '@ionic/angular';
 import { EstadoComponent } from '../../components/estado/estado.component';
 import { MiniaturaProductoComponent } from '../../components/miniatura-producto/miniatura-producto.component';
@@ -7,7 +7,12 @@ import { PrecioComponent } from '../../components/precio/precio.component';
 import { FechaCortaPipe } from '../../pipes/fecha-corta.pipe';
 import { PedidoService } from '../../services/pedido.service';
 import { SesionService } from '../../services/sesion.service';
-import { EstadoPedido, PedidoResumen } from '../../models/pedido.model';
+import { EstadoPedido, LineaPedido, PedidoResumen } from '../../models/pedido.model';
+import { NombreProductoPipe } from '../../pipes/nombre-producto.pipe';
+import { EurosPipe } from '../../pipes/euros.pipe';
+import { catchError, forkJoin, map, of } from 'rxjs';
+import { addIcons } from 'ionicons';
+import { chevronDown, chevronUp } from 'ionicons/icons';
 
 // Pasos de la barra del pedido en curso
 const PASOS: { estado: EstadoPedido; texto: string }[] = [
@@ -21,8 +26,8 @@ const PASOS: { estado: EstadoPedido; texto: string }[] = [
   selector: 'app-pedidos',
   templateUrl: './pedidos.page.html',
   styleUrls: ['../cuenta/subpagina.scss', './pedidos.page.scss'],
-  imports: [IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonSkeletonText,
-            EstadoComponent, MiniaturaProductoComponent, PrecioComponent, FechaCortaPipe],
+  imports: [IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonSkeletonText, IonIcon,
+            EstadoComponent, MiniaturaProductoComponent, NombreProductoPipe, EurosPipe, PrecioComponent, FechaCortaPipe],
 })
 export class PedidosPage {
   private servicio = inject(PedidoService);
@@ -32,8 +37,14 @@ export class PedidosPage {
 
   pedidos = signal<PedidoResumen[]>([]);     // GET /api/pedidos (el más reciente primero)
   cargando = signal(true);
+  lineas = signal<Record<number, LineaPedido[]>>({});   // artículos de cada pedido (GET /api/pedidos/{id})
+  abierto = signal<number | null>(null);                // pedido con «Ver más» desplegado
   error = signal(false);                     // sin conexión → Reintentar
   pasos = PASOS;
+
+  constructor() {
+    addIcons({ chevronDown, chevronUp });
+  }
 
   ionViewWillEnter(): void {
     this.cargar();
@@ -71,12 +82,29 @@ export class PedidosPage {
     await a.present();
   }
 
+  // Hasta 3 portadas en la tarjeta; el resto con «Ver más»
+  primeras(p: PedidoResumen): LineaPedido[] { return (this.lineas()[p.id] ?? []).slice(0, 3); }
+  restantes(p: PedidoResumen): number { return Math.max(0, (this.lineas()[p.id]?.length ?? 0) - 3); }
+
+  verMas(p: PedidoResumen): void {
+    this.abierto.update(id => id === p.id ? null : p.id);
+  }
+
   cargar(): void {
     this.error.set(false);
     this.servicio.listar().subscribe({
-      next: r => { this.pedidos.set(r.datos); this.cargando.set(false); },
+      next: r => { this.pedidos.set(r.datos); this.cargando.set(false); this.cargarLineas(r.datos); },
       error: () => { this.cargando.set(false); this.error.set(true); },
     });
+  }
+
+  // El listado solo trae el primer producto: se pide el detalle de cada pedido para ver todos
+  private cargarLineas(pedidos: PedidoResumen[]): void {
+    if (!pedidos.length) return;
+    forkJoin(pedidos.map(p => this.servicio.obtener(p.id).pipe(
+      map(d => [p.id, d.lineas] as const),
+      catchError(() => of([p.id, []] as const)),        // si falla uno, ese se queda con la portada del listado
+    ))).subscribe(res => this.lineas.set(Object.fromEntries(res)));
   }
 
   private async aviso(mensaje: string, color: string): Promise<void> {

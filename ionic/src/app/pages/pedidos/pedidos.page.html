@@ -33,12 +33,40 @@
           }
 
           <div class="pie">
+            <!-- Hasta 3 productos de izquierda a derecha -->
             <div class="minis">
-              <app-miniatura-producto [producto]="mini(p)"></app-miniatura-producto>
-              @if (p.unidades > 1) { <span class="mas">{{ p.unidades }} uds.</span> }
+              @for (l of primeras(p); track l.id) {
+                <span class="mini">
+                  <app-miniatura-producto [producto]="l.producto"></app-miniatura-producto>
+                  @if (l.cantidad > 1) { <b class="cantidad">×{{ l.cantidad }}</b> }
+                </span>
+              } @empty {
+                <app-miniatura-producto [producto]="mini(p)"></app-miniatura-producto>
+              }
+              @if (restantes(p) > 0) { <span class="mas">+{{ restantes(p) }}</span> }
             </div>
             <app-precio [valor]="p.total"></app-precio>
           </div>
+
+          @if (restantes(p) > 0) {
+            <button type="button" class="ver-mas pulsable" (click)="verMas(p)">
+              {{ abierto() === p.id ? 'Ver menos' : 'Ver más · ' + lineas()[p.id].length + ' artículos' }}
+              <ion-icon [name]="abierto() === p.id ? 'chevron-up' : 'chevron-down'"></ion-icon>
+            </button>
+          }
+
+          <!-- Todos los artículos del pedido -->
+          @if (abierto() === p.id) {
+            <ul class="detalle">
+              @for (l of lineas()[p.id]; track l.id) {
+                <li>
+                  <app-miniatura-producto [producto]="l.producto"></app-miniatura-producto>
+                  <span class="textos"><strong>{{ l.producto | nombreProducto }}</strong><small>{{ l.cantidad }} × {{ l.precio_unitario | euros }}</small></span>
+                  <app-precio [valor]="l.subtotal"></app-precio>
+                </li>
+              }
+            </ul>
+          }
 
           <!-- Solo en pedidos que no han salido (pendiente / pagado) -->
           @if (p.se_puede_cancelar) {
