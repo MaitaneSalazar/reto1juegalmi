@@ -3,6 +3,8 @@ package com.example.retoindividual_1.network;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.retoindividual_1.modelos.Cesta;
+
 public class SessionManager {
 
     private static final String PREFS = "juegalmi_sesion";
@@ -30,5 +32,7 @@ public class SessionManager {
     // Borra el token (cerrar sesión)
     public void cerrarSesion() {
         prefs.edit().clear().apply();
+        //LA CESTA ES DEL USUARIO QUE SALE, EL SIGUIENTE LA EMPIEZA VACIA
+        Cesta.vaciar();
     }
 }
