@@ -1,0 +1,77 @@
+{% extends 'gestion/base.html.twig' %}
+{% import 'gestion/_macros.html.twig' as m %}
+
+{% block titulo %}Buscar{% endblock %}
+
+{% block contenido %}
+    <div class="cabecera">
+        <h1 class="titulo">Buscar</h1>
+    </div>
+
+    <form class="tarjeta buscador-grande" method="get" action="{{ path('gestion_buscar') }}">
+        {{ m.icono('search') }}
+        <input type="search" name="q" value="{{ q }}" placeholder="Producto, cliente o número (#0021)" autofocus>
+        <button class="boton principal" type="submit">Buscar</button>
+    </form>
+
+    {% if q is empty %}
+        <p class="vacio">Escribe al menos 2 letras o un número.</p>
+    {% elseif total == 0 %}
+        <p class="vacio">No hay nada que coincida con «{{ q }}».</p>
+    {% else %}
+        <p class="dato-pequeno">{{ total }} resultado{{ total != 1 ? 's' }} para «{{ q }}»</p>
+
+        {% if r.productos is not empty %}
+            <section class="tarjeta resultados">
+                <h3 class="tarjeta-titulo">{{ m.icono('clipboard-check') }} Productos</h3>
+                {% for p in r.productos %}
+                    <a class="resultado{{ not p.activo ? ' inactivo' }}" href="{{ path('gestion_productos', {stock: p.id}) }}">
+                        {{ m.foto(p.imagen) }}
+                        <strong>{{ p.nombre }}</strong>
+                        <span class="gris">{{ p.stock }} en stock{{ not p.activo ? ' · desactivado' }}</span>
+                    </a>
+                {% endfor %}
+            </section>
+        {% endif %}
+
+        {% if r.reparaciones is not empty %}
+            <section class="tarjeta resultados">
+                <h3 class="tarjeta-titulo">{{ m.icono('wrench') }} Reparaciones</h3>
+                {% for x in r.reparaciones %}
+                    <a class="resultado" href="/gestion/reparaciones/{{ x.id }}">
+                        <span class="numero">#{{ '%04d'|format(x.id) }}</span>
+                        <strong>{{ x.modelo }}</strong>
+                        <span class="gris">{{ x.cliente ? x.cliente.nombre ~ ' ' ~ x.cliente.apellido1 }}</span>
+                    </a>
+                {% endfor %}
+            </section>
+        {% endif %}
+
+        {% if r.alquileres is not empty %}
+            <section class="tarjeta resultados">
+                <h3 class="tarjeta-titulo">{{ m.icono('clock') }} Alquileres</h3>
+                {% for x in r.alquileres %}
+                    {% set ver = x.estado == 'devuelto' ? 'devueltos' : (x.estado == 'retrasado' ? 'vencidos' : 'activos') %}
+                    <a class="resultado" href="{{ path('gestion_alquileres', {ver: ver, q: '%04d'|format(x.id)}) }}">
+                        <span class="numero">#{{ '%04d'|format(x.id) }}</span>
+                        <strong>{{ x.cliente ? x.cliente.nombre ~ ' ' ~ x.cliente.apellido1 }}</strong>
+                        <span class="etiqueta {{ x.estado == 'retrasado' ? 'roja' : 'gris' }}">{{ x.estado == 'retrasado' ? 'Vencido' : x.estado|capitalize }}</span>
+                    </a>
+                {% endfor %}
+            </section>
+        {% endif %}
+
+        {% if r.pedidos is not empty %}
+            <section class="tarjeta resultados">
+                <h3 class="tarjeta-titulo">{{ m.icono('receipt-text') }} Pedidos</h3>
+                {% for x in r.pedidos %}
+                    <a class="resultado" href="/gestion/pedidos?id={{ x.id }}">
+                        <span class="numero">#{{ x.id }}</span>
+                        <strong>{{ x.cliente ? x.cliente.nombre ~ ' ' ~ x.cliente.apellido1 }}</strong>
+                        <span class="etiqueta gris">{{ x.estado|capitalize }}</span>
+                    </a>
+                {% endfor %}
+            </section>
+        {% endif %}
+    {% endif %}
+{% endblock %}

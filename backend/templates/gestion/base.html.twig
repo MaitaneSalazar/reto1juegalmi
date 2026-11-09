@@ -19,7 +19,7 @@
 
             <form class="menu-buscar" action="/gestion/buscar" method="get">
                 {{ m.icono('search') }}
-                <input type="search" name="q" placeholder="Buscar" value="{{ app.request.query.get('q') }}">
+                <input type="search" name="q" placeholder="Buscar" value="{{ ruta starts with '/gestion/buscar' ? app.request.query.get('q') }}">
             </form>
 
             <nav>
