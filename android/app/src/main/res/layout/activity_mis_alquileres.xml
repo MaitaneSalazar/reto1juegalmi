@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MIS ALQUILERES (16 del mockup). De momento vacía: solo botón de volver y título -->
+<!-- MIS ALQUILERES (16 DEL MOCKUP): LOS QUE ESTAN SIN DEVOLVER ARRIBA Y LOS DEVUELTOS DEBAJO -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -9,22 +9,95 @@
     android:orientation="vertical"
     tools:context=".MisAlquileresActivity">
 
-    <!-- El padding de los lados va aquí dentro: el de "main" lo pone el código para no quedar debajo de las barras del sistema -->
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp">
+        android:layout_height="match_parent">
 
-        <include layout="@layout/barra_volver" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="24dp">
 
-        <TextView
-            style="@style/TituloPagina"
-            android:text="@string/menu_mis_alquileres" />
+            <include layout="@layout/barra_volver" />
 
-        <TextView
-            style="@style/TextoPendiente"
-            android:text="@string/pagina_en_construccion" />
-    </LinearLayout>
+            <TextView
+                style="@style/TituloPagina"
+                android:layout_marginBottom="20dp"
+                android:text="@string/menu_mis_alquileres" />
+
+            <ProgressBar
+                android:id="@+id/pbAlquileres"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="32dp"
+                android:indeterminateTint="@color/color_marca" />
+
+            <!-- AVISO CUANDO NO HAY ALQUILERES O NO HAY CONEXION -->
+            <LinearLayout
+                android:id="@+id/llAlquileresAviso"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvAlquileresAvisoTitulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_texto"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvAlquileresAvisoTexto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:textColor="@color/color_texto_suave"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAlquileresReintentar"
+                    style="@style/BotonPrincipal"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:paddingStart="32dp"
+                    android:paddingEnd="32dp"
+                    android:text="@string/alq_reintentar" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvAlquileresActivos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_alquiler_activo" />
+
+            <TextView
+                android:id="@+id/tvAlquileresDevueltos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="12dp"
+                android:text="@string/alq_devueltos"
+                android:textColor="@color/color_texto"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvAlquileresDevueltos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_alquiler_devuelto" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

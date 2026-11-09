@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alq_devueltos">Devueltos</string>
+    <string name="alq_devolver">Devolver</string>
+    <string name="alq_devolver_antes">Devolver antes del %1$s</string>
+    <string name="alq_devuelto_el">Devuelto el %1$s</string>
+    <string name="alq_vacio_titulo">Sin alquileres</string>
+    <string name="alq_vacio_texto">Todavía no has alquilado ningún juego. Puedes hacerlo desde la tienda.</string>
+    <string name="alq_error_titulo">Algo ha fallado</string>
+    <string name="alq_reintentar">Reintentar</string>
+    <string name="alq_devolver_titulo">¿Devolver el juego?</string>
+    <string name="alq_devolver_texto">Se marcará %1$s como devuelto.</string>
+    <string name="alq_devolver_si">Devolver</string>
+    <string name="alq_cancelar">Cancelar</string>
+    <string name="alq_devuelto_ok">Juego devuelto</string>
+    <plurals name="alq_dias_quedan">
+        <item quantity="one">día</item>
+        <item quantity="other">días</item>
+    </plurals>
+    <plurals name="alq_dias_retraso">
+        <item quantity="one">día de retraso</item>
+        <item quantity="other">días de retraso</item>
+    </plurals>
+</resources>
