@@ -48,7 +48,6 @@ class Reparacion
     #[Assert\PositiveOrZero(message: 'El presupuesto no puede ser negativo')]
     private ?string $presupuesto = null;
 
-
     /** Notas del taller: solo las ve el equipo, nunca el cliente */
     #[ORM\Column(name: 'notas_internas', type: 'text', nullable: true)]
     private ?string $notasInternas = null;
@@ -79,12 +78,6 @@ class Reparacion
     /** @var Collection<int, TrabajadorReparacion> */
     #[ORM\OneToMany(targetEntity: TrabajadorReparacion::class, mappedBy: 'reparacion', cascade: ['persist'], orphanRemoval: true)]
     private Collection $asignaciones;
-
-
-    /* Solo para el formulario «Gestionar» de la web: no tienen columna en la base de datos */
-    private ?string $estadoNuevo = null;
-    private ?string $notaEstado = null;
-    private ?Trabajador $trabajadorNuevo = null;
 
     public function __construct()
     {
@@ -195,19 +188,6 @@ class Reparacion
 
     public function getAvisadoEn(): ?\DateTimeImmutable { return $this->avisadoEn; }
     public function setAvisadoEn(?\DateTimeImmutable $fecha): static { $this->avisadoEn = $fecha; return $this; }
-
-    // ---------- Solo para la web de trabajadores ----------
-
-    /** En el formulario sale marcado el estado actual */
-    public function getEstadoNuevo(): ?string { return $this->estadoNuevo ?? $this->getEstadoActual(); }
-    public function setEstadoNuevo(?string $estado): static { $this->estadoNuevo = $estado; return $this; }
-
-    public function getNotaEstado(): ?string { return $this->notaEstado; }
-    public function setNotaEstado(?string $nota): static { $this->notaEstado = $nota; return $this; }
-
-    /** En el formulario sale marcado el trabajador actual */
-    public function getTrabajadorNuevo(): ?Trabajador { return $this->trabajadorNuevo ?? $this->getTrabajadorActual(); }
-    public function setTrabajadorNuevo(?Trabajador $trabajador): static { $this->trabajadorNuevo = $trabajador; return $this; }
 
     public function getNombreTrabajadorActual(): string
     {

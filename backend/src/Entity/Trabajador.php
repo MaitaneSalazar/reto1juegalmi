@@ -22,17 +22,6 @@ class Trabajador extends Usuario
     #[Assert\NotNull(message: 'La fecha de contratación es obligatoria')]
     private ?\DateTimeImmutable $fechaContratacion = null;
 
-
-    /* Solo para el formulario de la web: no tienen columna en la base de datos */
-    private ?string $contrasenaNueva = null;
-    private ?Departamento $departamentoNuevo = null;
-
-    public function getContrasenaNueva(): ?string { return $this->contrasenaNueva; }
-    public function setContrasenaNueva(?string $contrasena): static { $this->contrasenaNueva = $contrasena; return $this; }
-
-    public function getDepartamentoNuevo(): ?Departamento { return $this->departamentoNuevo; }
-    public function setDepartamentoNuevo(?Departamento $departamento): static { $this->departamentoNuevo = $departamento; return $this; }
-
     public function getCargo(): ?string { return $this->cargo; }
     public function setCargo(string $cargo): static { $this->cargo = $cargo; return $this; }
 
