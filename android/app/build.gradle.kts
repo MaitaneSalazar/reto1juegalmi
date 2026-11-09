@@ -25,7 +25,7 @@ android {
     buildTypes {
         debug {
             // API local en la VM de Ubuntu (cambia la IP por la de tu VM)
-            buildConfigField("String", "API_URL", "\"http://192.168.2.74:8000/api/\"")
+            buildConfigField("String", "API_URL", "\"https://symfony.44-219-6-54.sslip.io/api/\"")
         }
         release {
             optimization {
