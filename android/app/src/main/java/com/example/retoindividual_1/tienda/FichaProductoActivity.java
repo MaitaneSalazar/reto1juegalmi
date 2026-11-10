@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import com.airbnb.lottie.LottieAnimationView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +40,7 @@ public class FichaProductoActivity extends PaginaMenuActivity {
 
     private ImageView ivFoto;
     private LinearLayout llEtiquetas;
-    private ProgressBar pbFicha;
+    private LottieAnimationView pbFicha;
     private TextView tvError;
     private LinearLayout llDatos;
     private TextView tvNombre;

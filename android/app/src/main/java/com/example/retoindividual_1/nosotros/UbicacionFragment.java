@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import com.airbnb.lottie.LottieAnimationView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -50,7 +50,7 @@ public class UbicacionFragment extends Fragment {
             return getBaseUrl() + MapTileIndex.getZoom(indice) + "/" + MapTileIndex.getY(indice) + "/" + MapTileIndex.getX(indice);
         }
     };
-    private ProgressBar pbUbicacion;
+    private LottieAnimationView pbUbicacion;
     private TextView tvError;
     private LinearLayout llDatos;
     private TextView tvLinea1;

@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+import com.airbnb.lottie.LottieAnimationView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,7 +26,7 @@ public class GaleriaFragment extends Fragment {
     private Repositorio datos;
 
     private RecyclerView rvGaleria;
-    private ProgressBar pbGaleria;
+    private LottieAnimationView pbGaleria;
     private TextView tvAviso;
 
     @Override

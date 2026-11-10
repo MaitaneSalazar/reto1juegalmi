@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import com.airbnb.lottie.LottieAnimationView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -23,7 +23,7 @@ public class DatosPersonalesActivity extends PaginaMenuActivity {
     private Repositorio datos;
 
     private View svDatos;
-    private ProgressBar pbCargando;
+    private LottieAnimationView pbCargando;
     private LinearLayout llAviso;
     private TextView tvAvisoTexto;
     private TextView tvIniciales;

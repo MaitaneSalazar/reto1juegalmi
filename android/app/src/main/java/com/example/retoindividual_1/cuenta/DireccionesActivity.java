@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import com.airbnb.lottie.LottieAnimationView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +36,7 @@ public class DireccionesActivity extends PaginaMenuActivity {
     private final List<Domicilio> domicilios = new ArrayList<>();
 
     private RecyclerView rvDomicilios;
-    private ProgressBar pbCargando;
+    private LottieAnimationView pbCargando;
     private LinearLayout llAviso;
     private TextView tvAvisoTitulo;
     private TextView tvAvisoTexto;

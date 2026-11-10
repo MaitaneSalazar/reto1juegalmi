@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import com.airbnb.lottie.LottieAnimationView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,7 +31,7 @@ public class MisReparacionesFragment extends Fragment {
     private Repositorio datos;
 
     private RecyclerView rvReparaciones;
-    private ProgressBar pbCargando;
+    private LottieAnimationView pbCargando;
     private LinearLayout llAviso;
     private TextView tvAvisoTitulo;
     private TextView tvAvisoTexto;

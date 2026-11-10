@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import com.airbnb.lottie.LottieAnimationView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +29,7 @@ import java.util.List;
 //MIS ALQUILERES (16 DEL MOCKUP): GET /alquileres Y PUT /alquileres/{id}/devolver
 public class MisAlquileresActivity extends PaginaMenuActivity {
 
-    private ProgressBar pbAlquileres;
+    private LottieAnimationView pbAlquileres;
     private LinearLayout llAviso;
     private TextView tvAvisoTitulo;
     private TextView tvAvisoTexto;

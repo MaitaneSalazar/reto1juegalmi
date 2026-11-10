@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import com.airbnb.lottie.LottieAnimationView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +34,7 @@ public class MisPedidosActivity extends PaginaMenuActivity {
     //LOS ESTADOS DE LA API EN ORDEN, IGUAL QUE ped_pasos
     private static final List<String> ESTADOS = Arrays.asList("pendiente", "pagado", "enviado", "entregado");
 
-    private ProgressBar pbPedidos;
+    private LottieAnimationView pbPedidos;
     private LinearLayout llAviso;
     private TextView tvAvisoTitulo;
     private TextView tvAvisoTexto;

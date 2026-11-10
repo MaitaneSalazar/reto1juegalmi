@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import com.airbnb.lottie.LottieAnimationView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +50,7 @@ public class EditarDatosActivity extends PaginaMenuActivity {
     private static final String ESTADO_URI_CAMARA = "uri_camara";
 
     private View svEditar;
-    private ProgressBar pbCargando;
+    private LottieAnimationView pbCargando;
     private LinearLayout llAviso;
     private TextView tvAvisoTexto;
     private TextView tvIniciales;

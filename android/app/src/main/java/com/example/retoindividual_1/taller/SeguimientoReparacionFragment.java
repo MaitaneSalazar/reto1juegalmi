@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import com.airbnb.lottie.LottieAnimationView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +37,7 @@ public class SeguimientoReparacionFragment extends Fragment {
 
     private View svContenido;
     private SwipeRefreshLayout srlSeguimiento;
-    private ProgressBar pbCargando;
+    private LottieAnimationView pbCargando;
     private LinearLayout llAviso;
     private TextView tvAvisoTexto;
 

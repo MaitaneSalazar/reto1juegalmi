@@ -50,6 +50,7 @@ dependencies {
     implementation("org.osmdroid:osmdroid-android:6.1.20")
     implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    implementation("com.airbnb.android:lottie:6.7.1")
     implementation(libs.glide) //PARA CARGAR LAS IMAGENES POR URL
     implementation(libs.retrofit) //LIBRERIA DE RED DE TODA LA APP
     implementation(libs.retrofit.scalars)
