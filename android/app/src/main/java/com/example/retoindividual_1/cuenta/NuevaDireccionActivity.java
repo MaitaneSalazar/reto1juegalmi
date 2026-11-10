@@ -1,6 +1,7 @@
 package com.example.retoindividual_1.cuenta;
 
 import com.example.retoindividual_1.R;
+import com.example.retoindividual_1.network.SessionManager;
 import com.example.retoindividual_1.principal.PaginaMenuActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -142,6 +143,11 @@ public class NuevaDireccionActivity extends PaginaMenuActivity {
         Repositorio.Resultado<JSONObject> alGuardar = new Repositorio.Resultado<JSONObject>() {
             @Override
             public void bien(JSONObject respuesta) {
+                //AL EDITAR, LA API DA OTRO id AL DOMICILIO: SI ERA EL ELEGIDO, SE APUNTA EL NUEVO
+                SessionManager sesion = new SessionManager(NuevaDireccionActivity.this);
+                if (esEdicion() && sesion.getDomicilio() == idDomicilio) {
+                    sesion.guardarDomicilio(respuesta.optInt("id"));
+                }
                 Toast.makeText(NuevaDireccionActivity.this, R.string.dir_guardada, Toast.LENGTH_SHORT).show();
                 finish();
             }

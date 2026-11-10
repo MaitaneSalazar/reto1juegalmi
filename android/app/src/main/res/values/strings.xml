@@ -51,7 +51,7 @@
     <string name="menu_cerrar_sesion">Cerrar sesión</string>
 
     <string name="volver">Volver</string>
-    <string name="direcciones_subtitulo">Donde te enviamos los pedidos.</string>
+    <string name="direcciones_subtitulo">Toca una para enviar ahí tus pedidos.</string>
     <string name="pagina_en_construccion">Esta página está en construcción.</string>
 
     <!-- Páginas que faltaban -->

@@ -2,7 +2,9 @@ package com.example.retoindividual_1.cesta;
 
 import com.example.retoindividual_1.R;
 import com.example.retoindividual_1.alquileres.MisAlquileresActivity;
+import com.example.retoindividual_1.cuenta.DireccionesActivity;
 import com.example.retoindividual_1.cuenta.NuevaDireccionActivity;
+import com.example.retoindividual_1.network.SessionManager;
 import com.example.retoindividual_1.pedidos.MisPedidosActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -125,14 +127,15 @@ public class CestaFragment extends Fragment {
             public void bien(List<Domicilio> lista) {
                 domicilios.clear();
                 domicilios.addAll(lista);
-                //SI LA QUE HABIA ELEGIDO YA NO ESTA (SE HA EDITADO O BORRADO) COGEMOS LA PRIMERA
-                Domicilio anterior = elegido;
+                //LA ELEGIDA ES LA QUE SE TOCO EN DIRECCIONES. SI NO HAY O YA NO EXISTE, LA PRIMERA
+                SessionManager sesion = new SessionManager(requireContext());
                 elegido = domicilios.isEmpty() ? null : domicilios.get(0);
                 for (Domicilio domicilio : domicilios) {
-                    if (anterior != null && domicilio.getId() == anterior.getId()) {
+                    if (domicilio.getId() == sesion.getDomicilio()) {
                         elegido = domicilio;
                     }
                 }
+                sesion.guardarDomicilio(elegido == null ? -1 : elegido.getId());
                 pintarDireccion();
             }
 
@@ -153,26 +156,13 @@ public class CestaFragment extends Fragment {
         }
     }
 
-    //SIN DIRECCIONES SE ABRE LA PANTALLA DE AÑADIR, CON DIRECCIONES SE ELIGE UNA EN UN DIALOGO
+    //LA DIRECCION SE ELIGE EN DIRECCIONES. AL VOLVER, onResume RECARGA Y PINTA LA ELEGIDA
     private void cambiarDireccion() {
         if (domicilios.isEmpty()) {
             startActivity(NuevaDireccionActivity.crearIntent(requireContext(), null));
             return;
         }
-        String[] textos = new String[domicilios.size()];
-        for (int i = 0; i < domicilios.size(); i++) {
-            textos[i] = domicilios.get(i).getLinea1() + " · " + domicilios.get(i).getCiudad();
-        }
-        new MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.cesta_elegir_direccion)
-                .setItems(textos, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogo, int posicion) {
-                        elegido = domicilios.get(posicion);
-                        pintarDireccion();
-                    }
-                })
-                .show();
+        startActivity(DireccionesActivity.elegirDesdeCesta(requireContext()));
     }
 
     //PRIMERO EL PEDIDO CON LO QUE SE COMPRA Y LUEGO LOS ALQUILERES. LO QUE SALE BIEN SE QUITA DE LA CESTA

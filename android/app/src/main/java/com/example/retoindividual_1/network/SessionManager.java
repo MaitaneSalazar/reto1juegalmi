@@ -9,6 +9,7 @@ public class SessionManager {
 
     private static final String PREFS = "juegalmi_sesion";
     private static final String CLAVE_TOKEN = "token";
+    private static final String CLAVE_DOMICILIO = "domicilio_elegido";
     private final SharedPreferences prefs;
 
     public SessionManager(Context context) {
@@ -27,6 +28,15 @@ public class SessionManager {
 
     public boolean haySesion() {
         return getToken() != null;
+    }
+
+    //LA DIRECCION ELEGIDA PARA LOS PEDIDOS (-1 = NINGUNA)
+    public void guardarDomicilio(int id) {
+        prefs.edit().putInt(CLAVE_DOMICILIO, id).apply();
+    }
+
+    public int getDomicilio() {
+        return prefs.getInt(CLAVE_DOMICILIO, -1);
     }
 
     // Borra el token (cerrar sesión)

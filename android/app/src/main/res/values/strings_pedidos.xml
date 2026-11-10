@@ -36,7 +36,6 @@
     <string name="cesta_cambiar">Cambiar</string>
     <string name="cesta_anadir_direccion">Añade una dirección de envío</string>
     <string name="cesta_anadir">Añadir</string>
-    <string name="cesta_elegir_direccion">¿A dónde lo enviamos?</string>
     <string name="cesta_vacia_titulo">Tu cesta está vacía</string>
     <string name="cesta_vacia_texto">Añade productos desde la tienda y aparecerán aquí.</string>
     <string name="cesta_sin_stock">No quedan más unidades</string>
