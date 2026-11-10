@@ -24,15 +24,15 @@ android {
 
     buildTypes {
         debug {
-            // API local en la VM de Ubuntu (cambia la IP por la de tu VM)
+            //API EN AWS
             buildConfigField("String", "API_URL", "\"https://symfony.44-219-6-54.sslip.io/api/\"")
         }
         release {
             optimization {
                 enable = false
             }
-            // API en AWS (se cambiará cuando tengáis el dominio)
-            buildConfigField("String", "API_URL", "\"https://api.vuestrodominio.com/api/\"")
+            //API EN AWS
+            buildConfigField("String", "API_URL", "\"https://symfony.44-219-6-54.sslip.io/api/\"")
         }
     }
     compileOptions {
