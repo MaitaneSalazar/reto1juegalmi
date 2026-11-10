@@ -90,10 +90,10 @@ class TrabajadoresController extends AbstractController
                 $errores['fecha_contratacion'] = 'Elige la fecha de contratación.';
             }
             $contrasena = (string) ($v['contrasena'] ?? '');
-            if ($esNuevo && mb_strlen($contrasena) < 6) {
-                $errores['contrasena'] = 'La contraseña tiene que tener al menos 6 caracteres.';
-            } elseif (!$esNuevo && $contrasena !== '' && mb_strlen($contrasena) < 6) {
-                $errores['contrasena'] = 'La contraseña tiene que tener al menos 6 caracteres.';
+            if ($esNuevo && !\App\Service\ReglaContrasena::valida($contrasena)) {
+                $errores['contrasena'] = \App\Service\ReglaContrasena::MENSAJE;
+            } elseif (!$esNuevo && $contrasena !== '' && !\App\Service\ReglaContrasena::valida($contrasena)) {
+                $errores['contrasena'] = \App\Service\ReglaContrasena::MENSAJE;
             }
             if (!$esNuevo && $this->esYo($trabajador) && (!$v['activo'] || !$v['es_admin'])) {
                 $errores['es_admin'] = 'No puedes desactivarte ni quitarte el permiso de admin a ti mismo.';

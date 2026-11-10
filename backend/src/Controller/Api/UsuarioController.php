@@ -78,6 +78,7 @@ class UsuarioController extends AbstractController
 
             $errores = $validator->validate((string) $datos['password_nueva'], [
                 new Assert\Length(min: 6, minMessage: 'La contraseña tiene que tener al menos 6 caracteres'),
+                new Assert\Regex(pattern: \App\Service\ReglaContrasena::PATRON, message: 'La contraseña tiene que tener al menos una mayúscula y una minúscula'),
             ]);
             if (count($errores) > 0) {
                 $campos['password_nueva'] = $errores[0]->getMessage();

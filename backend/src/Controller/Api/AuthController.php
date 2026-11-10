@@ -51,6 +51,7 @@ class AuthController extends AbstractController
         $erroresPassword = $validator->validate($password, [
             new Assert\NotBlank(message: 'La contraseña es obligatoria'),
             new Assert\Length(min: 6, minMessage: 'La contraseña tiene que tener al menos 6 caracteres'),
+            new Assert\Regex(pattern: \App\Service\ReglaContrasena::PATRON, message: 'La contraseña tiene que tener al menos una mayúscula y una minúscula'),
         ]);
         if (count($erroresPassword) > 0) {
             $campos['password'] = $erroresPassword[0]->getMessage();

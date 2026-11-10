@@ -71,8 +71,8 @@ class AjustesController extends AbstractController
             $errores['_'] = 'El formulario ha caducado. Vuelve a intentarlo.';
         } elseif (!$hasher->isPasswordValid($yo, $actual)) {
             $errores['actual'] = 'La contraseña actual no es correcta.';
-        } elseif (mb_strlen($nueva) < 6) {
-            $errores['nueva'] = 'La nueva tiene que tener al menos 6 caracteres.';
+        } elseif (!\App\Service\ReglaContrasena::valida($nueva)) {
+            $errores['nueva'] = \App\Service\ReglaContrasena::MENSAJE;
         } elseif ($nueva !== $repetida) {
             $errores['repetida'] = 'Las dos contraseñas nuevas no coinciden.';
         } elseif ($nueva === $actual) {

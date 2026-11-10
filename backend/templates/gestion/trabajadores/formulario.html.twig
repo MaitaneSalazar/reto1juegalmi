@@ -62,7 +62,7 @@
                     <input type="password" name="contrasena" autocomplete="new-password">
                     {{ m.error(errores, 'contrasena') }}
                 </label>
-                <p class="dato-pequeno">{{ es_nuevo ? 'Mínimo 6 caracteres. Se guarda con hash: nadie puede verla.' : 'Déjala vacía para no cambiarla.' }}</p>
+                <p class="dato-pequeno">{{ es_nuevo ? 'Mínimo 6 caracteres, con mayúscula y minúscula. Se guarda con hash: nadie puede verla.' : 'Déjala vacía para no cambiarla.' }}</p>
                 <p class="dato-pequeno">Entrará en la web con su email.</p>
             </aside>
         </div>
