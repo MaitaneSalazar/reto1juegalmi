@@ -1,5 +1,6 @@
 package com.example.retoindividual_1.cesta;
 
+import com.example.retoindividual_1.utilidades.Exito;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -259,8 +260,14 @@ public class CestaFragment extends Fragment {
     private void terminar() {
         btnConfirmar.setEnabled(true);
         pintarCesta();
-        Toast.makeText(getContext(), huboPedido ? R.string.cesta_pedido_ok : R.string.cesta_alquiler_ok, Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(requireContext(), huboPedido ? MisPedidosActivity.class : MisAlquileresActivity.class));
+        boolean pedido = huboPedido;
+        String texto = getString(pedido ? R.string.cesta_pedido_ok : R.string.cesta_alquiler_ok);
+        //CUANDO TERMINA LA ANIMACION SE ABRE LA PANTALLA CORRESPONDIENTE
+        Exito.mostrar(requireActivity(), texto, () -> {
+            if (isAdded()) {
+                startActivity(new Intent(requireContext(), pedido ? MisPedidosActivity.class : MisAlquileresActivity.class));
+            }
+        });
     }
 
     //SI FALLA UN ENVIO (POR EJEMPLO 409 SIN STOCK) SE PARA Y LA CESTA SE QUEDA CON LO QUE FALTA

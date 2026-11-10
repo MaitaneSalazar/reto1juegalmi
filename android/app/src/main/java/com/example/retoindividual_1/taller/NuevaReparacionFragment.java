@@ -1,5 +1,6 @@
 package com.example.retoindividual_1.taller;
 
+import com.example.retoindividual_1.utilidades.Exito;
 import com.example.retoindividual_1.R;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -16,7 +17,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
@@ -425,20 +425,20 @@ public class NuevaReparacionFragment extends Fragment {
     }
 
     private void terminar(int fotosFallidas) {
-        if (fotosFallidas == 0) {
-            Toast.makeText(requireContext(), R.string.reparacion_enviada, Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(requireContext(),
-                    getString(R.string.reparacion_enviada_fotos_fallidas, fotosFallidas), Toast.LENGTH_LONG).show();
-        }
+        String texto = fotosFallidas == 0
+                ? getString(R.string.reparacion_enviada)
+                : getString(R.string.reparacion_enviada_fotos_fallidas, fotosFallidas);
         for (File foto : fotos) {
             foto.delete();
         }
         fotos.clear();
 
-        if (getParentFragment() instanceof TallerFragment) {
-            ((TallerFragment) getParentFragment()).mostrar(true);
-        }
+        //CUANDO TERMINA LA ANIMACION SE PASA A "MIS REPARACIONES"
+        Exito.mostrar(requireActivity(), texto, () -> {
+            if (isAdded() && getParentFragment() instanceof TallerFragment) {
+                ((TallerFragment) getParentFragment()).mostrar(true);
+            }
+        });
     }
 
     private void bloquearBoton(boolean enviando) {

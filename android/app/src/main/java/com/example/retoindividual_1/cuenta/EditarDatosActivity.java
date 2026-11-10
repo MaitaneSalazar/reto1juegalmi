@@ -1,5 +1,6 @@
 package com.example.retoindividual_1.cuenta;
 
+import com.example.retoindividual_1.utilidades.Exito;
 import com.example.retoindividual_1.R;
 import com.example.retoindividual_1.principal.PaginaMenuActivity;
 import android.content.ActivityNotFoundException;
@@ -411,8 +412,8 @@ public class EditarDatosActivity extends PaginaMenuActivity {
             fotoNueva.delete();
             fotoNueva = null;
         }
-        Toast.makeText(this, R.string.editar_guardado, Toast.LENGTH_SHORT).show();
-        finish();
+        //CUANDO TERMINA LA ANIMACION SE CIERRA LA PANTALLA
+        Exito.mostrar(this, getString(R.string.editar_guardado), this::finish);
     }
 
     private void marcarError(EditText campo, String mensaje) {

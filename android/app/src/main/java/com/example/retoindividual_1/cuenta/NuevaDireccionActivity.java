@@ -1,5 +1,6 @@
 package com.example.retoindividual_1.cuenta;
 
+import com.example.retoindividual_1.utilidades.Exito;
 import com.example.retoindividual_1.R;
 import com.example.retoindividual_1.network.SessionManager;
 import com.example.retoindividual_1.principal.PaginaMenuActivity;
@@ -148,8 +149,8 @@ public class NuevaDireccionActivity extends PaginaMenuActivity {
                 if (esEdicion() && sesion.getDomicilio() == idDomicilio) {
                     sesion.guardarDomicilio(respuesta.optInt("id"));
                 }
-                Toast.makeText(NuevaDireccionActivity.this, R.string.dir_guardada, Toast.LENGTH_SHORT).show();
-                finish();
+                Exito.mostrar(NuevaDireccionActivity.this, getString(R.string.dir_guardada),
+                        NuevaDireccionActivity.this::finish);
             }
 
             @Override
