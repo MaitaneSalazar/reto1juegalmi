@@ -1,27 +1,32 @@
-// Barra de pasos turquesa
+// Barra de 3 partes (como Android)
 .pasos {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 26px;
-  span { height: 6px; border-radius: 3px; background: var(--jg-segmento); transition: background .3s; }
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 10px 0 26px;
+  span { height: 4px; border-radius: 2px; background: var(--jg-segmento); transition: background .3s; }
   .hecho { background: var(--jg-acento); }
 }
 
-// Rejilla de dispositivos 4×2
-.tipos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+// Dispositivos 4×2: 76px de alto, gris sin elegir y turquesa el elegido
+.tipos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
 .tipo {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
-  aspect-ratio: 1; border: 0; border-radius: 20px;
-  background: var(--jg-tarjeta); color: var(--ion-text-color); font: inherit;
-  ion-icon { font-size: 28px; }
-  span { font-size: 12px; }
-  &.activo { background: var(--jg-acento); color: #1f2329; }
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  height: 76px; border: 0; border-radius: 18px;
+  background: var(--jg-tarjeta); color: var(--jg-texto-sec); font: inherit;
+  ion-icon { font-size: 24px; }
+  span { font-size: 12px; font-weight: 500; }
+  &.activo { background: #78cdd0; color: #162525; }
 }
 
-.etiqueta { display: block; margin: 26px 0 10px; font-size: 16px; font-weight: 600; }
+// Etiquetas (estilo Etiqueta de Android)
+.etiqueta { display: block; margin: 20px 0 6px; font-size: 13px; font-weight: 500; color: var(--jg-texto-sec); }
+.etiqueta small { margin-left: 6px; font-size: 13px; font-weight: 400; color: var(--jg-texto-tenue, #9aa0a6); }
+// Chips de componente (ChipComponente en Android)
+ion-chip.componente { --background: #ffffff; --color: var(--jg-texto-sec); height: 36px; margin: 0 8px 8px 0; padding: 0 14px; font-size: 13px; border-radius: 999px; }
+ion-chip.componente.activo { --background: #1f2329; --color: #ffffff; }
 ion-textarea { min-height: 130px; }
 
 // Fotos de la cámara
 .fotos { display: flex; gap: 10px; flex-wrap: wrap; }
-.foto, .hacer-foto { width: 96px; height: 96px; border-radius: 18px; }
+.foto, .hacer-foto { width: 80px; height: 80px; border-radius: 18px; }
 .foto {
   position: relative; overflow: hidden;
   img { width: 100%; height: 100%; object-fit: cover; }
@@ -31,10 +36,10 @@ ion-textarea { min-height: 130px; }
   }
 }
 .hacer-foto {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
-  border: 2px dashed var(--jg-acento); background: var(--jg-acento-suave);
-  color: var(--ion-text-color); font: inherit; font-size: 13px;
-  ion-icon { font-size: 26px; }
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  border: 1.5px dashed rgba(24, 26, 32, 0.16); background: transparent;
+  color: var(--jg-texto-sec); font: inherit; font-size: 12px;
+  ion-icon { font-size: 24px; }
 }
 .nota { margin: 12px 0 0; color: var(--jg-texto-sec); font-size: 14px; }
 
@@ -43,7 +48,7 @@ ion-textarea { min-height: 130px; }
   margin: 24px 0 0; padding: 12px 16px; border-radius: 14px;
   background: #f4e4e9; color: #a72144; font-size: 14px;
 }
-.continuar { margin-top: 18px; }
+.continuar { min-height: 48px; margin-top: 24px; }
 
 // Mis reparaciones
 .reparacion {
@@ -91,37 +96,3 @@ ion-list.lista ion-card { margin: 0 0 14px; }
   .precio { font-size: 15px; font-weight: 700; white-space: nowrap; }
 }
 
-// ===== Nueva reparación como Android (fragment_nueva_reparacion.xml) =====
-// Barra de 3 partes
-.pasos {
-  gap: 6px;
-  span { height: 4px; border-radius: 2px; }
-}
-// Botones de dispositivo: 76px de alto, gris sin elegir y turquesa el elegido
-.tipos { gap: 8px; }
-.tipo {
-  aspect-ratio: auto; height: 76px; gap: 6px; border-radius: 18px;
-  color: var(--jg-texto-sec);
-  ion-icon { font-size: 24px; }
-  span { font-size: 12px; font-weight: 500; }
-  &.activo { background: #78cdd0; color: #162525; }
-}
-// Etiquetas como el estilo Etiqueta de Android
-.etiqueta { margin: 20px 0 6px; font-size: 13px; font-weight: 500; color: var(--jg-texto-sec); }
-.etiqueta small { margin-left: 6px; font-size: 13px; font-weight: 400; color: var(--jg-texto-tenue, #9aa0a6); }
-// Chips de componente (ChipComponente en Android)
-ion-chip.componente {
-  --background: #ffffff;
-  --color: var(--jg-texto-sec);
-  height: 36px; margin: 0 8px 8px 0; padding: 0 14px; font-size: 13px;
-  border-radius: 999px;
-}
-ion-chip.componente.activo { --background: #1f2329; --color: #ffffff; }
-// Fotos y el recuadro «Añadir»
-.foto, .hacer-foto { width: 80px; height: 80px; border-radius: 18px; }
-.hacer-foto {
-  border: 1.5px dashed rgba(24, 26, 32, 0.16); background: transparent;
-  color: var(--jg-texto-sec); font-size: 12px; gap: 4px;
-  ion-icon { font-size: 24px; }
-}
-.continuar { min-height: 48px; margin-top: 24px; }
