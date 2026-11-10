@@ -114,6 +114,15 @@
                     android:textColor="@color/color_texto_suave"
                     android:textSize="15sp" />
 
+                <!-- FRASE DE DISPONIBILIDAD: "En stock", "¡Date prisa!", "Agotado"... -->
+                <TextView
+                    android:id="@+id/tvFichaStock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textSize="14sp" />
+
                 <!-- COMPRAR O ALQUILAR, SOLO EN LOS JUEGOS -->
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tlFichaModo"
@@ -168,6 +177,7 @@
 
                 <!-- CUANTAS UNIDADES (O COPIAS SI SE ALQUILA) SE AÑADEN A LA CESTA -->
                 <LinearLayout
+                    android:id="@+id/llFichaCantidad"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"

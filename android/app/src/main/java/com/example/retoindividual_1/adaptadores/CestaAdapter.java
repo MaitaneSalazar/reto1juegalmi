@@ -46,7 +46,7 @@ public class CestaAdapter extends RecyclerView.Adapter<CestaAdapter.CestaViewHol
     public void onBindViewHolder(@NonNull CestaViewHolder holder, int position) {
         Cesta.Linea linea = lineas.get(position);
 
-        holder.tvNombre.setText(linea.getProducto().getNombre());
+        holder.tvNombre.setText(linea.getProducto().getNombreConPlataforma());
         holder.tvPrecio.setText(FormatosReparacion.precio(linea.getPrecio()));
         if (linea.isAlquiler()) {
             holder.tvDetalle.setText(holder.itemView.getContext().getResources()

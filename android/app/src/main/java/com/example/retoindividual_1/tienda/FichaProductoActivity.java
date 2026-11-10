@@ -16,15 +16,22 @@ import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.example.retoindividual_1.alquileres.MisAlquileresActivity;
 import com.example.retoindividual_1.datos.Repositorio;
 import com.example.retoindividual_1.modelos.Cesta;
 import com.example.retoindividual_1.modelos.Plataforma;
 import com.example.retoindividual_1.modelos.Producto;
+import com.example.retoindividual_1.principal.MainActivity;
 import com.example.retoindividual_1.utilidades.Animaciones;
+import com.example.retoindividual_1.utilidades.Exito;
 import com.example.retoindividual_1.utilidades.FormatosReparacion;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.NumberFormat;
 import java.util.Calendar;
@@ -57,6 +64,8 @@ public class FichaProductoActivity extends PaginaMenuActivity {
     private TextView tvPrecioDetalle;
     private MaterialButton btnFicha;
     private TextView tvCantidad;
+    private LinearLayout llCantidad;
+    private TextView tvStock;
 
     private Producto producto;
     private boolean alquilando;
@@ -100,6 +109,8 @@ public class FichaProductoActivity extends PaginaMenuActivity {
         tvPrecioDetalle = findViewById(R.id.tvFichaPrecioDetalle);
         btnFicha = findViewById(R.id.btnFicha);
         tvCantidad = findViewById(R.id.tvFichaCantidad);
+        llCantidad = findViewById(R.id.llFichaCantidad);
+        tvStock = findViewById(R.id.tvFichaStock);
 
         boolean seAlquila = getIntent().getBooleanExtra(EXTRA_SE_ALQUILA, false);
         alquilando = seAlquila && getIntent().getBooleanExtra(EXTRA_EMPEZAR_ALQUILANDO, false);
@@ -160,12 +171,14 @@ public class FichaProductoActivity extends PaginaMenuActivity {
             }
         });
 
-        //COMPRANDO O ALQUILANDO, TODO VA A LA CESTA
+        //"AVISAME" AVISA, ALQUILANDO SE ALQUILA EN EL MOMENTO, Y COMPRANDO VA A LA CESTA
         btnFicha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (modoAvisame) {
                     avisame();
+                } else if (alquilando) {
+                    alquilar();
                 } else {
                     anadirCesta();
                 }
@@ -261,6 +274,11 @@ public class FichaProductoActivity extends PaginaMenuActivity {
         //AL CAMBIAR DE MODO PUEDE QUE QUEDEN MENOS, LA CANTIDAD SE AJUSTA
         int quedan = quedan();
         cantidad = Math.max(1, Math.min(cantidad, quedan));
+        //LA API SOLO DEJA UNA COPIA DE CADA JUEGO POR ALQUILER: ALQUILANDO NO HAY SELECTOR
+        if (alquilando) {
+            cantidad = 1;
+        }
+        llCantidad.setVisibility(alquilando ? View.GONE : View.VISIBLE);
         tvCantidad.setText(String.valueOf(cantidad));
 
         double unidad = alquilando ? producto.getPrecioAlquilerDia() * diasElegidos : producto.getPrecioVenta();
@@ -281,7 +299,7 @@ public class FichaProductoActivity extends PaginaMenuActivity {
         btnFicha.setIcon(null);
         if (quedan > 0) {
             btnFicha.setEnabled(true);
-            btnFicha.setText(R.string.ficha_anadir);
+            btnFicha.setText(alquilando ? R.string.ficha_alquilar : R.string.ficha_anadir);
         } else if (agotado) {
             //NO QUEDA NINGUNO: SE PUEDE PEDIR QUE AVISEMOS CUANDO VUELVA
             btnFicha.setEnabled(true);
@@ -294,6 +312,24 @@ public class FichaProductoActivity extends PaginaMenuActivity {
             btnFicha.setEnabled(false);
             btnFicha.setText(R.string.ficha_todo_en_cesta);
         }
+        pintarStock();
+    }
+
+    //FRASE DE DISPONIBILIDAD, IGUAL QUE EN IONIC: NO RESTA LO QUE YA ESTA EN LA CESTA
+    private void pintarStock() {
+        int hay = Cesta.Linea.limite(producto, alquilando);
+        String texto;
+        if (hay <= 0) {
+            texto = getString(alquilando ? R.string.ficha_stock_alquiladas : R.string.ficha_stock_agotado);
+        } else if (hay == 1) {
+            texto = getString(R.string.ficha_stock_queda, getString(alquilando ? R.string.ficha_copia : R.string.ficha_unidad));
+        } else if (hay == 2) {
+            texto = getString(R.string.ficha_stock_quedan, getString(alquilando ? R.string.ficha_copias : R.string.ficha_unidades));
+        } else {
+            texto = getString(alquilando ? R.string.ficha_stock_alquilar : R.string.ficha_stock_en_stock);
+        }
+        tvStock.setText(texto);
+        tvStock.setTextColor(ContextCompat.getColor(this, hay >= 3 ? R.color.color_marca_texto : R.color.color_alerta_texto));
     }
 
     //HOY + LOS DIAS DE ALQUILER, ESCRITO COMO "14 nov"
@@ -314,12 +350,49 @@ public class FichaProductoActivity extends PaginaMenuActivity {
     }
 
     private void anadirCesta() {
-        boolean anadido = Cesta.anadir(producto, cantidad, alquilando, diasElegidos);
-        Toast.makeText(this, anadido ? R.string.ficha_anadido : R.string.ficha_sin_stock, Toast.LENGTH_SHORT).show();
+        boolean anadido = Cesta.anadir(producto, cantidad, false, 0);
         if (anadido) {
             Animaciones.latido(btnFicha);
+            Snackbar.make(findViewById(R.id.main), R.string.ficha_anadido, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.ficha_ver_cesta, v -> startActivity(MainActivity.irALaCesta(this)))
+                    //LOS MISMOS COLORES QUE LOS AVISOS DE IONIC: FONDO OSCURO Y EL BOTON EN TURQUESA
+                    .setBackgroundTint(ContextCompat.getColor(this, R.color.color_oscuro))
+                    .setTextColor(ContextCompat.getColor(this, R.color.white))
+                    .setActionTextColor(ContextCompat.getColor(this, R.color.color_marca))
+                    .show();
+        } else {
+            Toast.makeText(this, R.string.ficha_sin_stock, Toast.LENGTH_SHORT).show();
         }
         cantidad = 1;
         pintarModo();
+    }
+
+    //POST /api/alquileres CON {"dias", "videojuegos": [id]}. SI NO QUEDAN COPIAS (409) SALE EL MENSAJE DE LA API
+    private void alquilar() {
+        JSONObject cuerpo = new JSONObject();
+        try {
+            cuerpo.put("dias", diasElegidos);
+            cuerpo.put("videojuegos", new JSONArray().put(producto.getId()));
+        } catch (JSONException e) {
+            return;
+        }
+        //DESACTIVAMOS EL BOTON PARA NO ALQUILAR DOS VECES
+        btnFicha.setEnabled(false);
+        new Repositorio(this, this).crearAlquiler(cuerpo, new Repositorio.Resultado<JSONObject>() {
+            @Override
+            public void bien(JSONObject respuesta) {
+                Exito.mostrar(FichaProductoActivity.this, getString(R.string.cesta_alquiler_ok), () -> {
+                    startActivity(new Intent(FichaProductoActivity.this, MisAlquileresActivity.class));
+                    //LA FICHA SE CIERRA: SUS COPIAS LIBRES YA NO SON LAS QUE ENSEÑA
+                    finish();
+                });
+            }
+
+            @Override
+            public void mal(String mensaje) {
+                btnFicha.setEnabled(true);
+                Toast.makeText(FichaProductoActivity.this, mensaje, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

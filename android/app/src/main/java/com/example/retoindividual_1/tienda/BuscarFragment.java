@@ -144,13 +144,6 @@ public class BuscarFragment extends Fragment {
             }
         });
 
-        view.findViewById(R.id.ivBuscarVoz).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                escuchar();
-            }
-        });
-
         etBuscar.requestFocus();
     }
 
@@ -161,7 +154,7 @@ public class BuscarFragment extends Fragment {
     }
 
     //ABRIMOS EL RECONOCEDOR DE VOZ DEL MOVIL EN ESPAÑOL. NO HACE FALTA PERMISO DE MICROFONO, LO PIDE EL
-    private void escuchar() {
+    public void escuchar() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es-ES");

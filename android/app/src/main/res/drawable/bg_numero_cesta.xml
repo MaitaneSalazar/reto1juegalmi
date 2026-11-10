@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- PILDORA ROJA DEL NUMERO DE LA CESTA. EL BORDE OSCURO LA SEPARA DE LA BARRA -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/color_alerta" />
+    <stroke
+        android:width="2dp"
+        android:color="@color/color_oscuro" />
+    <corners android:radius="999dp" />
+</shape>

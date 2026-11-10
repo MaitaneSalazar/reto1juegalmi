@@ -210,7 +210,7 @@ public class InicioFragment extends Fragment {
         Producto juego = alquiler.getLineas().get(0).getVideojuego();
         int dias = Math.abs(alquiler.getDiasRestantes());
 
-        tvAlquilerNombre.setText(juego.getNombre());
+        tvAlquilerNombre.setText(juego.getNombreConPlataforma());
         tvAlquilerDias.setText(String.valueOf(dias));
         tvAlquilerDias.setTextColor(ContextCompat.getColor(requireContext(),
                 alquiler.estaRetrasado() ? R.color.color_alerta : R.color.color_texto));

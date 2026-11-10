@@ -3,6 +3,8 @@ package com.example.retoindividual_1.principal;
 import com.example.retoindividual_1.R;
 import android.os.Bundle;
 
+import com.example.retoindividual_1.modelos.Cesta;
+
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.LayoutRes;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +32,8 @@ public abstract class PaginaMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //POR SI ANDROID VUELVE A ABRIR LA APP DIRECTAMENTE EN UNA FICHA
+        Cesta.iniciar(this);
         EdgeToEdge.enable(this);
         setContentView(getLayout());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {

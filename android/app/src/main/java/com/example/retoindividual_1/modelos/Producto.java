@@ -26,9 +26,12 @@ public class Producto {
     private final int copiasDisponibles;
     private final int copiasAlquiler;
     private final boolean disponible;
+    //EL JSON CON EL QUE SE CREO, PARA PODER GUARDARLO EN LA CESTA
+    private final String json;
 
     //ABRIMOS EL JSON Y SACAMOS CADA DATO
     public Producto(JSONObject json) {
+        this.json = json.toString();
         this.id = json.optInt("id");
         this.tipo = json.optString("tipo");
         this.nombre = json.optString("nombre");
@@ -69,6 +72,18 @@ public class Producto {
     }
 
     public String getNombre() {
+        return nombre;
+    }
+
+    public String getJson() {
+        return json;
+    }
+
+    //"Minecraft · Xbox": CON VARIOS JUEGOS IGUALES, LA PLATAFORMA LOS DISTINGUE (LO PIDE LA GUIA DE LA API)
+    public String getNombreConPlataforma() {
+        if ("videojuego".equals(tipo) && plataformas.size() == 1) {
+            return nombre + " · " + Plataforma.nombre(plataformas.get(0));
+        }
         return nombre;
     }
 

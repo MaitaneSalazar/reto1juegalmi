@@ -175,10 +175,25 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
-                        style="@style/Etiqueta"
-                        android:labelFor="@id/etRegistroTelefono"
-                        android:text="@string/telefono" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/Etiqueta"
+                            android:layout_width="wrap_content"
+                            android:labelFor="@id/etRegistroTelefono"
+                            android:text="@string/telefono" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="@string/editar_opcional"
+                            android:textColor="@color/color_texto_tenue"
+                            android:textSize="13sp" />
+                    </LinearLayout>
 
                     <EditText
                         android:id="@+id/etRegistroTelefono"

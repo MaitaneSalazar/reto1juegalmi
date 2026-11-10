@@ -80,6 +80,20 @@ public class TiendaFragment extends Fragment {
                 alternarBuscador();
             }
         });
+        //EL MICROFONO VA JUNTO A LA LUPA (COMO EN IONIC): ABRE EL BUSCADOR SI HACE FALTA Y EMPIEZA A ESCUCHAR
+        ImageView ivVoz = view.findViewById(R.id.ivBarraVoz);
+        ivVoz.setVisibility(View.VISIBLE);
+        ivVoz.setOnClickListener(v -> {
+            if (!buscando) {
+                alternarBuscador();
+                //EL BUSCADOR TIENE QUE EXISTIR YA PARA PODER ESCUCHAR
+                getChildFragmentManager().executePendingTransactions();
+            }
+            Fragment buscador = getChildFragmentManager().findFragmentById(R.id.fcvTiendaBuscar);
+            if (buscador instanceof BuscarFragment) {
+                ((BuscarFragment) buscador).escuchar();
+            }
+        });
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), cerrarBuscador);
 
         datos = new Repositorio(requireContext(), getViewLifecycleOwner());

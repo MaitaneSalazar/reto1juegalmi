@@ -15,4 +15,16 @@
     </plurals>
     <string name="ficha_todo_en_cesta">Ya tienes todas en la cesta</string>
     <string name="ficha_por_unidades">%1$d × %2$s</string>
+    <string name="ficha_alquilar">Alquilar</string>
+    <string name="ficha_ver_cesta">Ver cesta</string>
+    <string name="ficha_stock_agotado">Agotado</string>
+    <string name="ficha_stock_alquiladas">Todas las copias están alquiladas</string>
+    <string name="ficha_stock_queda">¡Date prisa! Queda 1 %1$s</string>
+    <string name="ficha_stock_quedan">¡Date prisa! Quedan 2 %1$s</string>
+    <string name="ficha_stock_en_stock">En stock · envío en 24 h</string>
+    <string name="ficha_stock_alquilar">Disponible para alquilar</string>
+    <string name="ficha_unidad">unidad</string>
+    <string name="ficha_unidades">unidades</string>
+    <string name="ficha_copia">copia</string>
+    <string name="ficha_copias">copias</string>
 </resources>

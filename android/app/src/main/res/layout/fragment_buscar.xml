@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- BUSCADOR DENTRO DE LA TIENDA (LO ABRE LA LUPA): CAMPO DE TEXTO CON MICROFONO Y LOS RESULTADOS EN 2 COLUMNAS -->
+<!-- BUSCADOR DENTRO DE LA TIENDA (LO ABRE LA LUPA): CAMPO DE TEXTO Y LOS RESULTADOS EN 2 COLUMNAS -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -15,7 +15,7 @@
         android:paddingStart="20dp"
         android:paddingEnd="20dp">
 
-        <!-- EL CAMPO: LUPA, TEXTO, EQUIS PARA BORRAR Y MICROFONO -->
+        <!-- EL CAMPO: LUPA, TEXTO Y EQUIS PARA BORRAR (EL MICROFONO ESTA EN LA BARRA DE ARRIBA) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="52dp"
@@ -59,19 +59,6 @@
                 android:src="@drawable/ic_cerrar"
                 android:visibility="gone"
                 app:tint="@color/color_texto_suave" />
-
-            <ImageView
-                android:id="@+id/ivBuscarVoz"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="2dp"
-                android:background="@drawable/bg_circulo_hoja"
-                android:backgroundTint="@color/color_marca"
-                android:contentDescription="@string/buscar_voz"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:padding="9dp"
-                android:src="@drawable/ic_microfono"
-                app:tint="@color/color_sobre_marca" />
         </LinearLayout>
     </LinearLayout>
 

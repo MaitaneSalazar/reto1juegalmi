@@ -6,6 +6,7 @@ import com.example.retoindividual_1.cesta.CestaFragment;
 import com.example.retoindividual_1.cuenta.DatosPersonalesActivity;
 import com.example.retoindividual_1.cuenta.DireccionesActivity;
 import com.example.retoindividual_1.inicio.InicioFragment;
+import com.example.retoindividual_1.modelos.Cesta;
 import com.example.retoindividual_1.nosotros.NosotrosFragment;
 import com.example.retoindividual_1.pedidos.MisPedidosActivity;
 import com.example.retoindividual_1.sesion.LoginActivity;
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout[] llPestanas;
     private ImageView[] ivPestanas;
     private TextView[] tvPestanas;
+    private TextView tvNavCestaNumero;
     private int pestanaActual = INICIO;
 
     private DrawerLayout dlMain;
@@ -87,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Cesta.iniciar(this);
         conectarBotonMenu();
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -103,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.ivNavCesta), findViewById(R.id.ivNavNosotros)};
         tvPestanas = new TextView[]{findViewById(R.id.tvNavInicio), findViewById(R.id.tvNavTienda), findViewById(R.id.tvNavTaller),
                 findViewById(R.id.tvNavCesta), findViewById(R.id.tvNavNosotros)};
+
+        tvNavCestaNumero = findViewById(R.id.tvNavCestaNumero);
 
         //CADA PESTAÑA ABRE SU FRAGMENT
         for (int i = 0; i < llPestanas.length; i++) {
@@ -142,6 +147,13 @@ public class MainActivity extends AppCompatActivity {
     public static Intent irALaTienda(Context context) {
         return new Intent(context, MainActivity.class)
                 .putExtra(EXTRA_PESTANA, TIENDA)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    }
+
+    //VUELVE A LA PANTALLA PRINCIPAL (CERRANDO LAS QUE HAYA ENCIMA) Y ABRE LA CESTA
+    public static Intent irALaCesta(Context context) {
+        return new Intent(context, MainActivity.class)
+                .putExtra(EXTRA_PESTANA, CESTA)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
     }
 
@@ -230,6 +242,16 @@ public class MainActivity extends AppCompatActivity {
         cargarUsuarioMenu();
         Localizador.getInstance(this).iniciar();
         agitar.iniciar();
+        //AL VOLVER DE LA FICHA, LA CESTA PUEDE HABER CAMBIADO
+        Cesta.setAlCambiar(this::pintarNumeroCesta);
+        pintarNumeroCesta();
+    }
+
+    //PILDORA ROJA CON LAS UNIDADES DE LA CESTA, SOLO SI HAY ALGO
+    private void pintarNumeroCesta() {
+        int unidades = Cesta.getUnidades();
+        tvNavCestaNumero.setText(unidades > 9 ? "9+" : String.valueOf(unidades));
+        tvNavCestaNumero.setVisibility(unidades > 0 ? View.VISIBLE : View.GONE);
     }
 
     // Mientras la app no se ve, no se pide la ubicación (ahorra batería). Se sigue enviando la última conocida
@@ -238,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         Localizador.getInstance(this).detener();
         agitar.detener();
+        Cesta.setAlCambiar(null);
     }
 
     private void cargarUsuarioMenu() {
