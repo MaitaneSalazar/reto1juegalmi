@@ -127,7 +127,9 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
     private void pintarAviso(ProductoViewHolder holder, Producto producto) {
         Context context = holder.itemView.getContext();
         int quedan = alquiler ? producto.getCopiasDisponibles() : producto.getStock();
-        boolean agotado = quedan <= 0 || !producto.isDisponible();
+        //ALQUILANDO SOLO CUENTAN LAS COPIAS: UN JUEGO SIN STOCK DE VENTA SE PUEDE ALQUILAR SI QUEDAN COPIAS.
+        //"disponible" DE LA API SOLO MIRA EL STOCK DE VENTA, POR ESO SOLO SE USA AL COMPRAR
+        boolean agotado = alquiler ? quedan <= 0 : (quedan <= 0 || !producto.isDisponible());
         //AGOTADO SE VE EN GRIS (SIN COLOR), PERO SE PUEDE ABRIR PARA PEDIR "AVISAME" EN LA FICHA.
         //LAS PLATAFORMAS NO SE TOCAN, SIGUEN CON SU COLOR
         View[] partes = {holder.flSinFoto, holder.ivFoto, holder.tvAviso, holder.tvNombre, holder.tvPrecio, holder.tvPorDia};
