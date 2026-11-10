@@ -10,38 +10,45 @@ export class CestaService {
   readonly lineas = signal<LineaCesta[]>(this.leer());
 
   readonly unidades = computed(() => this.lineas().reduce((s, l) => s + l.cantidad, 0));               // badge
-  readonly total = computed(() => +this.lineas().reduce((s, l) => s + l.producto.precio_venta * l.cantidad, 0).toFixed(2));
+  readonly total = computed(() => +this.lineas().reduce((s, l) => s + this.precio(l) * l.cantidad, 0).toFixed(2));
 
-  // Añade un producto (si ya está, suma cantidad)
-  // Devuelve false si se pasaría del stock (no se añade)
-  // Cuántas unidades de ese producto hay ya en la cesta (para no pasar del stock)
-  enCesta(id: number): number {
-    return this.lineas().find(l => l.producto.id === id)?.cantidad ?? 0;
+  // Precio de una unidad: el de venta, o el del día por los días (igual que Cesta.Linea.getPrecio() en Android)
+  precio(l: LineaCesta): number {
+    return l.alquiler ? (l.producto.precio_alquiler_dia ?? 0) * (l.dias ?? 0) : l.producto.precio_venta;
   }
 
-  anadir(producto: Producto, cantidad = 1): boolean {
+  // Comprando manda el stock; alquilando, las copias libres
+  limite(p: Producto, alquiler: boolean): number {
+    return alquiler ? (p.copias_disponibles ?? 0) : p.stock;
+  }
+
+  // Cuántas hay ya de ese producto en la cesta, en ese modo
+  enCesta(id: number, alquiler = false): number {
+    return this.lineas().filter(l => l.producto.id === id && !!l.alquiler === alquiler).reduce((s, l) => s + l.cantidad, 0);
+  }
+
+  // Añade (si ya está la misma línea, suma). false = se pasaría del stock / de las copias
+  anadir(producto: Producto, cantidad = 1, alquiler = false, dias = 0): boolean {
+    if (this.enCesta(producto.id, alquiler) + cantidad > this.limite(producto, alquiler)) return false;
+    const misma = (l: LineaCesta) => l.producto.id === producto.id && !!l.alquiler === alquiler && (l.dias ?? 0) === (alquiler ? dias : 0);
     const lista = this.lineas();
-    const existe = lista.find(l => l.producto.id === producto.id);
-    if ((existe?.cantidad ?? 0) + cantidad > producto.stock) return false;
-    this.guardar(existe
-      ? lista.map(l => l.producto.id === producto.id ? { ...l, cantidad: l.cantidad + cantidad } : l)
-      : [...lista, { producto, cantidad }]);
+    this.guardar(lista.some(misma)
+      ? lista.map(l => misma(l) ? { ...l, cantidad: l.cantidad + cantidad } : l)
+      : [...lista, { producto, cantidad, alquiler, dias: alquiler ? dias : 0 }]);
     return true;
   }
 
-  // Botones − y + de la cesta (si llega a 0 se quita)
-  // Devuelve false si se pasaría del stock
-  cambiarCantidad(productoId: number, cambio: number): boolean {
-    const linea = this.lineas().find(l => l.producto.id === productoId);
-    if (linea && cambio > 0 && linea.cantidad + cambio > linea.producto.stock) return false;
+  // Botones − y + de la cesta (si llega a 0 se quita). false = se pasaría del límite
+  cambiarCantidad(linea: LineaCesta, cambio: number): boolean {
+    if (cambio > 0 && this.enCesta(linea.producto.id, !!linea.alquiler) + cambio > this.limite(linea.producto, !!linea.alquiler)) return false;
     this.guardar(this.lineas()
-      .map(l => l.producto.id === productoId ? { ...l, cantidad: l.cantidad + cambio } : l)
+      .map(l => l === linea ? { ...l, cantidad: l.cantidad + cambio } : l)
       .filter(l => l.cantidad > 0));
     return true;
   }
 
-  quitar(productoId: number): void {
-    this.guardar(this.lineas().filter(l => l.producto.id !== productoId));
+  quitar(linea: LineaCesta): void {
+    this.guardar(this.lineas().filter(l => l !== linea));
   }
 
   vaciar(): void {

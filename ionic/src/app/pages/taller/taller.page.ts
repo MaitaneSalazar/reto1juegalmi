@@ -6,7 +6,7 @@ import { IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon,
          IonChip, IonButton, ToastController, IonList, IonCard } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { gameControllerOutline, phonePortraitOutline, tabletLandscapeOutline, laptopOutline, tvOutline,
-         headsetOutline, watchOutline, ellipsisHorizontal, cameraOutline, close, chevronForward, keypadOutline, checkmarkCircleOutline } from 'ionicons/icons';
+         headsetOutline, watchOutline, ellipsisHorizontal, cameraOutline, close, chevronForward, keypadOutline, checkmarkCircleOutline, closeCircleOutline } from 'ionicons/icons';
 import { EstadoComponent } from '../../components/estado/estado.component';
 import { CabeceraComponent } from '../../components/cabecera/cabecera.component';
 import { EurosPipe } from '../../pipes/euros.pipe';
@@ -87,11 +87,12 @@ export class TallerPage {
   errorMias = signal(false);                 // sin conexión → Reintentar
   enCurso = computed(() => this.mias().filter(r => r.estado !== 'entregada' && r.estado !== 'cancelada'));
   entregadas = computed(() => this.mias().filter(r => r.estado === 'entregada'));
+  canceladas = computed(() => this.mias().filter(r => r.estado === 'cancelada'));
   vuelta = 2 * Math.PI * 26;                 // perímetro del círculo de progreso (radio 26)
 
   constructor() {
     addIcons({ gameControllerOutline, phonePortraitOutline, tabletLandscapeOutline, laptopOutline, tvOutline,
-               headsetOutline, watchOutline, ellipsisHorizontal, cameraOutline, close, chevronForward, keypadOutline, checkmarkCircleOutline });
+               headsetOutline, watchOutline, ellipsisHorizontal, cameraOutline, close, chevronForward, keypadOutline, checkmarkCircleOutline, closeCircleOutline });
   }
 
   ionViewWillEnter(): void {
@@ -126,7 +127,7 @@ export class TallerPage {
       const foto = await this.fotos.hacerFoto();
       if (foto) this.listaFotos.update(l => [...l, foto]);
     } catch {
-      this.aviso('No se ha podido usar la cámara. Revisa los permisos.', 'danger');
+      this.aviso('No se ha podido usar la cámara. Revisa los permisos.');
     }
   }
 
@@ -164,7 +165,7 @@ export class TallerPage {
       },
       error: e => {
         this.enviando.set(false);
-        this.aviso(this.sesion.mensaje(e), 'danger');
+        this.aviso(this.sesion.mensaje(e));
       },
     });
   }
@@ -191,7 +192,7 @@ export class TallerPage {
     this.marca.set(''); this.modelo.set(''); this.componente.set(''); this.descripcion.set(''); this.listaFotos.set([]);
   }
 
-  private async aviso(mensaje: string, color: string): Promise<void> {
+  private async aviso(mensaje: string): Promise<void> {
     const t = await this.toast.create({ message: mensaje, duration: 3000, position: 'bottom' });
     await t.present();
   }

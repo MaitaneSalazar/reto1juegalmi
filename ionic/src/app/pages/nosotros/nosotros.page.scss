@@ -29,21 +29,27 @@
   b { font-size: 18px; font-weight: 600; }
 }
 
-// Historia
-.historia { margin: 6px 0 24px; font-size: 21px; line-height: 1.4; font-weight: 700; letter-spacing: -0.02em; }
+// Historia (como Android)
+.historia { margin: 0 0 24px; font-size: 19px; line-height: 1.15; font-weight: 700; }
 .hitos {
-  list-style: none; margin: 0; padding: 0 0 0 28px; position: relative;
-  &::before { content: ''; position: absolute; left: 6px; top: 12px; bottom: 0; width: 3px; border-radius: 2px; background: var(--jg-acento); opacity: .6; }
-  li { position: relative; margin-bottom: 18px; }
-  .punto { position: absolute; left: -28px; top: 26px; width: 15px; height: 15px; border-radius: 50%; background: #5fbfc3; }
-  .tarjeta { position: relative; padding: 22px; }
+  list-style: none; margin: 0; padding: 0;
+  li { position: relative; padding-left: 32px; }
+  // La línea de cada hito; en el último solo llega hasta su punto
+  li::before { content: ''; position: absolute; left: 14px; top: 0; bottom: 0; width: 3px; background: #375e60; }
+  li.ultimo::before { bottom: auto; height: 30px; }
+  .punto { position: absolute; left: 10px; top: 26px; width: 12px; height: 12px; border-radius: 50%; background: #375e60; z-index: 1; }
+  li.ultimo .punto { left: 7px; top: 23px; width: 18px; height: 18px; background: #ffffff; border: 3px solid #375e60; box-sizing: border-box; }
+  .tarjeta { position: relative; margin-bottom: 16px; padding: 20px; border-radius: 18px; }
+  li.ultimo .tarjeta { background: linear-gradient(135deg, #8ad6d8 0%, #6fc4c7 100%); color: #162525; }   // el de «Lo reparamos»
   .icono {
-    position: absolute; top: 20px; right: 20px; width: 46px; height: 46px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center; background: var(--jg-acento-suave); font-size: 20px;
+    position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; background: #deeeed; font-size: 20px; color: var(--jg-texto-sec);
   }
-  b { display: block; font-size: 48px; line-height: 1; font-weight: 700; letter-spacing: -0.05em; }
-  strong { display: block; margin-top: 18px; font-size: 18px; font-weight: 600; }
-  p { margin: 8px 0 0; color: var(--jg-texto-sec); font-size: 15px; line-height: 1.5; }
+  li.ultimo .icono { background: rgba(255, 255, 255, 0.28); color: #162525; }
+  b { display: block; font-size: 40px; line-height: 1; font-weight: 700; letter-spacing: -0.03em; }
+  strong { display: block; margin-top: 14px; font-size: 15px; font-weight: 700; }
+  p { margin: 4px 0 0; font-size: 13px; color: var(--jg-texto-sec); }
+  li.ultimo p { color: #162525; }
 }
 
 // Galería: una grande y dos pequeñas

@@ -6,6 +6,7 @@ ion-list.lista ion-card { margin-bottom: 14px; }
   app-miniatura-producto { width: 72px; height: 92px; --radio: 14px; --fondo: #ffffff; --ajuste: contain; }   // tamaños de Android
   .datos { flex-grow: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
   strong { font-size: 15px; font-weight: 700; }
+  small { font-size: 13px; color: var(--jg-texto-sec); }   // «3 días» en los alquileres
   app-precio { font-size: 18px; }
 }
 

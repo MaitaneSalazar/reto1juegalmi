@@ -29,7 +29,8 @@ export const HITOS = [
   { anio: 2012, titulo: 'Abrimos en Bilbao', texto: 'Un pequeño local en Gran Vía dedicado a la compraventa de videojuegos de segunda mano.', icono: 'storefront-outline' },
   { anio: 2015, titulo: 'Nace el taller', texto: 'Empezamos a reparar consolas y mandos en la trastienda, con un único técnico.', icono: 'build-outline' },
   { anio: 2018, titulo: 'Llegan los móviles', texto: 'Ampliamos la tienda con venta y reparación de móviles y tablets.', icono: 'phone-portrait-outline' },
-  { anio: 2026, titulo: 'Lanzamos la app', texto: 'Compra, alquila y repara desde el móvil.', icono: 'rocket-outline' },
+  { anio: 2021, titulo: 'Alquiler de videojuegos', texto: 'Lanzamos el alquiler por días para probar un juego antes de comprarlo.', icono: 'time-outline' },
+  { anio: 2026, titulo: 'La app JuegAlmi', texto: 'Todo el catálogo, los alquileres y el seguimiento de reparaciones, desde el móvil.', icono: 'game-controller-outline' },
 ];
 
 // Galería de respaldo si la API todavía no tiene fotos (assets/tienda/1-5.png)

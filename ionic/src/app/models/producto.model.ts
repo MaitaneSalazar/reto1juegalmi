@@ -54,6 +54,13 @@ export function plataformasDe(p: { plataforma?: string | null; plataformas?: str
 }
 // Xbox verde · PlayStation azul · Switch rojo. Se reconoce como venga escrito
 // ("PS5", "PS4", "PlayStation 5", "ps5", "Nintendo Switch", "Xbox Series"...)
+// Nombre para enseñar: la API manda "Switch" y "PS5" (igual que Plataforma.nombre() en Android)
+export function nombrePlataforma(codigo: string): string {
+  if (codigo === 'Switch') return 'Nintendo Switch';
+  if (codigo === 'PS5') return 'PlayStation';
+  return codigo;
+}
+
 export function colorPlataforma(plataforma: string): string {
   const t = plataforma.toLowerCase();
   if (t.includes('xbox')) return '#107c10';                              // verde

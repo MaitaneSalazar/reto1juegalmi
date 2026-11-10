@@ -17,39 +17,38 @@
                   boton="Ir a la tienda" (accion)="irATienda()"></app-estado>
     }
 
-    <!-- Alquileres en curso (ion-card = CardView) -->
+    <!-- Alquileres sin devolver (ion-card = CardView) -->
+    <ion-list class="lista cascada">
     @for (a of activos(); track a.id) {
-      <ion-card class="tarjeta activo">
+      <ion-card class="tarjeta activo" [class.retraso]="a.dias_restantes < 0">
         <div class="arriba">
-          @if (a.lineas[0]; as l) { <app-miniatura-producto [producto]="l.videojuego"></app-miniatura-producto> }
-          <div>
+          @if (a.lineas[0]; as l) { <app-miniatura-producto [producto]="l.videojuego" [sinMarca]="true"></app-miniatura-producto> }
+          <div class="info">
             <strong>{{ titulo(a) }}</strong>
             @if (a.dias_restantes >= 0) {
               <p class="dias"><b>{{ a.dias_restantes }}</b> {{ a.dias_restantes === 1 ? 'día' : 'días' }}</p>
             } @else {
-              <p class="vencido">Retrasado {{ -a.dias_restantes }} {{ a.dias_restantes === -1 ? 'día' : 'días' }}</p>
+              <p class="dias"><b>{{ -a.dias_restantes }}</b> {{ a.dias_restantes === -1 ? 'día de retraso' : 'días de retraso' }}</p>
             }
           </div>
         </div>
         <div class="barra"><i [style.width.%]="progreso(a) * 100"></i></div>
         <div class="fechas"><span>{{ a.fecha_inicio | fechaCorta }}</span><span>Devolver antes del {{ a.fecha_fin_prevista | fechaCorta }}</span></div>
-        <button type="button" class="devolver pulsable" (click)="devolver(a)">
-          <ion-icon name="arrow-undo-outline"></ion-icon> Devolver
-        </button>
+        <button type="button" class="devolver pulsable" (click)="devolver(a)">Devolver</button>
       </ion-card>
     }
+    </ion-list>
 
-    <!-- Devueltos -->
+    <!-- Devueltos: tarjetas, como el resto -->
     @if (devueltos().length) {
-      <h2>Devueltos</h2>
-      <!-- ion-list + ion-item = RecyclerView con filas sencillas -->
-      <ion-list class="lista devueltos cascada">
+      <h2 class="seccion-titulo">Devueltos</h2>
+      <ion-list class="lista cascada">
         @for (a of devueltos(); track a.id) {
-          <ion-item lines="full">
-            @if (a.lineas[0]; as l) { <app-miniatura-producto slot="start" [producto]="l.videojuego"></app-miniatura-producto> }
-            <ion-label><strong>{{ titulo(a) }}</strong><small>Devuelto el {{ devueltoEl(a) | fechaCorta }}</small></ion-label>
-            <app-precio slot="end" [valor]="a.importe"></app-precio>
-          </ion-item>
+          <ion-card class="tarjeta devuelto">
+            @if (a.lineas[0]; as l) { <app-miniatura-producto [producto]="l.videojuego" [sinMarca]="true"></app-miniatura-producto> }
+            <span class="textos"><strong>{{ titulo(a) }}</strong><small>Devuelto el {{ devueltoEl(a) | fechaCorta }}</small></span>
+            <app-precio [valor]="a.importe"></app-precio>
+          </ion-card>
         }
       </ion-list>
     }

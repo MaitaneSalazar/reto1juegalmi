@@ -52,17 +52,19 @@
         <ion-list class="lista">
           @for (p of anteriores(); track p.id) {
             <ion-card class="tarjeta anterior">
-              <p class="nombre">{{ titulo(p) }}</p>
-              <p class="resumen">#{{ p.id }} · {{ p.fecha | fechaCorta }} · {{ p.total | euros }}@if (p.estado === 'cancelado') { · Cancelado }</p>
+              <div class="arriba">
+                <div class="textos">
+                  <p class="nombre">{{ titulo(p) }}</p>
+                  <p class="resumen">#{{ p.id }} · {{ p.fecha | fechaCorta }} · {{ estadoMayus(p) }}</p>
+                </div>
+                <app-precio [valor]="p.total"></app-precio>
+              </div>
               <ng-container *ngTemplateOutlet="miniaturas; context: { $implicit: p }"></ng-container>
 
-              @if (p.se_puede_cancelar) {
-                <button type="button" class="cancelar pulsable" (click)="cancelar(p)">Cancelar pedido</button>
-              }
               @if ((lineas()[p.id]?.length ?? 0) > 1) {
                 <button type="button" class="ver-mas pulsable" (click)="verMas(p)">
                   {{ abierto() === p.id ? 'Ver menos' : 'Ver más · ' + lineas()[p.id].length + ' artículos' }}
-                  <ion-icon [name]="abierto() === p.id ? 'chevron-up' : 'chevron-down'"></ion-icon>
+                  <ion-icon [name]="abierto() === p.id ? 'chevron-up' : 'chevron-forward'"></ion-icon>
                 </button>
               }
 
@@ -77,6 +79,9 @@
                     </li>
                   }
                 </ul>
+              }
+              @if (p.se_puede_cancelar) {
+                <button type="button" class="cancelar pulsable" (click)="cancelar(p)">Cancelar pedido</button>
               }
             </ion-card>
           }

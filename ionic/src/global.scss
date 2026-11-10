@@ -123,18 +123,18 @@ ion-segment-button.segment-button-checked {
   &::-webkit-scrollbar { display: none; }
   &.envolver { flex-wrap: wrap; overflow: visible; margin: 0 0 18px; padding: 0; }
 }
+// Como las pestañas de Android: solo texto gris; la elegida en píldora oscura
 ion-chip.filtro {
-  --background: var(--jg-tarjeta);
-  --color: var(--ion-text-color);
+  --background: transparent;
+  --color: var(--jg-texto-sec);
   flex-shrink: 0;
   height: 40px; margin: 0; padding: 0 16px;
   border-radius: 999px;
-  font-size: 15px;
+  font-size: 13px; font-weight: 500;
 }
 ion-chip.filtro.activo {
-  --background: var(--jg-inverso);
-  --color: var(--jg-inverso-texto);
-  font-weight: 600;
+  --background: #1f2329;
+  --color: #ecf2f1;
 }
 
 // Etiquetas pequeñas (Aventura, PEGI 12, Últimas unidades...)
@@ -165,8 +165,6 @@ app-datos-personales ion-input, app-direcciones ion-input, app-editar-datos ion-
 .error { margin: 6px 0 0; color: var(--ion-color-danger); font-size: 13px; }
 .vacio { text-align: center; color: var(--jg-texto-sec); margin: 40px 0; }
 
-// Avisos (toast) redondeados por encima de la barra
-ion-toast { --border-radius: 18px; --start: 16px; --end: 16px; transform: translateY(-80px); }
 
 // ===================== ANIMACIONES =====================
 @keyframes jg-aparecer {
@@ -222,5 +220,8 @@ ion-toast {
   --border-radius: 4px;
   --button-color: #78cdd0;
   --box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+  --start: 16px;
+  --end: 16px;
   font-size: 14px;
+  transform: translateY(-80px);                  // por encima de la barra inferior
 }

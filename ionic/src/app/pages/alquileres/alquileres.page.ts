@@ -1,9 +1,6 @@
-import { nombreProducto } from '../../pipes/nombre-producto.pipe';
 import { Router } from '@angular/router';
 import { Component, computed, inject, signal } from '@angular/core';
-import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon, AlertController, ToastController, IonList, IonCard, IonItem, IonLabel } from '@ionic/angular';
-import { addIcons } from 'ionicons';
-import { arrowUndoOutline } from 'ionicons/icons';
+import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, AlertController, ToastController, IonList, IonCard } from '@ionic/angular';
 import { EstadoComponent } from '../../components/estado/estado.component';
 import { MiniaturaProductoComponent } from '../../components/miniatura-producto/miniatura-producto.component';
 import { PrecioComponent } from '../../components/precio/precio.component';
@@ -20,7 +17,7 @@ const DIA = 86400000;
   selector: 'app-alquileres',
   templateUrl: './alquileres.page.html',
   styleUrls: ['../subpagina.scss', './alquileres.page.scss'],
-  imports: [LottieComponent, IonList, IonCard, IonItem, IonLabel, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon, EstadoComponent, MiniaturaProductoComponent, PrecioComponent, FechaCortaPipe],
+  imports: [LottieComponent, IonList, IonCard, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, EstadoComponent, MiniaturaProductoComponent, PrecioComponent, FechaCortaPipe],
 })
 export class AlquileresPage {
   private router = inject(Router);
@@ -39,9 +36,6 @@ export class AlquileresPage {
   activos = computed(() => this.todos().filter(a => a.estado !== 'devuelto'));     // activo o retrasado
   devueltos = computed(() => this.todos().filter(a => a.estado === 'devuelto'));
 
-  constructor() {
-    addIcons({ arrowUndoOutline });
-  }
 
   ionViewWillEnter(): void {
     this.cargar();
@@ -56,16 +50,16 @@ export class AlquileresPage {
 
   async devolver(a: Alquiler): Promise<void> {
     const alerta = await this.alerta.create({
-      header: 'Devolver alquiler',
-      message: `¿Confirmas que has devuelto ${this.titulo(a)} en la tienda?`,
+      header: '¿Devolver el juego?',
+      message: `Se marcará ${this.titulo(a)} como devuelto.`,
       buttons: [
-        { text: 'Cancelar', role: 'cancel' },
         { text: 'Devolver', handler: () => {
           this.servicio.devolver(a.id).subscribe({
-            next: () => { this.cargar(); this.resumen.refrescar(); this.aviso('Alquiler devuelto. ¡Gracias!', 'dark'); },
-            error: e => this.aviso(this.sesion.mensaje(e), 'danger'),
+            next: () => { this.cargar(); this.resumen.refrescar(); this.aviso('Juego devuelto'); },
+            error: e => this.aviso(this.sesion.mensaje(e)),
           });
         } },
+        { text: 'Cancelar', role: 'cancel' },
       ],
     });
     await alerta.present();
@@ -73,7 +67,7 @@ export class AlquileresPage {
 
   // "Elden Ring" o "Elden Ring +1" si el alquiler tiene varios juegos
   titulo(a: Alquiler): string {
-    const n = a.lineas[0] ? nombreProducto(a.lineas[0].videojuego) : 'Alquiler';
+    const n = a.lineas[0]?.videojuego.nombre ?? 'Alquiler';          // sin plataforma, como Android
     return a.lineas.length > 1 ? `${n} +${a.lineas.length - 1}` : n;
   }
 
@@ -91,7 +85,7 @@ export class AlquileresPage {
     });
   }
 
-  private async aviso(mensaje: string, color: string): Promise<void> {
+  private async aviso(mensaje: string): Promise<void> {
     const t = await this.toast.create({ message: mensaje, duration: 2500 });
     await t.present();
   }

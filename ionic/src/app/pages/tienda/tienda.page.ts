@@ -11,7 +11,7 @@ import { PrecioComponent } from '../../components/precio/precio.component';
 import { PlataformasComponent } from '../../components/plataformas/plataformas.component';
 import { ProductoService } from '../../services/producto.service';
 import { VozService } from '../../services/voz.service';
-import { Producto, TipoProducto, avisoStock } from '../../models/producto.model';
+import { Producto, TipoProducto, avisoStock, colorPlataforma, nombrePlataforma } from '../../models/producto.model';
 import { EstadoComponent } from '../../components/estado/estado.component';
 import { LottieComponent } from '../../components/lottie/lottie.component';
 
@@ -53,6 +53,11 @@ export class TiendaPage {
   // Plataformas de alquiler: se piden a la API (GET /api/videojuegos/plataformas)
   filtrosAlquilar: Filtro[] = [{ etiqueta: 'Todas', valor: '' }];
 
+  plataforma = signal('');           // Comprar → Videojuegos: Todas · PlayStation · Nintendo Switch · Xbox
+  plataformasComprar = ['', 'PlayStation', 'Switch', 'Xbox'];
+  colorPlataforma = colorPlataforma;
+  nombrePlataforma = nombrePlataforma;
+
   private pagina = 1;
   private peticion = 0;   // descarta respuestas antiguas
 
@@ -61,13 +66,14 @@ export class TiendaPage {
     this.servicio.plataformas().subscribe({
       // Por si la API aún manda «Multi» (ya no existe: cada juego viene una vez por plataforma)
       next: lista => this.filtrosAlquilar = [{ etiqueta: 'Todas', valor: '' },
-        ...lista.filter(p => p !== 'Multi').map(p => ({ etiqueta: p, valor: p }))],
+        ...lista.filter(p => p !== 'Multi').map(p => ({ etiqueta: nombrePlataforma(p), valor: p }))],   // el valor, como lo entiende la API
       error: () => { /* sin conexión: solo "Todas" */ },
     });
     // ?modo=alquilar (desde la tarjeta "Alquilar" de Inicio)
     inject(ActivatedRoute).queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
       this.modo.set(params.get('modo') === 'alquilar' ? 'alquilar' : 'comprar');
       this.filtro.set('');
+      this.plataforma.set('');
       this.cargar();
     });
   }
@@ -75,11 +81,13 @@ export class TiendaPage {
   cambiarModo(valor: unknown): void {
     this.modo.set(valor === 'alquilar' ? 'alquilar' : 'comprar');
     this.filtro.set('');
+    this.plataforma.set('');
     this.cargar();
   }
 
   elegirFiltro(valor: string): void {
     this.filtro.set(valor);
+    this.plataforma.set('');
     this.cargar();
   }
 
@@ -138,7 +146,7 @@ export class TiendaPage {
     // Comprar: GET /api/productos (con q= para buscar) · Alquilar: GET /api/videojuegos/alquiler
     const peticion$ = this.modo() === 'alquilar'
       ? this.servicio.alquiler({ plataforma: this.filtro() || undefined, page: this.pagina, limit: POR_PAGINA })
-      : this.servicio.listar({ tipo: (this.filtro() || undefined) as TipoProducto | undefined, q: texto || undefined,
+      : this.servicio.listar({ tipo: (this.filtro() || undefined) as TipoProducto | undefined, plataforma: this.plataforma() || undefined, q: texto || undefined,
                                page: this.pagina, limit: POR_PAGINA });
 
     peticion$.subscribe({

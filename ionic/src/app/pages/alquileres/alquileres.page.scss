@@ -1,29 +1,31 @@
-.activo { padding: 22px; margin: 0 0 14px; }
+// ===== Mis alquileres, como Android =====
+.activo { padding: 12px; margin: 0 0 12px; border-radius: 20px; background: #ffffff; }
 .arriba {
-  display: flex; gap: 24px;
-  app-miniatura-producto { --tam: 112px; --radio: 16px; height: 150px; }
-  strong { font-size: 19px; font-weight: 600; }
+  display: flex; gap: 16px;
+  app-miniatura-producto { width: 84px; height: 112px; --radio: 14px; }
+  .info { display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
+  strong { font-size: 15px; font-weight: 700; }
 }
-.dias { margin: 34px 0 0; color: var(--jg-texto-sec); font-size: 15px; b { color: var(--ion-text-color); font-size: 56px; font-weight: 700; line-height: 1; letter-spacing: -0.04em; } }
-.vencido { margin: 34px 0 0; color: var(--ion-color-danger); font-size: 22px; font-weight: 700; }
-.barra { height: 8px; margin-top: 22px; border-radius: 4px; background: var(--jg-segmento); overflow: hidden;
-  i { display: block; height: 100%; border-radius: 4px; background: var(--jg-acento); } }
-.fechas { display: flex; justify-content: space-between; margin-top: 10px; color: var(--jg-texto-sec); font-size: 14px; }
+.dias { margin: 0; color: var(--jg-texto-sec); font-size: 13px;
+  b { color: var(--ion-text-color); font-size: 40px; font-weight: 700; line-height: 1; } }
+.retraso .dias b { color: #a72144; }
+.barra { height: 6px; margin-top: 16px; border-radius: 3px; background: #deeeed; overflow: hidden;
+  i { display: block; height: 100%; border-radius: 3px; background: #78cdd0; } }
+.retraso .barra i { background: #a72144; }
+.fechas { display: flex; justify-content: space-between; margin-top: 8px; color: var(--jg-texto-sec); font-size: 12px; }
 .devolver {
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-  width: 100%; height: 56px; margin-top: 22px; border-radius: 999px;
-  border: 1px solid var(--jg-borde); background: var(--jg-tarjeta);
-  color: var(--ion-text-color); font: inherit; font-size: 17px; font-weight: 500;
-  ion-icon { font-size: 20px; }
+  width: 100%; height: 48px; margin-top: 16px; border: 0; border-radius: 999px;
+  background: #deeeed; color: var(--ion-text-color); font: inherit; font-size: 15px; font-weight: 500;
 }
+.retraso .devolver { background: #a72144; color: #ffffff; }
 
-// Devueltos: filas sencillas (ion-item) dentro de una tarjeta
-.devueltos {
-  border-radius: var(--jg-radio); overflow: hidden; background: var(--jg-tarjeta) !important;
-  ion-item { --background: var(--jg-tarjeta); --padding-start: 14px; --inner-padding-end: 16px; --min-height: 84px; --border-color: var(--jg-borde); }
-  app-miniatura-producto { --tam: 56px; --radio: 12px; --fondo: #ffffff; --ajuste: contain; margin: 10px 14px 10px 0; }
-  ion-label { display: flex !important; flex-direction: column; gap: 4px; white-space: normal; }
-  strong { font-size: 16px; font-weight: 500; }
-  small { color: var(--jg-texto-sec); font-size: 14px; }
-  app-precio { font-size: 20px; }
+// Devueltos
+.seccion-titulo { margin: 20px 0 12px; font-size: 20px; font-weight: 700; }
+.devuelto {
+  display: flex; align-items: center; gap: 14px; padding: 12px; margin: 0 0 12px; border-radius: 20px; background: #ffffff;
+  app-miniatura-producto { width: 56px; height: 72px; --radio: 12px; }
+  .textos { flex-grow: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  strong { font-size: 15px; font-weight: 700; }
+  small { color: var(--jg-texto-sec); font-size: 13px; }
+  app-precio { font-size: 17px; }
 }

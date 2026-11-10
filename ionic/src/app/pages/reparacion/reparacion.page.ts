@@ -6,10 +6,7 @@ import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon, 
          AlertController, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { imageOutline, callOutline } from 'ionicons/icons';
-import { PrecioComponent } from '../../components/precio/precio.component';
-import { FechaCortaPipe } from '../../pipes/fecha-corta.pipe';
 import { ReparacionService } from '../../services/reparacion.service';
-import { TiendaService } from '../../services/tienda.service';
 import { SesionService } from '../../services/sesion.service';
 import { NOMBRE_DISPOSITIVO, Reparacion } from '../../models/reparacion.model';
 import { LottieComponent } from '../../components/lottie/lottie.component';
@@ -19,7 +16,7 @@ import { LottieComponent } from '../../components/lottie/lottie.component';
   templateUrl: './reparacion.page.html',
   styleUrls: ['./reparacion.page.scss'],
   imports: [LottieComponent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon, IonButton,
-            IonRefresher, IonRefresherContent, PrecioComponent, FechaCortaPipe],
+            IonRefresher, IonRefresherContent],
 })
 export class ReparacionPage {
   private servicio = inject(ReparacionService);
@@ -29,19 +26,21 @@ export class ReparacionPage {
   private id = 0;
 
   rep = signal<Reparacion | null>(null);
-  telTienda = signal('');                    // si aún no hay técnico se llama a la tienda
   cancelando = signal(false);
 
   tipo = computed(() => NOMBRE_DISPOSITIVO[this.rep()?.tipo_dispositivo ?? 'otro']);
-  // Teléfono del técnico asignado o, si no hay, el de la tienda
+  // Solo el teléfono del técnico, como en Android: sin técnico no hay botón de llamar
   telefono = computed(() => {
-    const t = this.rep()?.trabajador?.telefono ?? this.telTienda();
-    return t ? 'tel:' + t.replace(/\s/g, '') : '';
+    const t = this.rep()?.trabajador?.telefono;
+    return t ? `tel:${t.replace(/\s/g, '')}` : null;
   });
+
+  // Presupuesto partido como Android: «120» grande y «,00 €» pequeño
+  euros(v: number): string { return Math.trunc(v).toLocaleString('es-ES'); }
+  centimos(v: number): string { return ',' + v.toFixed(2).split('.')[1] + ' €'; }
 
   constructor() {
     addIcons({ imageOutline, callOutline });
-    inject(TiendaService).obtener().subscribe({ next: t => this.telTienda.set(t.telefono), error: () => {} });
     inject(ActivatedRoute).paramMap.pipe(takeUntilDestroyed()).subscribe(p => {
       this.id = Number(p.get('id'));
       this.cargar();
@@ -68,8 +67,8 @@ export class ReparacionPage {
   private confirmarCancelar(): void {
     this.cancelando.set(true);
     this.servicio.cancelar(this.id).subscribe({
-      next: r => { this.cancelando.set(false); this.rep.set(r); this.aviso('Solicitud cancelada', 'dark'); },
-      error: e => { this.cancelando.set(false); this.aviso(this.sesion.mensaje(e), 'danger'); },
+      next: r => { this.cancelando.set(false); this.rep.set(r); this.aviso('Solicitud cancelada'); },
+      error: e => { this.cancelando.set(false); this.aviso(this.sesion.mensaje(e)); },
     });
   }
 
@@ -80,7 +79,7 @@ export class ReparacionPage {
     });
   }
 
-  private async aviso(mensaje: string, color: string): Promise<void> {
+  private async aviso(mensaje: string): Promise<void> {
     const t = await this.toast.create({ message: mensaje, duration: 3000, position: 'bottom' });
     await t.present();
   }

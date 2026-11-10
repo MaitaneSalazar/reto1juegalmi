@@ -10,6 +10,9 @@ import { SelectorCantidadComponent } from '../../components/selector-cantidad/se
 import { PrecioComponent } from '../../components/precio/precio.component';
 import { CestaService } from '../../services/cesta.service';
 import { PedidoService } from '../../services/pedido.service';
+import { AlquilerService } from '../../services/alquiler.service';
+import { LineaCesta } from '../../models/pedido.model';
+import { firstValueFrom } from 'rxjs';
 import { SesionService } from '../../services/sesion.service';
 import { DomicilioService } from '../../services/domicilio.service';
 import { NombreProductoPipe } from '../../pipes/nombre-producto.pipe';
@@ -25,6 +28,7 @@ export class CestaPage {
   cesta = inject(CestaService);
   private sesion = inject(SesionService);
   private pedidos = inject(PedidoService);
+  private alquileres = inject(AlquilerService);
   private domicilios = inject(DomicilioService);
   private router = inject(Router);
   private toast = inject(ToastController);
@@ -45,34 +49,43 @@ export class CestaPage {
 
   irATienda(): void { this.router.navigateByUrl('/tienda'); }
 
-  cambiar(productoId: number, cambio: number): void {
-    // si llega a 0 se quita; no deja pasar del stock
-    if (!this.cesta.cambiarCantidad(productoId, cambio)) this.aviso('No quedan más unidades', 'dark');
+  cambiar(linea: LineaCesta, cambio: number): void {
+    // si llega a 0 se quita; no deja pasar del stock (o de las copias libres)
+    if (!this.cesta.cambiarCantidad(linea, cambio)) this.aviso('No quedan más unidades');
   }
 
-  // POST /api/pedidos { id_domicilio, lineas } → todo o nada (sin stock → 409 con el motivo)
-  confirmar(): void {
+  // Primero el pedido con las compras (POST /api/pedidos) y luego un alquiler por cada número de días
+  // (POST /api/alquileres: los mismos días para todos sus juegos). Igual que CestaFragment en Android
+  async confirmar(): Promise<void> {
+    const compras = this.cesta.lineas().filter(l => !l.alquiler);
+    const alquileres = this.cesta.lineas().filter(l => l.alquiler);
     const d = this.direccion();
-    if (!d) {
-      this.aviso('Elige una dirección de envío', 'danger');
+    if (compras.length && !d) {                // la dirección solo hace falta si hay compras
+      this.aviso('Elige una dirección de envío');
       return;
     }
     this.enviando.set(true);
-    this.pedidos.crear(d.id, this.cesta.lineas()).subscribe({
-      next: async () => {
-        this.enviando.set(false);
-        this.cesta.vaciar();
-        await this.exito.mostrar('Pedido hecho');           // check de Lottie, como Android
-        this.router.navigateByUrl('/cuenta/pedidos');
-      },
-      error: e => {
-        this.enviando.set(false);
-        this.aviso(this.sesion.mensaje(e), 'danger');
-      },
-    });
+    try {
+      if (compras.length) {
+        await firstValueFrom(this.pedidos.crear(d!.id, compras));
+        compras.forEach(l => this.cesta.quitar(l));
+      }
+      for (const dias of [...new Set(alquileres.map(l => l.dias ?? 0))]) {
+        const tanda = alquileres.filter(l => l.dias === dias);
+        await firstValueFrom(this.alquileres.crear(dias, tanda.map(l => l.producto.id)));
+        tanda.forEach(l => this.cesta.quitar(l));
+      }
+      await this.exito.mostrar(compras.length ? 'Pedido hecho' : 'Alquiler hecho');
+      this.router.navigateByUrl(compras.length ? '/cuenta/pedidos' : '/cuenta/alquileres');
+    } catch (e) {
+      // p. ej. 409 sin stock: la cesta se queda con lo que falta, como en Android
+      this.aviso(this.sesion.mensaje(e));
+    } finally {
+      this.enviando.set(false);
+    }
   }
 
-  private async aviso(mensaje: string, color: string): Promise<void> {
+  private async aviso(mensaje: string): Promise<void> {
     const t = await this.toast.create({ message: mensaje, duration: 3000, position: 'bottom' });
     await t.present();
   }

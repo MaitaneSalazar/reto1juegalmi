@@ -30,6 +30,17 @@
     }
   </div>
 
+  <!-- Comprar → Videojuegos: píldoras de plataforma con su color (como Android) -->
+  @if (modo() === 'comprar' && filtro() === 'videojuego') {
+    <div class="plataformas-filtro">
+      @for (pl of plataformasComprar; track pl) {
+        <button type="button" class="pildora" [class.elegida]="plataforma() === pl"
+                [style.--color]="pl ? colorPlataforma(pl) : '#1f2329'"
+                (click)="plataforma.set(pl); cargar()">{{ pl ? nombrePlataforma(pl) : 'Todas' }}</button>
+      }
+    </div>
+  }
+
   @if (error()) {
     <app-estado [error]="true" (reintentar)="cargar()"></app-estado>
   } @else if (cargando()) {

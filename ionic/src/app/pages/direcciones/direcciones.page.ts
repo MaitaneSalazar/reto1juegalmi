@@ -33,7 +33,7 @@ export class DireccionesPage {
   ionViewWillEnter(): void {
     this.domicilios.cargar().subscribe({
       next: () => this.cargando.set(false),
-      error: e => { this.cargando.set(false); this.aviso(this.sesion.mensaje(e), 'danger'); },
+      error: e => { this.cargando.set(false); this.aviso(this.sesion.mensaje(e)); },
     });
   }
 
@@ -44,7 +44,7 @@ export class DireccionesPage {
   // Tocar la tarjeta = usarla para enviar los pedidos
   elegir(d: Domicilio): void {
     this.domicilios.elegir(d.id);
-    this.aviso('Enviaremos tus pedidos aquí', 'dark');
+    this.aviso('Enviaremos tus pedidos aquí');
   }
 
   editar(d: Domicilio, e: Event): void {
@@ -62,8 +62,8 @@ export class DireccionesPage {
         { text: 'Cancelar', role: 'cancel' },
         { text: 'Borrar', role: 'destructive', handler: () => {
           this.domicilios.borrar(d.id).subscribe({
-            next: () => { this.aviso('Dirección borrada.', 'dark'); this.domicilios.cargar().subscribe(); },
-            error: err => this.aviso(this.sesion.mensaje(err), 'danger'),
+            next: () => { this.aviso('Dirección borrada.'); this.domicilios.cargar().subscribe(); },
+            error: err => this.aviso(this.sesion.mensaje(err)),
           });
         } },
       ],
@@ -71,7 +71,7 @@ export class DireccionesPage {
     await alerta.present();
   }
 
-  private async aviso(m: string, color: string): Promise<void> {
+  private async aviso(m: string): Promise<void> {
     const t = await this.toast.create({ message: m, duration: 2000 });
     await t.present();
   }

@@ -38,7 +38,7 @@ describe('CestaService', () => {
 
   it('quita la línea cuando la cantidad llega a 0', () => {
     cesta.anadir(zelda);
-    cesta.cambiarCantidad(zelda.id, -1);
+    cesta.cambiarCantidad(cesta.lineas()[0], -1);
     expect(cesta.lineas()).toEqual([]);
   });
 
@@ -57,6 +57,15 @@ describe('CestaService', () => {
     expect(cesta.anadir(zelda, 2)).toBe(true);
     expect(cesta.anadir(zelda)).toBe(false);          // Zelda tiene stock 2
     expect(cesta.unidades()).toBe(2);
-    expect(cesta.cambiarCantidad(1, 1)).toBe(false);
+    expect(cesta.cambiarCantidad(cesta.lineas()[0], 1)).toBe(false);
+  });
+
+  it('alquiler: línea aparte con sus días y precio por días', () => {
+    const juego = { ...zelda, precio_alquiler_dia: 1.5, copias_disponibles: 1 } as Producto;
+    cesta.anadir(juego);
+    expect(cesta.anadir(juego, 1, true, 3)).toBe(true);
+    expect(cesta.lineas().length).toBe(2);
+    expect(cesta.precio(cesta.lineas()[1])).toBe(4.5);
+    expect(cesta.anadir(juego, 1, true, 5)).toBe(false);     // solo queda 1 copia libre
   });
 });

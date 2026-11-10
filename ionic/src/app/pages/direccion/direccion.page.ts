@@ -80,7 +80,7 @@ export class DireccionPage {
         await this.exito.mostrar('Dirección guardada');
         this.nav.back();
       },
-      error: e => { this.guardando.set(false); this.aviso(this.sesion.mensaje(e), 'danger'); },
+      error: e => { this.guardando.set(false); this.aviso(this.sesion.mensaje(e)); },
     });
   }
 
@@ -95,7 +95,7 @@ export class DireccionPage {
     return c as Partial<DatosDireccion>;
   }
 
-  private async aviso(m: string, color: string): Promise<void> {
+  private async aviso(m: string): Promise<void> {
     const t = await this.toast.create({ message: m, duration: 2000 });
     await t.present();
   }

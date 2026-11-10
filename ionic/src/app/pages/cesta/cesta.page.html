@@ -9,16 +9,17 @@
     <div class="cascada">
       <!-- ion-list = RecyclerView · ion-card = CardView -->
       <ion-list class="lista">
-      @for (l of cesta.lineas(); track l.producto.id) {
+      @for (l of cesta.lineas(); track $index) {
         <ion-card class="tarjeta">
         <div class="linea">
           <app-miniatura-producto [producto]="l.producto"></app-miniatura-producto>
           <div class="datos">
             <strong>{{ l.producto | nombreProducto }}</strong>
-            <app-precio [valor]="l.producto.precio_venta"></app-precio>
+            @if (l.alquiler) { <small>{{ l.dias }} {{ l.dias === 1 ? 'día' : 'días' }}</small> }
+            <app-precio [valor]="cesta.precio(l)"></app-precio>
           </div>
-          <app-selector-cantidad [vertical]="true" [valor]="l.cantidad" [min]="0" [max]="l.producto.stock"
-                                 (cambio)="cambiar(l.producto.id, $event)"></app-selector-cantidad>
+          <app-selector-cantidad [vertical]="true" [valor]="l.cantidad" [min]="0"
+                                 [max]="cesta.limite(l.producto, !!l.alquiler)" (cambio)="cambiar(l, $event)"></app-selector-cantidad>
         </div>
         </ion-card>
       }

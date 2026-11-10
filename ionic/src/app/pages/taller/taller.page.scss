@@ -88,5 +88,5 @@ ion-list.lista ion-card { margin: 0 0 14px; }
 .entregada {
   display: flex; align-items: center; gap: 16px; padding: 18px 20px;
   > ion-icon { font-size: 24px; color: var(--jg-texto-sec); flex-shrink: 0; }
-  .precio { font-size: 16px; white-space: nowrap; }
+  .precio { font-size: 15px; font-weight: 700; white-space: nowrap; }
 }

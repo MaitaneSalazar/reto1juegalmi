@@ -29,7 +29,7 @@
         <div class="tarjeta"><span>Avería</span><strong>{{ r.descripcion_averia }}</strong></div>
         <div class="tarjeta">
           <span>Presupuesto</span>
-          @if (r.presupuesto != null) { <app-precio [valor]="r.presupuesto"></app-precio> }
+          @if (r.presupuesto != null) { <span class="presupuesto"><b>{{ euros(r.presupuesto) }}</b><i>{{ centimos(r.presupuesto) }}</i></span> }
           @else { <strong>Pendiente</strong> }
         </div>
       </div>
@@ -44,7 +44,7 @@
                 <strong>{{ p.texto }}</strong>
                 @if (p.actual && p.descripcion) { <p>{{ p.descripcion }}</p> }
               </div>
-              @if (p.fecha) { <small>{{ p.fecha | fechaCorta }}</small> }
+              @if (p.fecha) { <small class="fecha">{{ p.fecha.slice(0, 10) }}</small> }   <!-- tal cual llega, como Android -->
             </li>
           }
         </ol>
@@ -55,7 +55,7 @@
         <div class="tarjeta tecnico">
           @if (r.trabajador; as t) {
             <span class="inicial">{{ t.nombre_completo[0] }}</span>
-            <span><strong>{{ t.nombre_completo }}</strong><small>{{ t.cargo }} · {{ t.departamento }}</small></span>
+            <span><strong>{{ t.nombre_completo }}</strong><small>{{ t.departamento }}</small></span>
           } @else {
             <span class="inicial">?</span>
             <span><strong>Aún sin técnico</strong><small>Te avisaremos cuando lo revisen.</small></span>
@@ -79,7 +79,7 @@
       }
 
       @if (r.se_puede_cancelar) {
-        <ion-button expand="block" fill="outline" color="danger" class="cancelar" (click)="cancelar()" [disabled]="cancelando()">
+        <ion-button expand="block" fill="clear" class="cancelar" (click)="cancelar()" [disabled]="cancelando()">
           Cancelar solicitud
         </ion-button>
       }

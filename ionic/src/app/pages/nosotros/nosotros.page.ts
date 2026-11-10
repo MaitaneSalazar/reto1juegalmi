@@ -2,7 +2,7 @@ import { Component, ElementRef, OnDestroy, inject, signal, viewChild } from '@an
 import { IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon, IonButton, IonCard, IonImg } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { locationOutline, timeOutline, callOutline, navigateOutline, imageOutline,
-         storefrontOutline, buildOutline, phonePortraitOutline, rocketOutline } from 'ionicons/icons';
+         storefrontOutline, buildOutline, phonePortraitOutline, rocketOutline, gameControllerOutline } from 'ionicons/icons';
 import * as L from 'leaflet';
 import { CabeceraComponent } from '../../components/cabecera/cabecera.component';
 import { TiendaService } from '../../services/tienda.service';
@@ -39,7 +39,7 @@ export class NosotrosPage implements OnDestroy {
 
   constructor() {
     addIcons({ locationOutline, timeOutline, callOutline, navigateOutline, imageOutline,
-               storefrontOutline, buildOutline, phonePortraitOutline, rocketOutline });
+               storefrontOutline, buildOutline, phonePortraitOutline, rocketOutline, gameControllerOutline });
     this.tiendaSrv.obtener().subscribe({
       next: t => {
         this.tienda.set(t);

@@ -8,13 +8,13 @@ import { FechaCortaPipe } from '../../pipes/fecha-corta.pipe';
 import { PedidoService } from '../../services/pedido.service';
 import { SesionService } from '../../services/sesion.service';
 import { EstadoPedido, LineaPedido, PedidoResumen } from '../../models/pedido.model';
-import { NombreProductoPipe, nombreProducto } from '../../pipes/nombre-producto.pipe';
+import { NombreProductoPipe } from '../../pipes/nombre-producto.pipe';
 import { NgTemplateOutlet } from '@angular/common';
 import { Router } from '@angular/router';
 import { EurosPipe } from '../../pipes/euros.pipe';
 import { catchError, forkJoin, map, of } from 'rxjs';
 import { addIcons } from 'ionicons';
-import { chevronDown, chevronUp } from 'ionicons/icons';
+import { chevronForward, chevronUp } from 'ionicons/icons';
 import { LottieComponent } from '../../components/lottie/lottie.component';
 
 // Pasos de la barra del pedido en curso
@@ -47,7 +47,7 @@ export class PedidosPage {
   pasos = PASOS;
 
   constructor() {
-    addIcons({ chevronDown, chevronUp });
+    addIcons({ chevronForward, chevronUp });
   }
 
   ionViewWillEnter(): void {
@@ -69,11 +69,13 @@ export class PedidosPage {
   anteriores = computed(() => this.pedidos().slice(1));
 
   // «PlayStation 5 Slim» o «Elden Ring +2» si el pedido tiene más artículos
+  // Igual que PedidoAdapter.nombre() en Android: "Elden Ring +2" (cuenta unidades, no líneas)
   titulo(p: PedidoResumen): string {
-    const l = this.lineas()[p.id];
-    if (!l?.length) return p.primer_producto;
-    return l.length > 1 ? `${nombreProducto(l[0].producto)} +${l.length - 1}` : nombreProducto(l[0].producto);
+    return p.unidades > 1 ? `${p.primer_producto} +${p.unidades - 1}` : p.primer_producto;
   }
+
+  // «Cancelado», «Pendiente», «Pagado»... con mayúscula, como Android
+  estadoMayus(p: PedidoResumen): string { return p.estado.charAt(0).toUpperCase() + p.estado.slice(1); }
 
   irATienda(): void { this.router.navigateByUrl('/tienda'); }
 
@@ -87,11 +89,11 @@ export class PedidosPage {
       header: '¿Cancelar el pedido?',
       message: `El pedido #${p.id} se cancelará y no se te cobrará.`,
       buttons: [
-        { text: 'No', role: 'cancel' },
-        { text: 'Sí, cancelar', role: 'destructive', handler: () => {
+        { text: 'Volver', role: 'cancel' },
+        { text: 'Cancelar pedido', role: 'destructive', handler: () => {
           this.servicio.cancelar(p.id).subscribe({
-            next: () => { this.aviso('Pedido cancelado.', 'dark'); this.cargar(); },
-            error: e => this.aviso(this.sesion.mensaje(e), 'danger'),
+            next: () => { this.aviso('Pedido cancelado'); this.cargar(); },
+            error: e => this.aviso(this.sesion.mensaje(e)),
           });
         } },
       ],
@@ -124,7 +126,7 @@ export class PedidosPage {
     ))).subscribe(res => this.lineas.set(Object.fromEntries(res)));
   }
 
-  private async aviso(mensaje: string, color: string): Promise<void> {
+  private async aviso(mensaje: string): Promise<void> {
     const t = await this.toast.create({ message: mensaje, duration: 2500 });
     await t.present();
   }

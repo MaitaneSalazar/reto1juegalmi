@@ -8,7 +8,7 @@ ion-searchbar { --background: var(--jg-tarjeta); --border-radius: 999px; --box-s
 .producto {
   display: flex; flex-direction: column; gap: 4px; min-width: 0;
   .nombre { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 6px; }
-  app-precio { font-size: 22px; }
+  app-precio { font-size: 17px; }
 }
 .foto {
   position: relative; display: block; aspect-ratio: 4 / 5;
@@ -48,3 +48,11 @@ ion-searchbar { --background: var(--jg-tarjeta); --border-radius: 999px; --box-s
   0%, 100% { box-shadow: 0 0 0 0 rgba(120, 205, 208, .6); }
   50%      { box-shadow: 0 0 0 10px rgba(120, 205, 208, 0); }
 }
+
+// Filtro de plataformas (Comprar → Videojuegos)
+.plataformas-filtro { display: flex; gap: 6px; overflow-x: auto; margin: -6px 0 16px; scrollbar-width: none; }
+.plataformas-filtro .pildora {
+  border: 0; border-radius: 999px; padding: 6px 12px; flex-shrink: 0;
+  background: #deeeed; color: var(--ion-text-color); font: inherit; font-size: 12px; font-weight: 700;
+}
+.plataformas-filtro .pildora.elegida { background: var(--color); color: #ffffff; }

@@ -1,5 +1,4 @@
 import { FechaCortaPipe } from '../../pipes/fecha-corta.pipe';
-import { ExitoService } from '../../services/exito.service';
 import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,7 +13,6 @@ import { EurosPipe } from '../../pipes/euros.pipe';
 import { ProductoService } from '../../services/producto.service';
 import { AlquilerService } from '../../services/alquiler.service';
 import { CestaService } from '../../services/cesta.service';
-import { SesionService } from '../../services/sesion.service';
 import { NOMBRE_TIPO, Producto, esAlquilable } from '../../models/producto.model';
 import { LottieComponent } from '../../components/lottie/lottie.component';
 import { SelectorCantidadComponent } from '../../components/selector-cantidad/selector-cantidad.component';
@@ -30,10 +28,8 @@ export class DetalleProductoPage {
   private productos = inject(ProductoService);
   private alquileres = inject(AlquilerService);
   private cesta = inject(CestaService);
-  private sesion = inject(SesionService);
   private router = inject(Router);
   private toast = inject(ToastController);
-  private exito = inject(ExitoService);
 
   producto = signal<Producto | null>(null);
   modo = signal<'comprar' | 'alquilar'>('comprar');
@@ -108,7 +104,7 @@ export class DetalleProductoPage {
   confirmar(): void {
     const p = this.producto();
     if (!p) return;
-    this.modo() === 'comprar' ? this.anadirCesta(p) : this.alquilar(p);
+    this.anadirCesta(p);              // comprar y alquilar van a la cesta, como Android
   }
 
   // Agotado: de momento solo se avisa (la API no tiene avisos de stock)
@@ -125,7 +121,10 @@ export class DetalleProductoPage {
   }
 
   private async anadirCesta(p: Producto): Promise<void> {
-    if (!this.cesta.anadir(p, this.cantidad())) {                       // ya tienes en la cesta todas las que quedan
+    const ok = this.modo() === 'alquilar'
+      ? this.cesta.anadir(p, 1, true, this.dias())       // una copia con los días elegidos
+      : this.cesta.anadir(p, this.cantidad());
+    if (!ok) {                       // ya tienes en la cesta todas las que quedan
       const t = await this.toast.create({ message: 'No quedan más unidades', duration: 2000 });
       await t.present();
       return;
@@ -138,23 +137,5 @@ export class DetalleProductoPage {
       buttons: [{ text: 'Ver cesta', handler: () => { this.router.navigateByUrl('/cesta'); } }],
     });
     await t.present();
-  }
-
-  private alquilar(p: Producto): void {
-    this.enviando.set(true);
-
-    this.alquileres.crear(this.dias(), [p.id]).subscribe({
-      next: async () => {
-        this.enviando.set(false);
-        await this.exito.mostrar('Alquiler hecho');          // check de Lottie, como Android
-        this.router.navigateByUrl('/cuenta/alquileres', { replaceUrl: true });
-      },
-      error: async e => {
-        this.enviando.set(false);
-        // 409: "No quedan copias libres de ..." (mensaje de la API)
-        const t = await this.toast.create({ message: this.sesion.mensaje(e), duration: 3000 });
-        await t.present();
-      },
-    });
   }
 }

@@ -43,8 +43,8 @@
   @if (vista() === 'historia') {
     <p class="historia">{{ historia }}</p>
     <ol class="hitos cascada">
-      @for (h of hitos; track h.anio) {
-        <li>
+      @for (h of hitos; track h.anio; let ultimo = $last) {
+        <li [class.ultimo]="ultimo">
           <span class="punto"></span>
           <div class="tarjeta">
             <span class="icono"><ion-icon [name]="h.icono"></ion-icon></span>

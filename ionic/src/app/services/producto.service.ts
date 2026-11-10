@@ -12,7 +12,7 @@ export class ProductoService {
   private http = inject(HttpClient);
 
   // Tienda · comprar: GET /api/productos?tipo=&q=&page=&limit=
-  listar(f: { tipo?: TipoProducto; q?: string; page?: number; limit?: number } = {}): Observable<Pagina<Producto>> {
+  listar(f: { tipo?: TipoProducto; plataforma?: string; q?: string; page?: number; limit?: number } = {}): Observable<Pagina<Producto>> {
     return this.http.get<Pagina<Producto>>(`${API}/productos`, { params: this.params(f) });
   }
 

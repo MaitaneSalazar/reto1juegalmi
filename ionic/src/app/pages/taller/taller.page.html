@@ -121,7 +121,21 @@
         </ion-list>
       }
 
-      @if (!enCurso().length && !entregadas().length) {
+      @if (canceladas().length) {
+        <div class="seccion"><h2>Canceladas</h2></div>
+        <ion-list class="lista">
+        @for (r of canceladas(); track r.id) {
+          <ion-card class="tarjeta pulsable" (click)="abrir(r)">
+          <div class="entregada">
+            <ion-icon name="close-circle-outline"></ion-icon>
+            <span class="textos"><strong>{{ tipoTexto(r) }} · {{ r.marca }} {{ r.modelo }}</strong><small>Cancelada</small></span>
+          </div>
+          </ion-card>
+        }
+        </ion-list>
+      }
+
+      @if (!enCurso().length && !entregadas().length && !canceladas().length) {
         <app-estado icono="build-outline" titulo="Aún no tienes reparaciones" texto="Cuando nos traigas algo a reparar, podrás seguirlo desde aquí."
                     boton="Pedir una reparación" (accion)="pedirReparacion()"></app-estado>
       }

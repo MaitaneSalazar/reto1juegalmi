@@ -73,7 +73,7 @@ export class EditarDatosPage {
       const nueva = await this.fotos.hacerFoto();
       if (nueva) this.foto.set(nueva);
     } catch {
-      this.aviso('No se ha podido usar la cámara. Revisa los permisos.', 'danger');
+      this.aviso('No se ha podido usar la cámara. Revisa los permisos.');
     }
   }
 
@@ -96,11 +96,11 @@ export class EditarDatosPage {
         : of(u)),
     ).subscribe({
       next: async () => { this.guardando.set(false); await this.exito.mostrar('Datos guardados'); this.nav.back(); },
-      error: e => { this.guardando.set(false); this.aviso(this.sesion.mensaje(e), 'danger'); },   // p. ej. contraseña actual incorrecta
+      error: e => { this.guardando.set(false); this.aviso(this.sesion.mensaje(e)); },   // p. ej. contraseña actual incorrecta
     });
   }
 
-  private async aviso(m: string, color: string): Promise<void> {
+  private async aviso(m: string): Promise<void> {
     const t = await this.toast.create({ message: m, duration: 2000 });
     await t.present();
   }

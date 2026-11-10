@@ -78,7 +78,7 @@
     &.aviso { background: #a72144; color: #ffffff; }
   }
   strong { font-size: 15px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  app-precio { font-size: 22px; }
+  app-precio { font-size: 17px; }
 }
 
 .novedad.agotado { app-miniatura-producto, strong, app-precio { opacity: .55; filter: grayscale(1); } }

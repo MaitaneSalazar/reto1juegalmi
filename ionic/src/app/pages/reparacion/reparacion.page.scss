@@ -19,26 +19,28 @@ ion-toolbar { --background: var(--ion-background-color); --min-height: 64px; pad
   .tarjeta { display: flex; flex-direction: column; gap: 8px; padding: 18px; }
   span { color: var(--jg-texto-sec); font-size: 15px; }
   strong { font-size: 17px; font-weight: 600; line-height: 1.4; }
-  app-precio { font-size: 34px; }
+  .presupuesto { display: flex; align-items: baseline; b { font-size: 36px; font-weight: 700; color: var(--ion-text-color); } i { font-style: normal; font-size: 18px; font-weight: 700; color: var(--ion-text-color); } }
 }
 
-// Línea de tiempo
+// Línea de tiempo (como Android)
 .linea-tiempo {
   list-style: none; margin: 0 0 14px; padding: 20px 20px 4px;
 
   li { position: relative; display: flex; gap: 16px; padding-bottom: 24px; color: var(--jg-texto-sec); }
-  li:not(:last-child)::before {               // línea vertical
+  li:not(:last-child)::before {               // línea vertical: #375E60 hasta el paso actual, gris después
     content: ''; position: absolute; left: 6px; top: 16px; bottom: -2px;
-    width: 2px; background: var(--jg-borde);
+    width: 2px; background: rgba(24, 26, 32, 0.16);
   }
-  li.hecho:not(:last-child)::before { background: var(--ion-text-color); }
-  .punto { width: 14px; height: 14px; margin-top: 3px; border-radius: 50%; flex-shrink: 0; background: var(--jg-borde); z-index: 1; }
-  li.hecho { color: var(--ion-text-color); .punto { background: var(--ion-text-color); } }
-  li.actual .punto { background: var(--jg-tarjeta); border: 3px solid var(--jg-acento); }
+  li.hecho:not(.actual):not(:last-child)::before { background: #375e60; }
+  .punto { width: 14px; height: 14px; margin-top: 3px; border-radius: 50%; flex-shrink: 0; box-sizing: border-box; z-index: 1;
+           background: #ffffff; border: 2px solid rgba(24, 26, 32, 0.16); }        // pendiente
+  li.hecho .punto { background: #375e60; border: 0; }                                // hecho
+  li.actual .punto { background: #ffffff; border: 3px solid #375e60; }               // actual
+  li.hecho, li.actual { color: var(--ion-text-color); }
   .crece { flex-grow: 1; }
-  strong { font-size: 17px; font-weight: 500; }
-  p { margin: 6px 0 0; color: var(--jg-texto-sec); font-size: 15px; line-height: 1.45; }
-  small { font-size: 13px; color: var(--jg-texto-sec); letter-spacing: .05em; padding-top: 3px; white-space: nowrap; }
+  strong { font-size: 16px; font-weight: 600; }
+  p { margin: 6px 0 0; color: var(--jg-texto-sec); font-size: 14px; line-height: 1.45; }
+  .fecha { font-family: monospace; font-size: 13px; color: var(--jg-texto-tenue, #9aa0a6); padding-top: 3px; white-space: nowrap; }
 }
 
 // Técnico + botón turquesa de llamar
@@ -66,5 +68,5 @@ ion-toolbar { --background: var(--ion-background-color); --min-height: 64px; pad
   img { width: 100%; height: 100%; object-fit: cover; }
 }
 
-.cancelar { margin-top: 26px; --border-radius: 999px; min-height: 52px; }
+.cancelar { margin-top: 26px; min-height: 52px; --color: #a72144; }   // solo texto rojo, como Android
 .foto img { width: 100%; height: 100%; object-fit: cover; }

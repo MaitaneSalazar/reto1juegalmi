@@ -26,4 +26,6 @@ export interface LineaPedido { id: number; producto: Producto; cantidad: number;
 export interface LineaCesta {
   producto: Producto;
   cantidad: number;
+  alquiler?: boolean;            // true = alquiler; se guarda en localStorage igual que el resto
+  dias?: number;                 // solo en los alquileres
 }

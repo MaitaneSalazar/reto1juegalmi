@@ -1,65 +1,75 @@
-.pedido, .anterior { margin: 0 0 14px; }
-.nombre { margin: 14px 0 8px; font-size: 16px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.anterior {
-  padding: 16px 18px;
-  .nombre { margin: 0 0 4px; }
-  .resumen { margin: 0 0 12px; color: var(--jg-texto-sec); font-size: 14px; }
-  .cancelar { margin-top: 12px; }
-}
+// ===== Mis pedidos, como Android =====
+.pedido, .anterior { margin: 0 0 12px; background: #ffffff; }
+
+// Último pedido
 .pedido {
-  padding: 20px 20px 18px;
+  padding: 20px; border-radius: 18px;
   .cabecera { display: flex; justify-content: space-between; align-items: baseline; }
-  strong { font-size: 17px; font-weight: 600; }
-  .cabecera span { color: var(--jg-texto-sec); font-size: 15px; }
-  app-precio { font-size: 26px; }
+  .cabecera strong { font-size: 15px; font-weight: 700; }
+  .cabecera span { color: var(--jg-texto-sec); font-size: 13px; }
+  .nombre { margin: 16px 0 8px; color: var(--jg-texto-sec); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pie app-precio { font-size: 28px; }
 }
-// Barra de 4 tramos con su texto debajo
-.barra { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; gap: 8px; margin: 18px 0 16px; }
+// 4 rayas con su paso debajo
+.barra { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; gap: 8px; margin: 20px 0 0; }
 .tramo {
-  display: flex; flex-direction: column; gap: 10px;
-  i { height: 6px; border-radius: 3px; background: var(--jg-segmento); }
-  span { font-size: 12px; color: var(--jg-texto-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  &.hecho i { background: var(--jg-acento); }
+  display: flex; flex-direction: column; gap: 8px;
+  i { height: 6px; border-radius: 3px; background: #deeeed; }
+  span { font-size: 11px; color: var(--jg-texto-tenue, #9aa0a6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  &.hecho i { background: #78cdd0; }
   &.ahora span { color: var(--ion-text-color); font-weight: 600; }
 }
 .cancelado {
-  display: inline-block; margin: 14px 0; padding: 4px 12px; border-radius: 999px;
-  background: var(--jg-gris); color: var(--jg-texto-sec); font-size: 13px; font-weight: 600;
+  display: inline-block; margin: 16px 0 0; padding: 4px 12px; border-radius: 999px;
+  background: #a72144; color: #ffffff; font-size: 12px; font-weight: 700;
 }
 .pie { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
-.minis { display: flex; align-items: flex-end; gap: 10px; }
-.minis app-miniatura-producto { --tam: 52px; --radio: 10px; height: 64px; }
+
+// Fotos: 48 × 64, máximo 3 y una cuarta con «+»
+.minis { display: flex; align-items: flex-end; gap: 8px; }
+.minis app-miniatura-producto { width: 48px; height: 64px; --radio: 10px; }
 .mini { position: relative; display: block; }
 .cantidad {
-  position: absolute; right: -6px; top: -6px; padding: 1px 6px; border-radius: 999px;
-  background: #1f2329; color: #ffffff; font-size: 11px;
+  position: absolute; right: -4px; top: -4px; padding: 1px 5px; border-radius: 999px;
+  background: #1f2329; color: #ffffff; font-size: 10px;
 }
 .mas {
-  align-self: center; min-width: 36px; height: 36px; padding: 0 8px; border-radius: 10px;
-  display: grid; place-items: center; background: var(--jg-acento-suave); font-size: 14px; font-weight: 700;
+  width: 48px; height: 64px; border-radius: 10px;
+  display: grid; place-items: center; background: #deeeed; font-size: 14px; font-weight: 700;
+}
+
+// Anteriores
+.seccion h2 { margin: 28px 0 12px; font-size: 20px; font-weight: 700; }
+.anterior {
+  padding: 16px; border-radius: 20px;
+  .arriba { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .textos { min-width: 0; }
+  .nombre { margin: 0; font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .resumen { margin: 2px 0 0; color: var(--jg-texto-sec); font-size: 13px; }
+  .arriba app-precio { font-size: 17px; }
+  .minis { margin-top: 12px; }
+  .cancelar { margin-top: 12px; }
 }
 .ver-mas {
-  display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 8px 14px;
-  border: 0; border-radius: 999px; background: var(--jg-acento-suave);
-  color: var(--ion-text-color); font: inherit; font-size: 14px; font-weight: 600; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; padding: 0;
+  border: 0; background: none; color: #375e60; font: inherit; font-size: 14px; font-weight: 700; white-space: nowrap;
 }
 
-// Lista completa al pulsar «Ver más»
+// Líneas de «Ver más»
 .detalle {
-  list-style: none; margin: 16px 0 0; padding: 12px 0 0; border-top: 1px solid var(--jg-borde);
-  display: flex; flex-direction: column; gap: 12px;
+  list-style: none; margin: 12px 0 0; padding: 0;
+  display: flex; flex-direction: column; gap: 10px;
   li { display: flex; align-items: center; gap: 12px; }
-  app-miniatura-producto { --tam: 48px; --radio: 10px; }
+  app-miniatura-producto { --tam: 44px; --radio: 10px; }
   .textos { flex-grow: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  strong { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  strong { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   small { color: var(--jg-texto-sec); font-size: 13px; }
-  app-precio { font-size: 17px; }
+  app-precio { font-size: 14px; }
 }
 
-// Cancelar: borde rojo suave, ancho completo
+// Cancelar: relleno #DEEEED, texto oscuro, píldora
 .cancelar {
-  width: 100%; min-height: 44px; margin-top: 16px;
-  border: 1.5px solid rgba(167, 33, 68, .4); border-radius: 999px;
-  background: rgba(244, 228, 233, .6); color: #a72144;
-  font: inherit; font-size: 15px; font-weight: 500;
+  width: 100%; height: 48px; margin-top: 16px;
+  border: 0; border-radius: 999px; background: #deeeed;
+  color: var(--ion-text-color); font: inherit; font-size: 15px; font-weight: 500;
 }

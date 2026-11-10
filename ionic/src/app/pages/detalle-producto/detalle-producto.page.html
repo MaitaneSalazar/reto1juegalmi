@@ -42,7 +42,7 @@
         <div class="dias">
           @for (d of opcionesDias; track d) {
             <button type="button" class="pulsable" [class.activo]="dias() === d" (click)="dias.set(d)">
-              <b>{{ d }}</b><span>{{ d === 1 ? 'día' : 'días' }}</span>
+              {{ d }} {{ d === 1 ? 'día' : 'días' }}
             </button>
           }
         </div>
@@ -64,7 +64,7 @@
       </div>
       @if (quedan() <= 0) {
         <!-- Agotado: el botón pasa a «Avísame» -->
-        <ion-button fill="outline" class="avisame" (click)="avisame()">
+        <ion-button (click)="avisame()">
           <ion-icon slot="start" name="notifications-outline"></ion-icon>Avísame
         </ion-button>
       } @else {
