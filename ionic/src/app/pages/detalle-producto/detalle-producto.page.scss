@@ -48,20 +48,21 @@ ion-footer { padding: 0 0 var(--ion-safe-area-bottom, 0px); background: var(--io
   .importe { display: flex; flex-direction: column; gap: 2px; }
   .importe app-precio { font-size: 24px; }
   .importe small { font-size: 12px; color: var(--jg-texto-sec); }
-  ion-button { flex: 1; min-height: 52px; margin: 0; }
+  ion-button { flex: 1; min-height: 52px; margin: 0; font-size: 14px; font-weight: 500; --color: #162525; }
 }
 
 // Stock visible
 .disponible { margin: -8px 0 20px; font-size: 14px; font-weight: 600; color: #375e60; }
 .disponible.aviso { color: #a72144; }
 
-
-// Fila «Cantidad» con − y + (modo Comprar)
+// Fila «Cantidad» con − y + (modo Comprar), como en Android: píldora de 44px y los dos botones siempre oscuros
 .fila-cantidad {
-  display: flex; align-items: center; justify-content: space-between; margin: 18px 0 4px; font-size: 15px; font-weight: 700;
-  app-selector-cantidad { background: #deeeed; }
-  app-selector-cantidad ::ng-deep button { width: 44px; height: 44px; }
-  app-selector-cantidad ::ng-deep span { font-size: 16px; font-weight: 700; }
+  display: flex; align-items: center; justify-content: space-between; margin: 20px 0 4px;
+  font-size: 15px; font-weight: 700;
+  app-selector-cantidad { padding: 0; gap: 0; background: #deeeed; }
+  app-selector-cantidad ::ng-deep button { width: 44px; height: 44px; font-size: 20px; color: #1f2329; }
+  app-selector-cantidad ::ng-deep button:disabled { opacity: 1; }   // en Android el «−» no se apaga
+  app-selector-cantidad ::ng-deep span { min-width: 24px; font-size: 16px; font-weight: 700; }
 }
 
 // Comprar / Alquilar: la elegida en turquesa, como la ficha de Android (solo aquí; la Tienda sigue en blanco)
@@ -69,10 +70,12 @@ ion-segment.modo {
   min-height: 48px; padding: 4px; background: #deeeed;
   ion-segment-button {
     --color: var(--jg-texto-sec);
-    --color-checked: #1f2329;
-    --indicator-color: #78cdd0;
-    --background-checked: #78cdd0;
+    --color-checked: var(--jg-texto-sec);     // en Android, el texto de la elegida también es gris
+    --indicator-height: 0;                    // sin la raya de abajo del modo md
+    min-height: 40px;
     font-size: 13px; font-weight: 500;
   }
-  ion-segment-button::part(indicator-background) { background: #78cdd0; }
+  // Va con .segment-button-checked para ganar a la regla global que la pone en blanco
+  ion-segment-button.segment-button-checked { background: #78cdd0; }
+  ion-segment-button::part(indicator) { display: none; }
 }
