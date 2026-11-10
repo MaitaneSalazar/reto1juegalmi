@@ -42,12 +42,11 @@ export class DetalleProductoPage {
   // Lo que queda: unidades para comprar o copias libres para alquilar
   quedan = computed(() => {
     const p = this.producto();
-    if (!p || p.stock <= 0) return 0;                 // sin stock: ni comprar ni alquilar
-    return this.modo() === 'alquilar' ? (p.copias_disponibles ?? 0) : p.stock;
+    return !p ? 0 : this.modo() === 'alquilar' ? (p.copias_disponibles ?? 0) : p.stock;
   });
   textoStock = computed(() => {
     const n = this.quedan(), alq = this.modo() === 'alquilar';
-    if (n <= 0) return alq && (this.producto()?.stock ?? 0) > 0 ? 'Todas las copias están alquiladas' : 'Agotado';
+    if (n <= 0) return alq ? 'Todas las copias están alquiladas' : 'Agotado';
     if (n === 1) return `¡Date prisa! Queda 1 ${alq ? 'copia' : 'unidad'}`;
     if (n === 2) return `¡Date prisa! Quedan 2 ${alq ? 'copias' : 'unidades'}`;
     return alq ? 'Disponible para alquilar' : 'En stock · envío en 24 h';
