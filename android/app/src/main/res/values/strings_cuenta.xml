@@ -57,4 +57,5 @@
     <string name="dir_guardando">Guardando…</string>
     <string name="dir_guardada">Dirección guardada</string>
     <string name="dir_error_cp">El código postal tiene 5 números</string>
+    <string name="sesion_caducada">La sesión ha caducado. Vuelve a iniciar sesión.</string>
 </resources>

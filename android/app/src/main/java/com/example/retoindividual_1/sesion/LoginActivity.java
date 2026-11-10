@@ -40,6 +40,12 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        //EL TOKEN DURA 7 DIAS: SI YA HAY SESION, SE SALTA EL LOGIN
+        if (new SessionManager(this).haySesion()) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_login);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             //CON ime() EL TECLADO NO TAPA EL FORMULARIO
