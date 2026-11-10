@@ -24,6 +24,7 @@ public class Producto {
     private final double precioAlquilerDia;
     private final int stock;
     private final int copiasDisponibles;
+    private final int copiasAlquiler;
     private final boolean disponible;
 
     //ABRIMOS EL JSON Y SACAMOS CADA DATO
@@ -54,6 +55,8 @@ public class Producto {
         this.precioAlquilerDia = json.optDouble("precio_alquiler_dia");
         this.stock = json.optInt("stock");
         this.copiasDisponibles = json.optInt("copias_disponibles");
+        //0 = ESE JUEGO NO SE ALQUILA
+        this.copiasAlquiler = json.optInt("copias_alquiler");
         this.disponible = json.optBoolean("disponible", true);
     }
 
@@ -111,6 +114,10 @@ public class Producto {
 
     public int getCopiasDisponibles() {
         return copiasDisponibles;
+    }
+
+    public int getCopiasAlquiler() {
+        return copiasAlquiler;
     }
 
     public boolean isDisponible() {

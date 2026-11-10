@@ -227,6 +227,12 @@ public class FichaProductoActivity extends PaginaMenuActivity {
             tvEtiqueta2.setVisibility(View.GONE);
         }
 
+        //SI EL JUEGO NO TIENE COPIAS DE ALQUILER SOLO SE PUEDE COMPRAR
+        if (producto.getCopiasAlquiler() <= 0) {
+            tlModo.setVisibility(View.GONE);
+            alquilando = false;
+        }
+
         TabLayout.Tab tabComprar = tlModo.getTabAt(0);
         if (tabComprar != null) {
             tabComprar.setText(getString(R.string.ficha_comprar_precio, EUROS.format(producto.getPrecioVenta())));
