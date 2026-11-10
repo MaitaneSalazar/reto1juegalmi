@@ -58,4 +58,8 @@ describe('avisoStock (la misma regla que Android)', () => {
     expect(avisoStock(p(9, { copias_disponibles: 1 }), true)).toEqual({ texto: 'Última copia', agotado: false });
     expect(avisoStock(p(9, { copias_disponibles: 0 }), true)?.texto).toBe('Alquilado');
   });
+
+  it('alquilar: sin stock tampoco se alquila aunque haya copias', () => {
+    expect(avisoStock(p(0, { copias_disponibles: 3 }), true)).toEqual({ texto: 'Agotado', agotado: true });
+  });
 });

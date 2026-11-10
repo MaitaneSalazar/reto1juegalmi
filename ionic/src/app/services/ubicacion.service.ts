@@ -44,7 +44,7 @@ export class UbicacionService {
     ]);
   }
 
-  // Distancia en km entre dos puntos (fórmula de Haversine)
+  // Distancia en km entre dos puntos
   distanciaKm(a: Posicion, b: Posicion): number {
     const rad = (g: number) => g * Math.PI / 180;
     const dLat = rad(b.lat - a.lat);
