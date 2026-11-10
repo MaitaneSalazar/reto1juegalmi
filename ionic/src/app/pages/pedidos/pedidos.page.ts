@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonSkeletonText, IonIcon,
+import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon,
          AlertController, ToastController, IonList, IonCard } from '@ionic/angular';
 import { EstadoComponent } from '../../components/estado/estado.component';
 import { MiniaturaProductoComponent } from '../../components/miniatura-producto/miniatura-producto.component';
@@ -15,6 +15,7 @@ import { EurosPipe } from '../../pipes/euros.pipe';
 import { catchError, forkJoin, map, of } from 'rxjs';
 import { addIcons } from 'ionicons';
 import { chevronDown, chevronUp } from 'ionicons/icons';
+import { LottieComponent } from '../../components/lottie/lottie.component';
 
 // Pasos de la barra del pedido en curso
 const PASOS: { estado: EstadoPedido; texto: string }[] = [
@@ -28,7 +29,7 @@ const PASOS: { estado: EstadoPedido; texto: string }[] = [
   selector: 'app-pedidos',
   templateUrl: './pedidos.page.html',
   styleUrls: ['../subpagina.scss', './pedidos.page.scss'],
-  imports: [IonList, IonCard, NgTemplateOutlet, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonSkeletonText, IonIcon,
+  imports: [LottieComponent, IonList, IonCard, NgTemplateOutlet, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon,
             EstadoComponent, MiniaturaProductoComponent, NombreProductoPipe, EurosPipe, PrecioComponent, FechaCortaPipe],
 })
 export class PedidosPage {
@@ -124,7 +125,7 @@ export class PedidosPage {
   }
 
   private async aviso(mensaje: string, color: string): Promise<void> {
-    const t = await this.toast.create({ message: mensaje, duration: 2500, color });
+    const t = await this.toast.create({ message: mensaje, duration: 2500 });
     await t.present();
   }
 }

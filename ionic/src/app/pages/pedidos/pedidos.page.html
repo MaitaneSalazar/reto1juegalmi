@@ -10,9 +10,7 @@
   @if (error()) {
     <app-estado [error]="true" (reintentar)="cargar()"></app-estado>
   } @else if (cargando()) {
-    @for (i of [1, 2]; track i) {
-      <ion-skeleton-text [animated]="true" style="height: 190px; border-radius: 24px; margin-bottom: 14px"></ion-skeleton-text>
-    }
+    <app-lottie nombre="cargando" class="cargando"></app-lottie>
   } @else if (!pedidos().length) {
     <app-estado icono="receipt-outline" titulo="Sin pedidos" texto="Todavía no has hecho ningún pedido. Puedes hacerlo desde la tienda."
                 boton="Ir a la tienda" (accion)="irATienda()"></app-estado>

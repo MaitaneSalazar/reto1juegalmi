@@ -208,3 +208,19 @@ ion-toast { --border-radius: 18px; --start: 16px; --end: 16px; transform: transl
   display: inline-flex; align-items: center; justify-content: center;
   font-size: 18px; font-weight: 700; letter-spacing: 0;
 }
+
+// Lottie: tres puntos mientras carga (mismo tamaño y margen que en Android)
+app-lottie.cargando { width: 72px; height: 30px; margin: 64px auto 0; }
+
+// Diálogo de «hecho» con el check de Lottie
+.modal-exito { --width: 280px; --height: auto; --border-radius: 28px; }
+
+// Avisos con el mismo aspecto que el Snackbar de Android
+ion-toast {
+  --background: #1f2329;
+  --color: #ffffff;
+  --border-radius: 4px;
+  --button-color: #78cdd0;
+  --box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+}

@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonSearchbar, IonChip, IonIcon,
-         IonSkeletonText, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, ToastController, IonCard } from '@ionic/angular';
+         IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, ToastController, IonCard } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { searchOutline, closeOutline, micOutline } from 'ionicons/icons';
 import { CabeceraComponent } from '../../components/cabecera/cabecera.component';
@@ -13,6 +13,7 @@ import { ProductoService } from '../../services/producto.service';
 import { VozService } from '../../services/voz.service';
 import { Producto, TipoProducto, avisoStock } from '../../models/producto.model';
 import { EstadoComponent } from '../../components/estado/estado.component';
+import { LottieComponent } from '../../components/lottie/lottie.component';
 
 type Modo = 'comprar' | 'alquilar';
 interface Filtro { etiqueta: string; valor: string; }   // valor '' = todos
@@ -23,8 +24,8 @@ const POR_PAGINA = 8;   // carga progresiva
   selector: 'app-tienda',
   templateUrl: './tienda.page.html',
   styleUrls: ['./tienda.page.scss'],
-  imports: [IonCard, IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonSearchbar, IonChip, IonIcon,
-            IonSkeletonText, IonInfiniteScroll, IonInfiniteScrollContent,
+  imports: [LottieComponent, IonCard, IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonSearchbar, IonChip, IonIcon,
+            IonInfiniteScroll, IonInfiniteScrollContent,
             CabeceraComponent, MiniaturaProductoComponent, PrecioComponent, EstadoComponent, PlataformasComponent],
 })
 export class TiendaPage {
@@ -102,7 +103,7 @@ export class TiendaPage {
   }
 
   private async avisoVoz(mensaje: string): Promise<void> {
-    const t = await this.toast.create({ message: '🎤 ' + mensaje, duration: 1500, position: 'top', color: 'dark' });
+    const t = await this.toast.create({ message: '🎤 ' + mensaje, duration: 1500, position: 'top' });
     await t.present();
   }
 

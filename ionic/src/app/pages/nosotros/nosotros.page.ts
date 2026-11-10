@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, inject, signal, viewChild } from '@angular/core';
-import { IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon, IonButton, IonSkeletonText, IonCard, IonImg } from '@ionic/angular';
+import { IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon, IonButton, IonCard, IonImg } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { locationOutline, timeOutline, callOutline, navigateOutline, imageOutline,
          storefrontOutline, buildOutline, phonePortraitOutline, rocketOutline } from 'ionicons/icons';
@@ -7,6 +7,7 @@ import * as L from 'leaflet';
 import { CabeceraComponent } from '../../components/cabecera/cabecera.component';
 import { TiendaService } from '../../services/tienda.service';
 import { FOTOS_LOCALES, FotoTienda, HISTORIA, HITOS, HORARIO, Tienda } from '../../models/tienda.model';
+import { LottieComponent } from '../../components/lottie/lottie.component';
 
 type Vista = 'ubicacion' | 'historia' | 'galeria';
 
@@ -18,7 +19,7 @@ const PIN = `<span class="pin"><svg width="22" height="22" viewBox="0 0 24 24" f
   selector: 'app-nosotros',
   templateUrl: './nosotros.page.html',
   styleUrls: ['./nosotros.page.scss'],
-  imports: [IonCard, IonImg, IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon, IonButton, IonSkeletonText, CabeceraComponent],
+  imports: [LottieComponent, IonCard, IonImg, IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon, IonButton, CabeceraComponent],
 })
 export class NosotrosPage implements OnDestroy {
   private tiendaSrv = inject(TiendaService);

@@ -1,6 +1,7 @@
+import { ExitoService } from '../../services/exito.service';
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { IonHeader, IonContent, IonIcon, IonButton, IonSpinner, ToastController, IonList, IonCard } from '@ionic/angular';
+import { IonHeader, IonContent, IonIcon, IonButton, ToastController, IonList, IonCard } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { locationOutline, bagHandleOutline } from 'ionicons/icons';
 import { CabeceraComponent } from '../../components/cabecera/cabecera.component';
@@ -18,8 +19,7 @@ import { EstadoComponent } from '../../components/estado/estado.component';
   selector: 'app-cesta',
   templateUrl: './cesta.page.html',
   styleUrls: ['./cesta.page.scss'],
-  imports: [EstadoComponent, IonList, IonCard, RouterLink, IonHeader, IonContent, IonIcon, IonButton, IonSpinner,
-            CabeceraComponent, MiniaturaProductoComponent, SelectorCantidadComponent, PrecioComponent, NombreProductoPipe],
+  imports: [EstadoComponent, IonList, IonCard, RouterLink, IonHeader, IonContent, IonIcon, IonButton, CabeceraComponent, MiniaturaProductoComponent, SelectorCantidadComponent, PrecioComponent, NombreProductoPipe],
 })
 export class CestaPage {
   cesta = inject(CestaService);
@@ -28,6 +28,7 @@ export class CestaPage {
   private domicilios = inject(DomicilioService);
   private router = inject(Router);
   private toast = inject(ToastController);
+  private exito = inject(ExitoService);
 
   enviando = signal(false);
   // Domicilio de envío: el elegido en Direcciones o el más reciente
@@ -53,15 +54,15 @@ export class CestaPage {
   confirmar(): void {
     const d = this.direccion();
     if (!d) {
-      this.aviso('Añade una dirección de envío antes de confirmar.', 'danger');
+      this.aviso('Elige una dirección de envío', 'danger');
       return;
     }
     this.enviando.set(true);
     this.pedidos.crear(d.id, this.cesta.lineas()).subscribe({
-      next: pedido => {
+      next: async () => {
         this.enviando.set(false);
         this.cesta.vaciar();
-        this.aviso(`Pedido #${pedido.id} confirmado. ¡Gracias!`, 'dark');
+        await this.exito.mostrar('Pedido hecho');           // check de Lottie, como Android
         this.router.navigateByUrl('/cuenta/pedidos');
       },
       error: e => {
@@ -72,7 +73,7 @@ export class CestaPage {
   }
 
   private async aviso(mensaje: string, color: string): Promise<void> {
-    const t = await this.toast.create({ message: mensaje, duration: 3000, position: 'bottom', color });
+    const t = await this.toast.create({ message: mensaje, duration: 3000, position: 'bottom' });
     await t.present();
   }
 }

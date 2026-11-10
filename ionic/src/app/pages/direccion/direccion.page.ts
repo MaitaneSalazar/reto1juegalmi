@@ -1,8 +1,9 @@
+import { ExitoService } from '../../services/exito.service';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonFooter, IonInput, IonButton,
-         IonSpinner, NavController, ToastController } from '@ionic/angular';
+         NavController, ToastController } from '@ionic/angular';
 import { SesionService } from '../../services/sesion.service';
 import { DomicilioService } from '../../services/domicilio.service';
 import { DatosDireccion } from '../../models/domicilio.model';
@@ -15,13 +16,14 @@ type Campo = 'calle' | 'numero' | 'codigo_postal' | 'ciudad' | 'provincia';
   templateUrl: './direccion.page.html',
   styleUrls: ['../subpagina.scss'],
   imports: [ReactiveFormsModule, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonFooter,
-            IonInput, IonButton, IonSpinner],
+            IonInput, IonButton],
 })
 export class DireccionPage {
   private sesion = inject(SesionService);
   private domicilios = inject(DomicilioService);
   private nav = inject(NavController);
   private toast = inject(ToastController);
+  private exito = inject(ExitoService);
 
   // Ruta /cuenta/direcciones/nueva → null · /cuenta/direcciones/3 → editar el domicilio 3
   id: number | null;
@@ -72,10 +74,10 @@ export class DireccionPage {
 
     this.guardando.set(true);
     llamada.subscribe({
-      next: d => {
+      next: async d => {
         this.guardando.set(false);
         if (this.id === null) this.domicilios.elegir(d.id);   // la nueva pasa a ser la de envío
-        this.aviso('Dirección guardada.', 'dark');
+        await this.exito.mostrar('Dirección guardada');
         this.nav.back();
       },
       error: e => { this.guardando.set(false); this.aviso(this.sesion.mensaje(e), 'danger'); },
@@ -94,7 +96,7 @@ export class DireccionPage {
   }
 
   private async aviso(m: string, color: string): Promise<void> {
-    const t = await this.toast.create({ message: m, duration: 2000, color });
+    const t = await this.toast.create({ message: m, duration: 2000 });
     await t.present();
   }
 }

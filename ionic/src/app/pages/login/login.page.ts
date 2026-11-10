@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { IonContent, IonInput, IonButton, IonSpinner, MenuController } from '@ionic/angular';
+import { IonContent, IonInput, IonButton, MenuController } from '@ionic/angular';
 import { SesionService } from '../../services/sesion.service';
 import { textoError } from '../../validators/validadores';
 
@@ -9,7 +9,7 @@ import { textoError } from '../../validators/validadores';
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  imports: [ReactiveFormsModule, RouterLink, IonContent, IonInput, IonButton, IonSpinner],
+  imports: [ReactiveFormsModule, RouterLink, IonContent, IonInput, IonButton],
 })
 export class LoginPage {
   private sesion = inject(SesionService);

@@ -2,7 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon, IonButton,
-         IonSkeletonText, IonRefresher, IonRefresherContent, RefresherCustomEvent,
+         IonRefresher, IonRefresherContent, RefresherCustomEvent,
          AlertController, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { imageOutline, callOutline } from 'ionicons/icons';
@@ -12,13 +12,14 @@ import { ReparacionService } from '../../services/reparacion.service';
 import { TiendaService } from '../../services/tienda.service';
 import { SesionService } from '../../services/sesion.service';
 import { NOMBRE_DISPOSITIVO, Reparacion } from '../../models/reparacion.model';
+import { LottieComponent } from '../../components/lottie/lottie.component';
 
 @Component({
   selector: 'app-reparacion',
   templateUrl: './reparacion.page.html',
   styleUrls: ['./reparacion.page.scss'],
-  imports: [IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon, IonButton,
-            IonSkeletonText, IonRefresher, IonRefresherContent, PrecioComponent, FechaCortaPipe],
+  imports: [LottieComponent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon, IonButton,
+            IonRefresher, IonRefresherContent, PrecioComponent, FechaCortaPipe],
 })
 export class ReparacionPage {
   private servicio = inject(ReparacionService);
@@ -80,7 +81,7 @@ export class ReparacionPage {
   }
 
   private async aviso(mensaje: string, color: string): Promise<void> {
-    const t = await this.toast.create({ message: mensaje, duration: 3000, position: 'bottom', color });
+    const t = await this.toast.create({ message: mensaje, duration: 3000, position: 'bottom' });
     await t.present();
   }
 }

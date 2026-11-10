@@ -97,7 +97,7 @@ export class VozService {
   }
 
   private async aviso(mensaje: string): Promise<void> {
-    const t = await this.toast.create({ message: mensaje, duration: 2500, position: 'top', color: 'dark' });
+    const t = await this.toast.create({ message: mensaje, duration: 2500, position: 'top' });
     await t.present();
   }
 }

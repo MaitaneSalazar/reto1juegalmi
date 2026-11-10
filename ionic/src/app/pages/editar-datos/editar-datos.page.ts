@@ -1,7 +1,8 @@
+import { ExitoService } from '../../services/exito.service';
 import { Component, inject, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonFooter, IonInput, IonButton,
-         IonIcon, IonSpinner, NavController, ToastController } from '@ionic/angular';
+         IonIcon, NavController, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { cameraOutline, lockClosedOutline } from 'ionicons/icons';
 import { SesionService } from '../../services/sesion.service';
@@ -27,13 +28,14 @@ function parejaContrasena(g: AbstractControl): ValidationErrors | null {
   templateUrl: './editar-datos.page.html',
   styleUrls: ['../subpagina.scss', '../datos-personales/datos-personales.page.scss', './editar-datos.page.scss'],
   imports: [ReactiveFormsModule, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonFooter,
-            IonInput, IonButton, IonIcon, IonSpinner],
+            IonInput, IonButton, IonIcon],
 })
 export class EditarDatosPage {
   sesion = inject(SesionService);
   private fotos = inject(FotoService);
   private nav = inject(NavController);
   private toast = inject(ToastController);
+  private exito = inject(ExitoService);
 
   guardando = signal(false);
   foto = signal<string | null>(null);          // foto nueva (o la que ya tenía)
@@ -93,13 +95,13 @@ export class EditarDatosPage {
         ? this.sesion.subirFoto(this.fotos.aBlob(fotoNueva), 'perfil.' + this.fotos.extension(fotoNueva))
         : of(u)),
     ).subscribe({
-      next: () => { this.guardando.set(false); this.aviso('Datos guardados.', 'dark'); this.nav.back(); },
+      next: async () => { this.guardando.set(false); await this.exito.mostrar('Datos guardados'); this.nav.back(); },
       error: e => { this.guardando.set(false); this.aviso(this.sesion.mensaje(e), 'danger'); },   // p. ej. contraseña actual incorrecta
     });
   }
 
   private async aviso(m: string, color: string): Promise<void> {
-    const t = await this.toast.create({ message: m, duration: 2000, color });
+    const t = await this.toast.create({ message: m, duration: 2000 });
     await t.present();
   }
 }

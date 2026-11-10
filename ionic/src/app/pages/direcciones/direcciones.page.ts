@@ -1,19 +1,20 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonFooter, IonButton, IonIcon,
-         IonSkeletonText, AlertController, ToastController, IonList, IonCard } from '@ionic/angular';
+         AlertController, ToastController, IonList, IonCard } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { locationOutline, pencilOutline, trashOutline, add, checkmarkCircle } from 'ionicons/icons';
 import { SesionService } from '../../services/sesion.service';
 import { DomicilioService } from '../../services/domicilio.service';
 import { Domicilio } from '../../models/domicilio.model';
 import { EstadoComponent } from '../../components/estado/estado.component';
+import { LottieComponent } from '../../components/lottie/lottie.component';
 
 @Component({
   selector: 'app-direcciones',
   templateUrl: './direcciones.page.html',
   styleUrls: ['../subpagina.scss', './direcciones.page.scss'],
-  imports: [EstadoComponent, IonList, IonCard, RouterLink, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonFooter, IonButton, IonIcon, IonSkeletonText],
+  imports: [LottieComponent, EstadoComponent, IonList, IonCard, RouterLink, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonFooter, IonButton, IonIcon],
 })
 export class DireccionesPage {
   domicilios = inject(DomicilioService);
@@ -43,7 +44,7 @@ export class DireccionesPage {
   // Tocar la tarjeta = usarla para enviar los pedidos
   elegir(d: Domicilio): void {
     this.domicilios.elegir(d.id);
-    this.aviso('Enviaremos tus pedidos a esta dirección.', 'dark');
+    this.aviso('Enviaremos tus pedidos aquí', 'dark');
   }
 
   editar(d: Domicilio, e: Event): void {
@@ -71,7 +72,7 @@ export class DireccionesPage {
   }
 
   private async aviso(m: string, color: string): Promise<void> {
-    const t = await this.toast.create({ message: m, duration: 2000, color });
+    const t = await this.toast.create({ message: m, duration: 2000 });
     await t.present();
   }
 }

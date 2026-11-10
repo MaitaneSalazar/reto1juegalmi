@@ -10,7 +10,7 @@
   @if (error()) {
     <app-estado [error]="true" (reintentar)="cargar()"></app-estado>
   } @else if (cargando()) {
-    <ion-skeleton-text [animated]="true" style="height: 260px; border-radius: 24px"></ion-skeleton-text>
+    <app-lottie nombre="cargando" class="cargando"></app-lottie>
   } @else {
     @if (!activos().length && !devueltos().length) {
       <app-estado icono="time-outline" titulo="Sin alquileres" texto="Todavía no has alquilado ningún juego. Puedes hacerlo desde la tienda."

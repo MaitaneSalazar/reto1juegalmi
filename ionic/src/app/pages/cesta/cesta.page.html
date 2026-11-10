@@ -28,7 +28,7 @@
       <div class="tarjeta direccion">
         <ion-icon name="location-outline"></ion-icon>
         <span>
-          @if (direccion(); as d) { {{ d.texto }} } @else { Sin dirección de envío }
+          @if (direccion(); as d) { {{ d.texto }} } @else { Añade una dirección de envío }
         </span>
         <a routerLink="/cuenta/direcciones">{{ direccion() ? 'Cambiar' : 'Añadir' }}</a>
       </div>
@@ -38,7 +38,7 @@
         <div class="linea-total"><span>Envío</span><span>Gratis</span></div>
         <div class="linea-total"><span>Total</span><app-precio [valor]="cesta.total()"></app-precio></div>
         <ion-button expand="block" (click)="confirmar()" [disabled]="enviando()">
-          @if (enviando()) { <ion-spinner name="crescent"></ion-spinner> } @else { Confirmar pedido }
+          Confirmar pedido
         </ion-button>
       </div>
     </div>

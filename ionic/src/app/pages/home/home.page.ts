@@ -2,8 +2,7 @@ import { NombreProductoPipe } from '../../pipes/nombre-producto.pipe';
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { IonHeader, IonContent, IonIcon, IonSkeletonText,
-         IonRefresher, IonRefresherContent, RefresherCustomEvent, IonCard } from '@ionic/angular';
+import { IonHeader, IonContent, IonIcon, IonRefresher, IonRefresherContent, RefresherCustomEvent, IonCard } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { storefrontOutline, timeOutline, chevronForward, arrowForward, buildOutline } from 'ionicons/icons';
 import { CabeceraComponent } from '../../components/cabecera/cabecera.component';
@@ -24,7 +23,7 @@ const VUELTA = 2 * Math.PI * 26;   // perímetro del círculo de progreso (radio
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
-  imports: [IonCard, RouterLink, IonHeader, IonContent, IonIcon, IonSkeletonText, IonRefresher, IonRefresherContent,
+  imports: [IonCard, RouterLink, IonHeader, IonContent, IonIcon, IonRefresher, IonRefresherContent,
             CabeceraComponent, MiniaturaProductoComponent, PrecioComponent, NombreProductoPipe],
 })
 export class HomePage {

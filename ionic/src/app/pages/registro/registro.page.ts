@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { IonContent, IonInput, IonButton, IonSpinner, MenuController } from '@ionic/angular';
+import { IonContent, IonInput, IonButton, MenuController } from '@ionic/angular';
 import { SesionService } from '../../services/sesion.service';
 import { OBLIGATORIO, dniValido, telefonoValido, textoError } from '../../validators/validadores';
 
@@ -14,7 +14,7 @@ type Campo = 'nombre' | 'apellido1' | 'apellido2' | 'dni' | 'telefono' | 'email'
   selector: 'app-registro',
   templateUrl: './registro.page.html',
   styleUrls: ['../login/login.page.scss', './registro.page.scss'],   // reutiliza los estilos del login
-  imports: [ReactiveFormsModule, RouterLink, IonContent, IonInput, IonButton, IonSpinner],
+  imports: [ReactiveFormsModule, RouterLink, IonContent, IonInput, IonButton],
 })
 export class RegistroPage {
   private sesion = inject(SesionService);

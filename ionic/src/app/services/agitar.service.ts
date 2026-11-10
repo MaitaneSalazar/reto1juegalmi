@@ -38,7 +38,7 @@ export class AgitarService {
 
   // Aviso y recarga de la pantalla actual (la sesión y la cesta se conservan)
   private async agitado(): Promise<void> {
-    const t = await this.toast.create({ message: 'Has agitado el móvil: recargando…', duration: 900, position: 'top', color: 'dark' });
+    const t = await this.toast.create({ message: 'Has agitado el móvil: recargando…', duration: 900, position: 'top' });
     await t.present();
     setTimeout(() => window.location.reload(), 700);
   }

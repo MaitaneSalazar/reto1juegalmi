@@ -1,9 +1,10 @@
 import { FechaCortaPipe } from '../../pipes/fecha-corta.pipe';
+import { ExitoService } from '../../services/exito.service';
 import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonContent, IonFooter, IonBackButton, IonSegment, IonSegmentButton, IonLabel, IonButton,
-         IonSpinner, IonSkeletonText, IonIcon, ToastController } from '@ionic/angular';
+         IonIcon, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { notificationsOutline } from 'ionicons/icons';
 import { PlataformasComponent } from '../../components/plataformas/plataformas.component';
@@ -15,13 +16,15 @@ import { AlquilerService } from '../../services/alquiler.service';
 import { CestaService } from '../../services/cesta.service';
 import { SesionService } from '../../services/sesion.service';
 import { NOMBRE_TIPO, Producto, esAlquilable } from '../../models/producto.model';
+import { LottieComponent } from '../../components/lottie/lottie.component';
+import { SelectorCantidadComponent } from '../../components/selector-cantidad/selector-cantidad.component';
 
 @Component({
   selector: 'app-detalle-producto',
   templateUrl: './detalle-producto.page.html',
   styleUrls: ['./detalle-producto.page.scss'],
-  imports: [IonContent, IonFooter, IonBackButton, IonSegment, IonSegmentButton, IonLabel, IonButton,
-            IonSpinner, IonSkeletonText, IonIcon, PlataformasComponent, MiniaturaProductoComponent, PrecioComponent, EurosPipe, FechaCortaPipe],
+  imports: [SelectorCantidadComponent, LottieComponent, IonContent, IonFooter, IonBackButton, IonSegment, IonSegmentButton, IonLabel, IonButton,
+            IonIcon, PlataformasComponent, MiniaturaProductoComponent, PrecioComponent, EurosPipe],
 })
 export class DetalleProductoPage {
   private productos = inject(ProductoService);
@@ -30,10 +33,12 @@ export class DetalleProductoPage {
   private sesion = inject(SesionService);
   private router = inject(Router);
   private toast = inject(ToastController);
+  private exito = inject(ExitoService);
 
   producto = signal<Producto | null>(null);
   modo = signal<'comprar' | 'alquilar'>('comprar');
-  dias = signal(5);
+  dias = signal(3);                 // 3 días por defecto, como Android
+  cantidad = signal(1);             // unidades al comprar
   enviando = signal(false);
   opcionesDias = [1, 3, 5, 7];
 
@@ -51,6 +56,24 @@ export class DetalleProductoPage {
     if (n === 2) return `¡Date prisa! Quedan 2 ${alq ? 'copias' : 'unidades'}`;
     return alq ? 'Disponible para alquilar' : 'En stock · envío en 24 h';
   });
+  // Máximo del selector: lo que queda menos lo que ya está en la cesta
+  maxCantidad = computed(() => {
+    const p = this.producto();
+    return p ? Math.max(1, p.stock - this.cesta.enCesta(p.id)) : 1;
+  });
+
+  // La línea de debajo del precio, igual que en Android
+  detallePrecio = computed(() => {
+    const p = this.producto();
+    if (!p) return '';
+    if (this.modo() === 'alquilar') {
+      const d = this.dias();
+      return `${d} ${d === 1 ? 'día' : 'días'} · Devolución antes del ${new FechaCortaPipe().transform(this.devolucion())}`;
+    }
+    const n = this.cantidad();
+    return n > 1 ? `${n} × ${new EurosPipe().transform(p.precio_venta)} · Envío gratis` : 'Envío gratis';
+  });
+
   alquilable = computed(() => { const p = this.producto(); return !!p && esAlquilable(p); });
 
   // Pastilla de arriba a la derecha: "Switch", "Consola"...
@@ -70,6 +93,7 @@ export class DetalleProductoPage {
 
     ruta.paramMap.pipe(takeUntilDestroyed()).subscribe(params => {
       this.producto.set(null);
+      this.cantidad.set(1);
       this.productos.obtener(Number(params.get('id'))).subscribe(p => {
         if (!esAlquilable(p)) this.modo.set('comprar');      // los que no se alquilan, solo compra
         this.producto.set(p);
@@ -89,7 +113,7 @@ export class DetalleProductoPage {
 
   // Agotado: de momento solo se avisa (la API no tiene avisos de stock)
   async avisame(): Promise<void> {
-    const t = await this.toast.create({ message: 'Te avisaremos cuando vuelva a estar disponible', duration: 2500, color: 'dark' });
+    const t = await this.toast.create({ message: 'Te avisaremos cuando vuelva a estar disponible', duration: 2500 });
     await t.present();
   }
 
@@ -101,15 +125,16 @@ export class DetalleProductoPage {
   }
 
   private async anadirCesta(p: Producto): Promise<void> {
-    if (!this.cesta.anadir(p)) {                       // ya tienes en la cesta todas las que quedan
-      const t = await this.toast.create({ message: 'No quedan más unidades', duration: 2000, color: 'dark' });
+    if (!this.cesta.anadir(p, this.cantidad())) {                       // ya tienes en la cesta todas las que quedan
+      const t = await this.toast.create({ message: 'No quedan más unidades', duration: 2000 });
       await t.present();
       return;
     }
     this.latir();                                      // el botón late, como en Android
+    this.cantidad.set(1);
     const t = await this.toast.create({
       message: 'Añadido a la cesta',
-      duration: 2500, position: 'bottom', color: 'dark',
+      duration: 2500, position: 'bottom',
       buttons: [{ text: 'Ver cesta', handler: () => { this.router.navigateByUrl('/cesta'); } }],
     });
     await t.present();
@@ -119,19 +144,15 @@ export class DetalleProductoPage {
     this.enviando.set(true);
 
     this.alquileres.crear(this.dias(), [p.id]).subscribe({
-      next: async alquiler => {
+      next: async () => {
         this.enviando.set(false);
-        const t = await this.toast.create({
-          message: `Alquiler confirmado. Devuélvelo antes del ${new FechaCortaPipe().transform(alquiler.fecha_fin_prevista)}.`,
-          duration: 3000, position: 'bottom', color: 'dark',
-        });
-        await t.present();
-        this.router.navigateByUrl('/inicio', { replaceUrl: true });
+        await this.exito.mostrar('Alquiler hecho');          // check de Lottie, como Android
+        this.router.navigateByUrl('/cuenta/alquileres', { replaceUrl: true });
       },
       error: async e => {
         this.enviando.set(false);
         // 409: "No quedan copias libres de ..." (mensaje de la API)
-        const t = await this.toast.create({ message: this.sesion.mensaje(e), duration: 3000, color: 'danger' });
+        const t = await this.toast.create({ message: this.sesion.mensaje(e), duration: 3000 });
         await t.present();
       },
     });

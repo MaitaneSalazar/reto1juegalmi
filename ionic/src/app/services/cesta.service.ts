@@ -14,6 +14,11 @@ export class CestaService {
 
   // Añade un producto (si ya está, suma cantidad)
   // Devuelve false si se pasaría del stock (no se añade)
+  // Cuántas unidades de ese producto hay ya en la cesta (para no pasar del stock)
+  enCesta(id: number): number {
+    return this.lineas().find(l => l.producto.id === id)?.cantidad ?? 0;
+  }
+
   anadir(producto: Producto, cantidad = 1): boolean {
     const lista = this.lineas();
     const existe = lista.find(l => l.producto.id === producto.id);

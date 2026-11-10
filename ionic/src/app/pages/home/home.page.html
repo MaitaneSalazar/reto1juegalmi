@@ -30,10 +30,7 @@
       </a>
     </div>
 
-    @if (cargando()) {
-      <ion-skeleton-text [animated]="true" class="esqueleto"></ion-skeleton-text>
-      <ion-skeleton-text [animated]="true" class="esqueleto"></ion-skeleton-text>
-    } @else {
+    @if (!cargando()) {   <!-- como Android: mientras carga no se muestra nada -->
       <!-- Reparación en curso con círculo de progreso (paso / total_pasos de la API) -->
       @if (reparacion(); as r) {
         <a class="tarjeta fila pulsable" [routerLink]="['/taller/reparacion', r.id]">

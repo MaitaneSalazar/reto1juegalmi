@@ -59,10 +59,7 @@ ion-footer { padding: 0 14px calc(14px + var(--ion-safe-area-bottom, 0px)); back
 .disponible { margin: -8px 0 20px; font-size: 14px; font-weight: 600; color: #375e60; }
 .disponible.aviso { color: #a72144; }
 
-// Cálculo del alquiler
-.calculo {
-  display: flex; flex-direction: column; gap: 10px; padding: 16px 18px;
-  div { display: flex; justify-content: space-between; gap: 12px; font-size: 15px; }
-  span { color: var(--jg-texto-sec); }
-}
 .compra .avisame { --border-radius: 999px; --border-width: 1.5px; }
+
+// Fila «Cantidad» con − y + (modo Comprar)
+.fila-cantidad { display: flex; align-items: center; justify-content: space-between; margin: 18px 0 4px; font-size: 15px; font-weight: 500; }

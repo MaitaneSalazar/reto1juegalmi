@@ -28,6 +28,15 @@
         </ion-segment>
       }
 
+      <!-- Cantidad al comprar (al alquilar no: la API solo deja una copia por alquiler) -->
+      @if (modo() !== 'alquilar' && quedan() > 0) {
+        <div class="fila-cantidad">
+          <span>Cantidad</span>
+          <app-selector-cantidad [valor]="cantidad()" [max]="maxCantidad()"
+                                 (cambio)="cantidad.set(cantidad() + $event)"></app-selector-cantidad>
+        </div>
+      }
+
       @if (modo() === 'alquilar') {
         <!-- Días de alquiler -->
         <div class="dias">
@@ -37,16 +46,10 @@
             </button>
           }
         </div>
-        <!-- Cálculo antes de pagar: días × precio y fecha de devolución -->
-        <div class="calculo tarjeta">
-          <div><span>{{ dias() }} {{ dias() === 1 ? 'día' : 'días' }} × {{ p.precio_alquiler_dia | euros }}</span><b>{{ totalAlquiler() | euros }}</b></div>
-          <div><span>Devolución antes del</span><b>{{ devolucion() | fechaCorta }}</b></div>
-        </div>
       }
       </div>
     } @else {
-      <ion-skeleton-text [animated]="true" style="width: 80%; height: 34px"></ion-skeleton-text>
-      <ion-skeleton-text [animated]="true" style="width: 60%; height: 18px"></ion-skeleton-text>
+      <app-lottie nombre="cargando" class="cargando"></app-lottie>
     }
   </div>
 </ion-content>
@@ -56,8 +59,8 @@
   <ion-footer class="ion-no-border">
     <div class="compra aparecer">   <!-- entra subiendo, como en Android -->
       <div class="importe">
-        <app-precio [valor]="modo() === 'alquilar' ? totalAlquiler() : p.precio_venta"></app-precio>
-        <small>{{ modo() === 'alquilar' ? dias() + (dias() === 1 ? ' día de alquiler' : ' días de alquiler') : 'Envío gratis' }}</small>
+        <app-precio [valor]="modo() === 'alquilar' ? totalAlquiler() : p.precio_venta * cantidad()"></app-precio>
+        <small>{{ detallePrecio() }}</small>
       </div>
       @if (quedan() <= 0) {
         <!-- Agotado: el botón pasa a «Avísame» -->
@@ -66,8 +69,7 @@
         </ion-button>
       } @else {
         <ion-button (click)="confirmar()" [disabled]="enviando()" [class.latido]="latiendo()">
-          @if (enviando()) { <ion-spinner name="crescent"></ion-spinner> }
-          @else { {{ modo() === 'alquilar' ? 'Alquilar' : 'Añadir a la cesta' }} }
+          {{ modo() === 'alquilar' ? 'Alquilar' : 'Añadir a la cesta' }}
         </ion-button>
       }
     </div>

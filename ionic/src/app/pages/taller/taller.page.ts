@@ -1,8 +1,9 @@
+import { ExitoService } from '../../services/exito.service';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { concatMap, from, last, of, switchMap } from 'rxjs';
 import { IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon, IonInput, IonTextarea,
-         IonChip, IonButton, IonSkeletonText, ToastController, IonList, IonCard } from '@ionic/angular';
+         IonChip, IonButton, ToastController, IonList, IonCard } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { gameControllerOutline, phonePortraitOutline, tabletLandscapeOutline, laptopOutline, tvOutline,
          headsetOutline, watchOutline, ellipsisHorizontal, cameraOutline, close, chevronForward, keypadOutline, checkmarkCircleOutline } from 'ionicons/icons';
@@ -14,6 +15,7 @@ import { SesionService } from '../../services/sesion.service';
 import { ReparacionService } from '../../services/reparacion.service';
 import { FotoService } from '../../services/foto.service';
 import { NOMBRE_DISPOSITIVO, Reparacion, TipoDispositivo } from '../../models/reparacion.model';
+import { LottieComponent } from '../../components/lottie/lottie.component';
 
 interface OpcionTipo { valor: TipoDispositivo; texto: string; icono: string; }
 
@@ -27,8 +29,8 @@ const COMPONENTES = ['Pantalla', 'Batería', 'Puerto de carga', 'HDMI', 'Ventila
   selector: 'app-taller',
   templateUrl: './taller.page.html',
   styleUrls: ['./taller.page.scss'],
-  imports: [IonList, IonCard, IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon, IonInput, IonTextarea,
-            IonChip, IonButton, IonSkeletonText, CabeceraComponent, EstadoComponent, EurosPipe, FechaCortaPipe],
+  imports: [LottieComponent, IonList, IonCard, IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon, IonInput, IonTextarea,
+            IonChip, IonButton, CabeceraComponent, EstadoComponent, EurosPipe, FechaCortaPipe],
 })
 export class TallerPage {
   private sesion = inject(SesionService);
@@ -37,6 +39,7 @@ export class TallerPage {
   private router = inject(Router);
   private ruta = inject(ActivatedRoute);
   private toast = inject(ToastController);
+  private exito = inject(ExitoService);
 
   vista = signal<'nueva' | 'mis'>('nueva');
 
@@ -152,10 +155,10 @@ export class TallerPage {
             last())
         : of(rep)),
     ).subscribe({
-      next: () => {
+      next: async () => {
         this.enviando.set(false);
         this.reiniciar();
-        this.aviso('Solicitud enviada. Te avisaremos cuando la revisemos.', 'dark');
+        await this.exito.mostrar('Solicitud enviada. Te avisaremos cuando la revisemos.');
         this.vista.set('mis');                                   // a la pestaña «Mis reparaciones»
         this.cargarMias();
       },
@@ -189,7 +192,7 @@ export class TallerPage {
   }
 
   private async aviso(mensaje: string, color: string): Promise<void> {
-    const t = await this.toast.create({ message: mensaje, duration: 3000, position: 'bottom', color });
+    const t = await this.toast.create({ message: mensaje, duration: 3000, position: 'bottom' });
     await t.present();
   }
 }

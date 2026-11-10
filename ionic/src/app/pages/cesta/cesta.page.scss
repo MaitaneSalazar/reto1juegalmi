@@ -3,15 +3,15 @@ ion-list.lista ion-card { margin-bottom: 14px; }
   display: flex; align-items: center; gap: 18px;
   padding: 14px;
 
-  app-miniatura-producto { --tam: 92px; --radio: 16px; --fondo: #ffffff; --ajuste: contain; }
+  app-miniatura-producto { width: 72px; height: 92px; --radio: 14px; --fondo: #ffffff; --ajuste: contain; }   // tamaños de Android
   .datos { flex-grow: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-  strong { font-size: 17px; font-weight: 600; }
-  app-precio { font-size: 21px; }
+  strong { font-size: 15px; font-weight: 700; }
+  app-precio { font-size: 18px; }
 }
 
 .direccion {
   display: flex; align-items: center; gap: 14px;
-  padding: 18px 22px; margin-bottom: 14px; font-size: 16px;
+  padding: 18px 22px; margin-bottom: 14px; font-size: 13px;
   ion-icon { font-size: 20px; color: var(--jg-texto-sec); flex-shrink: 0; }
   span { flex-grow: 1; }
   a { color: var(--ion-text-color); font-weight: 500; text-decoration: none; }
@@ -24,8 +24,8 @@ ion-list.lista ion-card { margin-bottom: 14px; }
 
   .linea-total { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 10px; font-size: 16px; }
   .linea-total:first-child span:first-child { opacity: .5; }
-  app-precio { font-size: 48px; }
-  ion-button { margin-top: 12px; min-height: 58px; }
+  app-precio { font-size: 36px; }
+  ion-button { margin-top: 12px; min-height: 52px; }
 }
 
 .vacia {

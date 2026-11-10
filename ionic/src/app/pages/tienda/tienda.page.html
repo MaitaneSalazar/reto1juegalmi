@@ -33,19 +33,13 @@
   @if (error()) {
     <app-estado [error]="true" (reintentar)="cargar()"></app-estado>
   } @else if (cargando()) {
-    <!-- Huesos grises mientras llega la API -->
-    <div class="rejilla">
-      @for (i of [1, 2, 3, 4]; track i) {
-        <div class="hueso"><ion-skeleton-text [animated]="true" class="esq-foto"></ion-skeleton-text>
-          <ion-skeleton-text [animated]="true" style="width: 80%"></ion-skeleton-text>
-          <ion-skeleton-text [animated]="true" style="width: 40%"></ion-skeleton-text></div>
-      }
-    </div>
+    <!-- Tres puntos de Lottie mientras llega la API (como Android) -->
+    <app-lottie nombre="cargando" class="cargando"></app-lottie>
   } @else if (!productos().length) {
     @if (texto()) {
-      <app-estado icono="search-outline" titulo="Sin resultados" [texto]="'No encontramos nada con «' + texto() + '». Prueba con otra palabra.'"></app-estado>
+      <app-estado icono="search-outline" titulo="Sin resultados" [texto]="'No hay nada que coincida con «' + texto() + '».'"></app-estado>
     } @else {
-      <app-estado titulo="Aún no hay productos" texto="Estamos reponiendo la tienda. Vuelve en un rato o mira otra categoría."></app-estado>
+      <app-estado titulo="No hay productos" texto="Ahora mismo no hay nada en esta categoría."></app-estado>
     }
   } @else {
     <!-- Rejilla de 2 columnas · cada producto es un ion-card (CardView) -->

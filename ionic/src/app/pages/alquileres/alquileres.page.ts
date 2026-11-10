@@ -1,8 +1,7 @@
 import { nombreProducto } from '../../pipes/nombre-producto.pipe';
 import { Router } from '@angular/router';
 import { Component, computed, inject, signal } from '@angular/core';
-import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon, IonSkeletonText,
-         AlertController, ToastController, IonList, IonCard, IonItem, IonLabel } from '@ionic/angular';
+import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon, AlertController, ToastController, IonList, IonCard, IonItem, IonLabel } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { arrowUndoOutline } from 'ionicons/icons';
 import { EstadoComponent } from '../../components/estado/estado.component';
@@ -13,6 +12,7 @@ import { AlquilerService } from '../../services/alquiler.service';
 import { SesionService } from '../../services/sesion.service';
 import { ResumenService } from '../../services/resumen.service';
 import { Alquiler } from '../../models/alquiler.model';
+import { LottieComponent } from '../../components/lottie/lottie.component';
 
 const DIA = 86400000;
 
@@ -20,8 +20,7 @@ const DIA = 86400000;
   selector: 'app-alquileres',
   templateUrl: './alquileres.page.html',
   styleUrls: ['../subpagina.scss', './alquileres.page.scss'],
-  imports: [IonList, IonCard, IonItem, IonLabel, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon, IonSkeletonText,
-            EstadoComponent, MiniaturaProductoComponent, PrecioComponent, FechaCortaPipe],
+  imports: [LottieComponent, IonList, IonCard, IonItem, IonLabel, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon, EstadoComponent, MiniaturaProductoComponent, PrecioComponent, FechaCortaPipe],
 })
 export class AlquileresPage {
   private router = inject(Router);
@@ -93,7 +92,7 @@ export class AlquileresPage {
   }
 
   private async aviso(mensaje: string, color: string): Promise<void> {
-    const t = await this.toast.create({ message: mensaje, duration: 2500, color });
+    const t = await this.toast.create({ message: mensaje, duration: 2500 });
     await t.present();
   }
 
