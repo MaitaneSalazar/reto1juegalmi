@@ -18,6 +18,8 @@ public class Pedido {
     private final String imagenUrl;
     private final boolean sePuedeCancelar;
     private final List<Miniatura> miniaturas = new ArrayList<>();
+    //LAS LINEAS DEL DETALLE, PARA "VER MAS". VACIA HASTA QUE LLEGA EL DETALLE
+    private final List<Linea> lineas = new ArrayList<>();
 
     public Pedido(JSONObject json) {
         this.id = json.optInt("id");
@@ -39,6 +41,7 @@ public class Pedido {
             return;
         }
         miniaturas.clear();
+        this.lineas.clear();
         for (int i = 0; i < lineas.length(); i++) {
             JSONObject linea = lineas.optJSONObject(i);
             JSONObject producto = linea.optJSONObject("producto");
@@ -49,7 +52,25 @@ public class Pedido {
                 url = producto.optString("imagen_url");
             }
             miniaturas.add(new Miniatura(url, linea.optInt("cantidad", 1)));
+            this.lineas.add(new Linea(nombreProducto(producto), url, linea.optInt("cantidad", 1),
+                    linea.optDouble("precio_unitario"), linea.optDouble("subtotal")));
         }
+    }
+
+    //"Minecraft · Xbox": CON VARIOS JUEGOS IGUALES, LA PLATAFORMA LOS DISTINGUE (LO PIDE LA GUIA DE LA API)
+    private static String nombreProducto(JSONObject producto) {
+        if (producto == null) {
+            return "";
+        }
+        String nombre = producto.optString("nombre");
+        if (!producto.isNull("plataforma") && !producto.optString("plataforma").isEmpty()) {
+            nombre += " · " + Plataforma.nombre(producto.optString("plataforma"));
+        }
+        return nombre;
+    }
+
+    public List<Linea> getLineas() {
+        return lineas;
     }
 
     public List<Miniatura> getMiniaturas() {
@@ -105,6 +126,43 @@ public class Pedido {
 
         public int getCantidad() {
             return cantidad;
+        }
+    }
+
+    public static class Linea {
+
+        private final String nombre;
+        private final String url;
+        private final int cantidad;
+        private final double precioUnitario;
+        private final double subtotal;
+
+        public Linea(String nombre, String url, int cantidad, double precioUnitario, double subtotal) {
+            this.nombre = nombre;
+            this.url = url;
+            this.cantidad = cantidad;
+            this.precioUnitario = precioUnitario;
+            this.subtotal = subtotal;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public int getCantidad() {
+            return cantidad;
+        }
+
+        public double getPrecioUnitario() {
+            return precioUnitario;
+        }
+
+        public double getSubtotal() {
+            return subtotal;
         }
     }
 }

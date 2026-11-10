@@ -17,7 +17,9 @@ import com.example.retoindividual_1.R;
 import com.example.retoindividual_1.modelos.Pedido;
 import com.example.retoindividual_1.utilidades.FormatosReparacion;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 //ADAPTADOR DE LOS PEDIDOS ANTERIORES, CON LAS FOTOS DE SUS PRODUCTOS Y CANCELAR SI TODAVIA SE PUEDE
 public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoViewHolder> {
@@ -31,6 +33,8 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoView
 
     private final List<Pedido> pedidos;
     private final AlCancelar alCancelar;
+    //LOS PEDIDOS CON "VER MAS" ABIERTO. SE GUARDAN AQUI PORQUE EL RecyclerView REUTILIZA LAS TARJETAS AL HACER SCROLL
+    private final Set<Integer> abiertos = new HashSet<>();
 
     public PedidoAdapter(List<Pedido> pedidos, AlCancelar alCancelar) {
         this.pedidos = pedidos;
@@ -56,6 +60,8 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoView
         holder.tvTotal.setText(FormatosReparacion.precio(pedido.getTotal()));
         pintarFotos(holder.llFotos, pedido);
 
+        pintarVerMas(holder, pedido);
+
         holder.btnCancelar.setVisibility(pedido.isSePuedeCancelar() ? View.VISIBLE : View.GONE);
         holder.btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +69,50 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoView
                 alCancelar.cancelar(pedido);
             }
         });
+    }
+
+    //"VER MAS · 3 ARTICULOS" DESPLIEGA LAS LINEAS DEL PEDIDO (SALEN DEL DETALLE QUE YA SE PIDE PARA LAS FOTOS)
+    private void pintarVerMas(PedidoViewHolder holder, Pedido pedido) {
+        Context context = holder.itemView.getContext();
+        List<Pedido.Linea> lineas = pedido.getLineas();
+        boolean abierto = abiertos.contains(pedido.getId());
+
+        holder.tvVerMas.setVisibility(lineas.size() > 1 ? View.VISIBLE : View.GONE);
+        holder.tvVerMas.setText(abierto ? context.getString(R.string.ped_ver_menos)
+                : context.getString(R.string.ped_ver_mas, lineas.size()));
+        holder.tvVerMas.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0,
+                abierto ? R.drawable.ic_contraer : R.drawable.ic_expandir, 0);
+        holder.tvVerMas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!abiertos.remove(pedido.getId())) {
+                    abiertos.add(pedido.getId());
+                }
+                notifyItemChanged(holder.getBindingAdapterPosition());
+            }
+        });
+
+        holder.llLineas.removeAllViews();
+        holder.llLineas.setVisibility(abierto ? View.VISIBLE : View.GONE);
+        if (!abierto) {
+            return;
+        }
+        LayoutInflater inflater = LayoutInflater.from(context);
+        for (Pedido.Linea linea : lineas) {
+            View fila = inflater.inflate(R.layout.item_linea_pedido, holder.llLineas, false);
+            ImageView ivFoto = fila.findViewById(R.id.ivLineaFoto);
+            ivFoto.setClipToOutline(true);
+            Glide.with(ivFoto)
+                    .load(linea.getUrl())
+                    .placeholder(R.drawable.placeholder_producto)
+                    .error(R.drawable.placeholder_producto)
+                    .into(ivFoto);
+            ((TextView) fila.findViewById(R.id.tvLineaNombre)).setText(linea.getNombre());
+            ((TextView) fila.findViewById(R.id.tvLineaCantidad)).setText(context.getString(R.string.ped_linea_cantidad,
+                    linea.getCantidad(), FormatosReparacion.precio(linea.getPrecioUnitario())));
+            ((TextView) fila.findViewById(R.id.tvLineaSubtotal)).setText(FormatosReparacion.precio(linea.getSubtotal()));
+            holder.llLineas.addView(fila);
+        }
     }
 
     //"Elden Ring +2" SI EL PEDIDO LLEVA MAS UNIDADES. LA USA TAMBIEN LA TARJETA GRANDE
@@ -107,6 +157,8 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoView
         TextView tvResumen;
         TextView tvTotal;
         LinearLayout llFotos;
+        TextView tvVerMas;
+        LinearLayout llLineas;
         Button btnCancelar;
 
         PedidoViewHolder(@NonNull View itemView) {
@@ -115,6 +167,8 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoView
             tvResumen = itemView.findViewById(R.id.tvPedidoResumen);
             tvTotal = itemView.findViewById(R.id.tvPedidoTotal);
             llFotos = itemView.findViewById(R.id.llPedidoFotos);
+            tvVerMas = itemView.findViewById(R.id.tvPedidoVerMas);
+            llLineas = itemView.findViewById(R.id.llPedidoLineas);
             btnCancelar = itemView.findViewById(R.id.btnPedidoCancelar);
         }
     }

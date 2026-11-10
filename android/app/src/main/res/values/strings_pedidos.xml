@@ -49,4 +49,7 @@
     </plurals>
     <string name="cesta_alquiler_ok">Alquiler hecho</string>
     <string name="ir_a_la_tienda">Ir a la tienda</string>
+    <string name="ped_ver_mas">Ver más · %1$d artículos</string>
+    <string name="ped_ver_menos">Ver menos</string>
+    <string name="ped_linea_cantidad">%1$d × %2$s</string>
 </resources>
