@@ -1,5 +1,5 @@
 .direccion {
-  display: flex; align-items: center; gap: 14px; padding: 16px 14px 16px 16px; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 14px; padding: 16px 14px 16px 16px;
   .icono {
     width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
@@ -16,6 +16,6 @@
   button:active { background: var(--jg-gris); }
 }
 
-.direccion { cursor: pointer; border: 2px solid transparent; }
-.direccion.elegida { border-color: var(--ion-color-primary); }
-.direccion.elegida .icono ion-icon { color: var(--ion-color-primary); }
+ion-card { margin-bottom: 14px; cursor: pointer; border: 2px solid transparent; }
+ion-card.elegida { border-color: var(--ion-color-primary); }
+ion-card.elegida .icono ion-icon { color: var(--ion-color-primary); }

@@ -21,14 +21,14 @@
       <div class="campo">
         <label>Nombre</label>
         <ion-input formControlName="nombre" autocomplete="given-name" aria-label="Nombre" [class.mal]="invalido('nombre')"></ion-input>
-        @if (invalido('nombre')) { <p class="error">Escribe tu nombre.</p> }
+        @if (invalido('nombre')) { <p class="error">Este campo es obligatorio</p> }
       </div>
 
       <div class="fila2">
         <div class="campo">
           <label>Primer apellido</label>
           <ion-input formControlName="apellido1" aria-label="Primer apellido" [class.mal]="invalido('apellido1')"></ion-input>
-          @if (invalido('apellido1')) { <p class="error">Escribe el apellido.</p> }
+          @if (invalido('apellido1')) { <p class="error">Este campo es obligatorio</p> }
         </div>
         <div class="campo">
           <label>Segundo <small>(opcional)</small></label>
@@ -39,7 +39,7 @@
       <div class="campo">
         <label>Teléfono <small>(opcional)</small></label>
         <ion-input formControlName="telefono" type="tel" inputmode="tel" aria-label="Teléfono" [class.mal]="invalido('telefono')"></ion-input>
-        @if (invalido('telefono')) { <p class="error">Teléfono de 9 cifras (empieza por 6, 7, 8 o 9).</p> }
+        @if (invalido('telefono')) { <p class="error">El teléfono debe tener 9 números y empezar por 6, 7, 8 o 9.</p> }
       </div>
 
       <!-- DNI y email no se pueden cambiar -->
@@ -59,13 +59,13 @@
         <label>Contraseña actual</label>
         <ion-input formControlName="password_actual" type="password" autocomplete="current-password"
                    aria-label="Contraseña actual" [class.mal]="invalido('password_actual')"></ion-input>
-        @if (invalido('password_actual')) { <p class="error">Escribe tu contraseña actual.</p> }
+        @if (invalido('password_actual')) { <p class="error">Escribe tu contraseña actual</p> }
       </div>
       <div class="campo">
         <label>Nueva contraseña</label>
         <ion-input formControlName="password_nueva" type="password" autocomplete="new-password" placeholder="Mínimo 6 caracteres"
                    aria-label="Nueva contraseña" [class.mal]="invalido('password_nueva')"></ion-input>
-        @if (invalido('password_nueva')) { <p class="error">Mínimo 6 caracteres.</p> }
+        @if (invalido('password_nueva')) { <p class="error">Mínimo 6 caracteres</p> }
       </div>
     </form>
   }

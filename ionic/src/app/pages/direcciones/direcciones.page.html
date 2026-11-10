@@ -11,9 +11,11 @@
   @if (cargando()) {
     <ion-skeleton-text [animated]="true" style="height: 90px; border-radius: 24px"></ion-skeleton-text>
   } @else {
-    <div class="cascada">
+    <!-- ion-list = RecyclerView · ion-card = CardView -->
+    <ion-list class="lista cascada">
       @for (d of domicilios.lista(); track d.id) {
-        <div class="tarjeta direccion pulsable" [class.elegida]="esElegido(d)" (click)="elegir(d)">
+        <ion-card class="tarjeta pulsable" [class.elegida]="esElegido(d)" (click)="elegir(d)">
+        <div class="direccion">
           <span class="icono"><ion-icon [name]="esElegido(d) ? 'checkmark-circle' : 'location-outline'"></ion-icon></span>
           <div class="textos">
             <strong>{{ d.direccion.calle }} {{ d.direccion.numero }}@if (d.direccion.piso) {, {{ d.direccion.piso }}}</strong>
@@ -22,10 +24,11 @@
           <button type="button" (click)="editar(d, $event)" aria-label="Editar dirección"><ion-icon name="pencil-outline"></ion-icon></button>
           <button type="button" (click)="borrar(d, $event)" aria-label="Borrar dirección"><ion-icon name="trash-outline"></ion-icon></button>
         </div>
+        </ion-card>
       } @empty {
-        <p class="vacio">Todavía no tienes ninguna dirección.</p>
+        <app-estado icono="location-outline" titulo="Aún no tienes direcciones" texto="Añade una para que podamos enviarte los pedidos."></app-estado>
       }
-    </div>
+    </ion-list>
   }
 </ion-content>
 

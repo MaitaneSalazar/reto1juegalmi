@@ -15,7 +15,7 @@
       <ion-input id="email" formControlName="email" type="email" inputmode="email" autocomplete="email"
                  aria-label="Email" [class.mal]="invalido('email')"></ion-input>
       @if (invalido('email')) {
-        <p class="error">Introduce un email válido.</p>
+        <p class="error">{{ mensajeError('email', 'El email no es válido.') }}</p>
       }
     </div>
 
@@ -25,7 +25,7 @@
       <ion-input id="password" formControlName="password" type="password" autocomplete="current-password"
                  aria-label="Contraseña" [class.mal]="invalido('password')"></ion-input>
       @if (invalido('password')) {
-        <p class="error">Introduce tu contraseña.</p>
+        <p class="error">{{ mensajeError('password') }}</p>
       }
     </div>
 

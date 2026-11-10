@@ -7,8 +7,11 @@
 
   @if (cesta.lineas().length) {
     <div class="cascada">
+      <!-- ion-list = RecyclerView · ion-card = CardView -->
+      <ion-list class="lista">
       @for (l of cesta.lineas(); track l.producto.id) {
-        <div class="tarjeta linea">
+        <ion-card class="tarjeta">
+        <div class="linea">
           <app-miniatura-producto [producto]="l.producto"></app-miniatura-producto>
           <div class="datos">
             <strong>{{ l.producto | nombreProducto }}</strong>
@@ -17,7 +20,9 @@
           <app-selector-cantidad [vertical]="true" [valor]="l.cantidad" [min]="0" [max]="l.producto.stock"
                                  (cambio)="cambiar(l.producto.id, $event)"></app-selector-cantidad>
         </div>
+        </ion-card>
       }
+      </ion-list>
 
       <!-- Dirección de envío -->
       <div class="tarjeta direccion">
@@ -38,10 +43,7 @@
       </div>
     </div>
   } @else {
-    <div class="vacia">
-      <ion-icon name="bag-handle-outline"></ion-icon>
-      <p>Tu cesta está vacía.</p>
-      <ion-button routerLink="/tienda">Ir a la tienda</ion-button>
-    </div>
+    <app-estado icono="bag-handle-outline" titulo="Tu cesta está vacía" texto="Añade productos desde la tienda y aparecerán aquí."
+                boton="Ir a la tienda" (accion)="irATienda()"></app-estado>
   }
 </ion-content>

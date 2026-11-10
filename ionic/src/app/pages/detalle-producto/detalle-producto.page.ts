@@ -93,12 +93,20 @@ export class DetalleProductoPage {
     await t.present();
   }
 
+  // Latido del botón al añadir (crece al 108 % y vuelve, 300 ms)
+  latiendo = signal(false);
+  private latir(): void {
+    this.latiendo.set(false);
+    setTimeout(() => { this.latiendo.set(true); setTimeout(() => this.latiendo.set(false), 300); });
+  }
+
   private async anadirCesta(p: Producto): Promise<void> {
     if (!this.cesta.anadir(p)) {                       // ya tienes en la cesta todas las que quedan
       const t = await this.toast.create({ message: 'No quedan más unidades', duration: 2000, color: 'dark' });
       await t.present();
       return;
     }
+    this.latir();                                      // el botón late, como en Android
     const t = await this.toast.create({
       message: 'Añadido a la cesta',
       duration: 2500, position: 'bottom', color: 'dark',

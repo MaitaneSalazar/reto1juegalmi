@@ -19,8 +19,6 @@
       <div class="tarjeta direccion">
         <strong>{{ t.direccion_linea1 }}</strong>
         <span>{{ t.direccion_linea2 }}</span>
-        @if (distancia() !== null) { <small>{{ textoDistancia() }}</small> }
-        @else if (sinGps()) { <small>Activa la ubicación para ver a qué distancia estás.</small> }
       </div>
 
       <div class="dos">
@@ -61,13 +59,16 @@
 
   <!-- ============ GALERÍA (imagen provisional si no hay foto) ============ -->
   @if (vista() === 'galeria') {
+    <!-- Cada foto es un ion-card con ion-img (carga diferida) -->
     <div class="galeria cascada">
       @for (f of fotos(); track f.id; let i = $index) {
-        <figure [class.grande]="i % 3 === 0">
+        <ion-card class="foto" [class.grande]="i % 3 === 0">
           <ion-icon name="image-outline"></ion-icon>
-          @if (f.url) { <img [src]="f.url" [alt]="f.titulo" loading="lazy" onerror="this.remove()"> }
-          <figcaption>{{ f.titulo }}</figcaption>
-        </figure>
+          @if (f.url) { <ion-img [src]="f.url" [alt]="f.titulo" (ionError)="f.url = null"></ion-img> }
+          <span class="pie-foto">{{ f.titulo }}</span>
+        </ion-card>
+      } @empty {
+        <p class="vacio">Todavía no hay fotos de la tienda.</p>
       }
     </div>
   }

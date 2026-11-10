@@ -10,7 +10,7 @@ const FORMATO = new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'short
 @Component({
   selector: 'app-datos-personales',
   templateUrl: './datos-personales.page.html',
-  styleUrls: ['../cuenta/subpagina.scss', './datos-personales.page.scss'],
+  styleUrls: ['../subpagina.scss', './datos-personales.page.scss'],
   imports: [RouterLink, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonFooter, IonButton, IonIcon],
 })
 export class DatosPersonalesPage {

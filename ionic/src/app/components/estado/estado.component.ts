@@ -4,16 +4,19 @@ import { addIcons } from 'ionicons';
 import { cloudOfflineOutline, refreshOutline, storefrontOutline, receiptOutline, timeOutline,
          buildOutline, searchOutline, bagHandleOutline } from 'ionicons/icons';
 
-// Pantalla de "no hay nada" o "sin conexión" (con botón Reintentar)
+// Pantalla de lista vacía (con botón de acción opcional) o de error al cargar (con Reintentar)
 @Component({
   selector: 'app-estado',
   template: `
     <div class="estado" [class.error]="error()">
       <span class="icono"><ion-icon [name]="error() ? 'cloud-offline-outline' : icono()"></ion-icon></span>
-      <h2>{{ error() ? 'Sin conexión' : titulo() }}</h2>
-      <p>{{ error() ? 'No hemos podido hablar con JuegAlmi. Revisa tu conexión e inténtalo otra vez.' : texto() }}</p>
+      <h2>{{ error() ? 'Algo ha fallado' : titulo() }}</h2>
+      <p>{{ error() ? 'No se puede conectar con el servidor.' : texto() }}</p>
       @if (error()) {
         <ion-button (click)="reintentar.emit()"><ion-icon slot="start" name="refresh-outline"></ion-icon>Reintentar</ion-button>
+      }
+      @if (!error() && boton()) {
+        <ion-button (click)="accion.emit()">{{ boton() }}</ion-button>
       }
     </div>
   `,
@@ -36,6 +39,8 @@ export class EstadoComponent {
   titulo = input('No hay nada');
   texto = input('');
   reintentar = output<void>();
+  boton = input('');                 // texto del botón de las listas vacías (vacío = sin botón)
+  accion = output<void>();
 
   constructor() {
     addIcons({ cloudOfflineOutline, refreshOutline, storefrontOutline, receiptOutline, timeOutline,

@@ -1,6 +1,7 @@
 ion-searchbar { --background: var(--jg-tarjeta); --border-radius: 999px; --box-shadow: none; padding: 0 0 14px; }
 
-.producto { border: 0; padding: 0; background: none; font: inherit; color: var(--ion-text-color); text-align: left; }
+// ion-card sin fondo ni sombra: la tarjeta es la portada
+.producto { --background: transparent; --color: var(--ion-text-color); margin: 0; box-shadow: none; border-radius: 0; overflow: visible; text-align: left; }
 
 // Rejilla de 2 columnas
 .rejilla { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
@@ -15,9 +16,10 @@ ion-searchbar { --background: var(--jg-tarjeta); --border-radius: 999px; --box-s
 }
 
 // Alquilar: sin copias libres → apagado y textos en gris legible (#686A62, contraste 4,8:1)
-.producto.alquilado {
-  app-miniatura-producto { opacity: .55; }
-  .nombre, app-precio { color: #686a62; }
+// Agotado / alquilado: la tarjeta en gris pero se puede abrir (para llegar a «Avísame»);
+// las píldoras de plataforma mantienen su color
+.producto.agotado {
+  app-miniatura-producto, .nombre, app-precio { opacity: .55; filter: grayscale(1); }
 }
 
 // Plataformas del juego arriba a la derecha (una debajo de otra si son varias)

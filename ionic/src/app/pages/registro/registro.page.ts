@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { IonContent, IonInput, IonButton, IonSpinner, MenuController } from '@ionic/angular';
 import { SesionService } from '../../services/sesion.service';
-import { dniValido, telefonoValido } from '../../validators/validadores';
+import { OBLIGATORIO, dniValido, telefonoValido, textoError } from '../../validators/validadores';
 
 const BORRADOR = 'juegalmi_registro';   // clave en sessionStorage
 
@@ -35,14 +35,15 @@ export class RegistroPage {
   });
 
   // Mensaje de error de cada campo
-  mensajes: Record<Campo, string> = {
-    nombre: 'Escribe tu nombre.',
-    apellido1: 'Escribe tu primer apellido.',
+  // Mensaje si el formato está mal (si está vacío: «Este campo es obligatorio»)
+  formatos: Record<Campo, string> = {
+    nombre: OBLIGATORIO,
+    apellido1: OBLIGATORIO,
     apellido2: '',
-    dni: 'DNI o NIE no válido (12345678Z o X1234567L).',
-    telefono: 'Teléfono no válido (9 cifras).',
-    email: 'Introduce un email válido.',
-    password: 'Mínimo 6 caracteres.',
+    dni: 'El DNI o NIE no es válido.',
+    telefono: 'El teléfono debe tener 9 números y empezar por 6, 7, 8 o 9.',
+    email: 'El email no es válido.',
+    password: 'La contraseña debe tener al menos 6 caracteres.',
   };
 
   constructor() {
@@ -64,6 +65,10 @@ export class RegistroPage {
   invalido(campo: Campo): boolean {
     const c = this.form.controls[campo];
     return c.invalid && c.touched;
+  }
+
+  mensajeError(campo: Campo): string {
+    return textoError(this.form.controls[campo], this.formatos[campo]);
   }
 
   registrar(): void {

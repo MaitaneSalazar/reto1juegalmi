@@ -48,19 +48,19 @@
       <app-estado titulo="Aún no hay productos" texto="Estamos reponiendo la tienda. Vuelve en un rato o mira otra categoría."></app-estado>
     }
   } @else {
-    <!-- Rejilla de 2 columnas -->
+    <!-- Rejilla de 2 columnas · cada producto es un ion-card (CardView) -->
     <div class="rejilla cascada">
       @for (p of productos(); track p.id) {
-        <button type="button" class="producto pulsable" [class.alquilado]="modo() === 'alquilar' && stock(p)?.tipo === 'off'" (click)="abrir(p)">
+        <ion-card class="producto pulsable" [class.agotado]="stock(p)?.agotado" (click)="abrir(p)">
           <span class="foto">
             <app-miniatura-producto [producto]="p" [sinMarca]="p.tipo === 'videojuego'"></app-miniatura-producto>
             @if (p.tipo === 'videojuego') { <app-plataformas class="columna" [producto]="p"></app-plataformas> }
-            @if (stock(p); as e) { <span class="stock" [class.aviso]="e.tipo === 'aviso'">{{ e.texto }}</span> }
+            @if (stock(p); as e) { <span class="stock" [class.aviso]="!e.agotado">{{ e.texto }}</span> }
           </span>
           <span class="nombre">{{ p.nombre }}</span>
           @if (modo() === 'alquilar') { <app-precio [valor]="p.precio_alquiler_dia ?? 0" sufijo="/ día"></app-precio> }
           @else { <app-precio [valor]="p.precio_venta"></app-precio> }
-        </button>
+        </ion-card>
       }
     </div>
 

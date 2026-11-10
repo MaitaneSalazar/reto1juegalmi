@@ -6,13 +6,14 @@ import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonFooter
 import { SesionService } from '../../services/sesion.service';
 import { DomicilioService } from '../../services/domicilio.service';
 import { DatosDireccion } from '../../models/domicilio.model';
+import { textoError } from '../../validators/validadores';
 
 type Campo = 'calle' | 'numero' | 'codigo_postal' | 'ciudad' | 'provincia';
 
 @Component({
   selector: 'app-direccion',
   templateUrl: './direccion.page.html',
-  styleUrls: ['../cuenta/subpagina.scss'],
+  styleUrls: ['../subpagina.scss'],
   imports: [ReactiveFormsModule, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonFooter,
             IonInput, IonButton, IonSpinner],
 })
@@ -46,6 +47,11 @@ export class DireccionPage {
     if (this.id === null) return;
     const d = this.domicilios.lista().find(x => x.id === this.id)?.direccion;
     if (d) this.form.reset({ ...d, piso: d.piso ?? '' });
+  }
+
+  // Código postal: vacío → genérico; mal escrito → el concreto (igual que Android)
+  errorCp(): string {
+    return textoError(this.form.controls.codigo_postal, 'El código postal tiene 5 números');
   }
 
   invalido(c: Campo): boolean {

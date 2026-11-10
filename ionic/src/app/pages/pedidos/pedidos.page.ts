@@ -1,6 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonSkeletonText, IonIcon,
-         AlertController, ToastController } from '@ionic/angular';
+         AlertController, ToastController, IonList, IonCard } from '@ionic/angular';
 import { EstadoComponent } from '../../components/estado/estado.component';
 import { MiniaturaProductoComponent } from '../../components/miniatura-producto/miniatura-producto.component';
 import { PrecioComponent } from '../../components/precio/precio.component';
@@ -8,7 +8,9 @@ import { FechaCortaPipe } from '../../pipes/fecha-corta.pipe';
 import { PedidoService } from '../../services/pedido.service';
 import { SesionService } from '../../services/sesion.service';
 import { EstadoPedido, LineaPedido, PedidoResumen } from '../../models/pedido.model';
-import { NombreProductoPipe } from '../../pipes/nombre-producto.pipe';
+import { NombreProductoPipe, nombreProducto } from '../../pipes/nombre-producto.pipe';
+import { NgTemplateOutlet } from '@angular/common';
+import { Router } from '@angular/router';
 import { EurosPipe } from '../../pipes/euros.pipe';
 import { catchError, forkJoin, map, of } from 'rxjs';
 import { addIcons } from 'ionicons';
@@ -25,12 +27,13 @@ const PASOS: { estado: EstadoPedido; texto: string }[] = [
 @Component({
   selector: 'app-pedidos',
   templateUrl: './pedidos.page.html',
-  styleUrls: ['../cuenta/subpagina.scss', './pedidos.page.scss'],
-  imports: [IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonSkeletonText, IonIcon,
+  styleUrls: ['../subpagina.scss', './pedidos.page.scss'],
+  imports: [IonList, IonCard, NgTemplateOutlet, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonSkeletonText, IonIcon,
             EstadoComponent, MiniaturaProductoComponent, NombreProductoPipe, EurosPipe, PrecioComponent, FechaCortaPipe],
 })
 export class PedidosPage {
   private servicio = inject(PedidoService);
+  private router = inject(Router);
   private sesion = inject(SesionService);
   private alerta = inject(AlertController);
   private toast = inject(ToastController);
@@ -60,6 +63,19 @@ export class PedidosPage {
   }
 
   // Miniatura del listado: la API trae el nombre y la imagen del primer producto
+  // El último pedido va destacado arriba; el resto en «Anteriores»
+  ultimo = computed(() => this.pedidos()[0] ?? null);
+  anteriores = computed(() => this.pedidos().slice(1));
+
+  // «PlayStation 5 Slim» o «Elden Ring +2» si el pedido tiene más artículos
+  titulo(p: PedidoResumen): string {
+    const l = this.lineas()[p.id];
+    if (!l?.length) return p.primer_producto;
+    return l.length > 1 ? `${nombreProducto(l[0].producto)} +${l.length - 1}` : nombreProducto(l[0].producto);
+  }
+
+  irATienda(): void { this.router.navigateByUrl('/tienda'); }
+
   mini(p: PedidoResumen) {
     return { nombre: p.primer_producto, imagen_url: p.imagen_url };
   }
@@ -67,8 +83,8 @@ export class PedidosPage {
   // PUT /api/pedidos/{id}/cancelar (solo pendiente/pagado: se_puede_cancelar)
   async cancelar(p: PedidoResumen): Promise<void> {
     const a = await this.alerta.create({
-      header: `¿Cancelar el pedido #${p.id}?`,
-      message: 'Se anulará el pedido y se devolverá el stock.',
+      header: '¿Cancelar el pedido?',
+      message: `El pedido #${p.id} se cancelará y no se te cobrará.`,
       buttons: [
         { text: 'No', role: 'cancel' },
         { text: 'Sí, cancelar', role: 'destructive', handler: () => {

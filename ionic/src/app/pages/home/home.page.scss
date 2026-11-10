@@ -1,7 +1,7 @@
 // Tarjeta turquesa "Lo reparamos."
 .taller {
   position: relative; overflow: hidden;
-  padding: 26px 26px 28px; border-radius: 30px;
+  padding: 26px 26px 28px; border-radius: 28px;   // como Android
   background: linear-gradient(135deg, #8ad6d8 0%, #6fc4c7 100%);
   color: #1f2329;
 
@@ -11,7 +11,7 @@
     padding: 6px 11px; border-radius: 999px;
     background: rgba(255, 255, 255, .55); font-size: 12px; font-weight: 600;
   }
-  h2 { position: relative; margin: 64px 0 18px; font-size: 44px; font-weight: 800; letter-spacing: -0.055em; }
+  h2 { position: relative; margin: 64px 0 18px; font-size: 44px; font-weight: 700; letter-spacing: -0.055em; }
 }
 .boton-oscuro {
   position: relative; display: inline-flex; align-items: center; gap: 10px;
@@ -62,16 +62,23 @@
 .novedades {
   display: flex; gap: 14px;
   overflow-x: auto; scrollbar-width: none;
-  margin: 0 -22px; padding: 0 22px 8px;
+  margin: 0 -20px; padding: 0 20px 8px;
   &::-webkit-scrollbar { display: none; }
 }
 .novedad {
+  --background: transparent; margin: 0; box-shadow: none; border-radius: 0; overflow: visible;
   position: relative; flex: 0 0 168px;
   display: flex; flex-direction: column; gap: 8px;
   color: var(--ion-text-color); text-decoration: none;
 
   app-miniatura-producto { --tam: 168px; --radio: 22px; --fondo: var(--jg-tarjeta); --icono: 48px; }
-  .etiqueta-mini { position: absolute; top: 10px; left: 10px; }
+  .stock {
+    position: absolute; top: 10px; left: 10px; z-index: 1; padding: 4px 10px; border-radius: 999px;
+    background: #ffffff; color: #1f2329; font-size: 11px; font-weight: 600; box-shadow: 0 2px 8px rgba(0, 0, 0, .12);
+    &.aviso { background: #a72144; color: #ffffff; }
+  }
   strong { font-size: 15px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   app-precio { font-size: 22px; }
 }
+
+.novedad.agotado { app-miniatura-producto, strong, app-precio { opacity: .55; filter: grayscale(1); } }

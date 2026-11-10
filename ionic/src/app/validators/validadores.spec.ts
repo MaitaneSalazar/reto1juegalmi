@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { FormControl } from '@angular/forms';
-import { dniValido, telefonoValido } from './validadores';
+import { FormControl, Validators } from '@angular/forms';
+import { dniValido, telefonoValido, textoError, OBLIGATORIO } from './validadores';
 
 // Ayuda: ejecuta un validador sobre un valor y devuelve el error (o null si es válido)
 const validar = (validador: typeof dniValido, valor: string) => validador(new FormControl(valor));
@@ -50,5 +50,14 @@ describe('Validador de teléfono', () => {
 
   it('rechaza si no empieza por 6, 7, 8 o 9', () => {
     expect(validar(telefonoValido, '500111222')).toEqual({ telefono: true });
+  });
+});
+
+describe('Mensajes de los formularios (los de Android)', () => {
+  it('vacío → «Este campo es obligatorio»; mal escrito → el concreto', () => {
+    const vacio = new FormControl('', Validators.required);
+    const mal = new FormControl('12', [Validators.required, Validators.pattern(/^\d{5}$/)]);
+    expect(textoError(vacio, 'El código postal tiene 5 números')).toBe(OBLIGATORIO);
+    expect(textoError(mal, 'El código postal tiene 5 números')).toBe('El código postal tiene 5 números');
   });
 });

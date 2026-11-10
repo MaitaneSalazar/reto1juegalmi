@@ -1,7 +1,6 @@
-import { NombreProductoPipe } from '../../pipes/nombre-producto.pipe';
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { IonHeader, IonContent, IonIcon, IonButton, IonSpinner, ToastController } from '@ionic/angular';
+import { IonHeader, IonContent, IonIcon, IonButton, IonSpinner, ToastController, IonList, IonCard } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { locationOutline, bagHandleOutline } from 'ionicons/icons';
 import { CabeceraComponent } from '../../components/cabecera/cabecera.component';
@@ -12,12 +11,14 @@ import { CestaService } from '../../services/cesta.service';
 import { PedidoService } from '../../services/pedido.service';
 import { SesionService } from '../../services/sesion.service';
 import { DomicilioService } from '../../services/domicilio.service';
+import { NombreProductoPipe } from '../../pipes/nombre-producto.pipe';
+import { EstadoComponent } from '../../components/estado/estado.component';
 
 @Component({
   selector: 'app-cesta',
   templateUrl: './cesta.page.html',
   styleUrls: ['./cesta.page.scss'],
-  imports: [RouterLink, IonHeader, IonContent, IonIcon, IonButton, IonSpinner,
+  imports: [EstadoComponent, IonList, IonCard, RouterLink, IonHeader, IonContent, IonIcon, IonButton, IonSpinner,
             CabeceraComponent, MiniaturaProductoComponent, SelectorCantidadComponent, PrecioComponent, NombreProductoPipe],
 })
 export class CestaPage {
@@ -40,6 +41,8 @@ export class CestaPage {
   ionViewWillEnter(): void {
     this.domicilios.cargar().subscribe({ error: () => { /* sin conexión */ } });
   }
+
+  irATienda(): void { this.router.navigateByUrl('/tienda'); }
 
   cambiar(productoId: number, cambio: number): void {
     // si llega a 0 se quita; no deja pasar del stock

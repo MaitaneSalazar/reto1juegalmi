@@ -4,8 +4,8 @@
   // Primario: turquesa de la marca (botones, pestaña activa, tarjeta "Lo reparamos")
   --ion-color-primary: #78cdd0;
   --ion-color-primary-rgb: 120, 205, 208;
-  --ion-color-primary-contrast: #1f2329;            // texto oscuro sobre turquesa
-  --ion-color-primary-contrast-rgb: 31, 35, 41;
+  --ion-color-primary-contrast: #162525;            // texto oscuro sobre turquesa (igual que Android)
+  --ion-color-primary-contrast-rgb: 22, 37, 37;
   --ion-color-primary-shade: #6ab4b7;
   --ion-color-primary-tint: #86d2d5;
 
@@ -26,7 +26,7 @@
   --ion-color-danger-tint: #b03757;
 
   // Generales
-  --ion-font-family: 'Inter', system-ui, sans-serif;
+  --ion-font-family: 'Roboto', system-ui, sans-serif;   // la fuente de Android
   --ion-background-color: #ecf2f1;                  // fondo verde grisáceo
   --ion-background-color-rgb: 236, 242, 241;
   --ion-text-color: #1f2329;
@@ -43,11 +43,11 @@
   --jg-inverso: #1f2329;                            // tarjetas oscuras y chips activos
   --jg-inverso-texto: #ffffff;
   --jg-acento: #78cdd0;
-  --jg-acento-suave: rgba(120, 205, 208, 0.22);     // fondos turquesa suaves
-  --jg-borde: rgba(31, 35, 41, 0.08);
+  --jg-acento-suave: #eff9f9;                       // círculos de iconos y avatares (Android)
+  --jg-borde: rgba(24, 26, 32, 0.16);               // borde de los campos (Android)
   --jg-barra: #ffffff;                              // barra inferior flotante
   --jg-sombra: 0 10px 30px rgba(31, 35, 41, 0.10);
-  --jg-radio: 24px;
+  --jg-radio: 20px;                                // esquinas de las tarjetas (Android)
   --jg-relleno: var(--jg-gris);                     // nombre antiguo (lo usan páginas anteriores)
 }
 

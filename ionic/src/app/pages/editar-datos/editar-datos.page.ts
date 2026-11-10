@@ -25,7 +25,7 @@ function parejaContrasena(g: AbstractControl): ValidationErrors | null {
 @Component({
   selector: 'app-editar-datos',
   templateUrl: './editar-datos.page.html',
-  styleUrls: ['../cuenta/subpagina.scss', '../datos-personales/datos-personales.page.scss', './editar-datos.page.scss'],
+  styleUrls: ['../subpagina.scss', '../datos-personales/datos-personales.page.scss', './editar-datos.page.scss'],
   imports: [ReactiveFormsModule, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonFooter,
             IonInput, IonButton, IonIcon, IonSpinner],
 })

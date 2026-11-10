@@ -54,11 +54,11 @@ export class ReparacionPage {
   // DELETE /api/reparaciones/{id} (solo en "recibida": se_puede_cancelar)
   async cancelar(): Promise<void> {
     const a = await this.alerta.create({
-      header: '¿Cancelar la reparación?',
-      message: 'La solicitud se anulará y no se podrá recuperar.',
+      header: '¿Cancelar la solicitud?',
+      message: 'Solo se puede cancelar mientras no hayamos empezado a revisarla.',
       buttons: [
-        { text: 'No', role: 'cancel' },
         { text: 'Sí, cancelar', role: 'destructive', handler: () => this.confirmarCancelar() },
+        { text: 'No', role: 'cancel' },
       ],
     });
     await a.present();
@@ -67,7 +67,7 @@ export class ReparacionPage {
   private confirmarCancelar(): void {
     this.cancelando.set(true);
     this.servicio.cancelar(this.id).subscribe({
-      next: r => { this.cancelando.set(false); this.rep.set(r); this.aviso('Reparación cancelada.', 'dark'); },
+      next: r => { this.cancelando.set(false); this.rep.set(r); this.aviso('Solicitud cancelada', 'dark'); },
       error: e => { this.cancelando.set(false); this.aviso(this.sesion.mensaje(e), 'danger'); },
     });
   }

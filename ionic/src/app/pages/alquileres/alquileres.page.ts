@@ -1,7 +1,8 @@
 import { nombreProducto } from '../../pipes/nombre-producto.pipe';
+import { Router } from '@angular/router';
 import { Component, computed, inject, signal } from '@angular/core';
 import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon, IonSkeletonText,
-         AlertController, ToastController } from '@ionic/angular';
+         AlertController, ToastController, IonList, IonCard, IonItem, IonLabel } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { arrowUndoOutline } from 'ionicons/icons';
 import { EstadoComponent } from '../../components/estado/estado.component';
@@ -18,11 +19,14 @@ const DIA = 86400000;
 @Component({
   selector: 'app-alquileres',
   templateUrl: './alquileres.page.html',
-  styleUrls: ['../cuenta/subpagina.scss', './alquileres.page.scss'],
-  imports: [IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon, IonSkeletonText,
+  styleUrls: ['../subpagina.scss', './alquileres.page.scss'],
+  imports: [IonList, IonCard, IonItem, IonLabel, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonIcon, IonSkeletonText,
             EstadoComponent, MiniaturaProductoComponent, PrecioComponent, FechaCortaPipe],
 })
 export class AlquileresPage {
+  private router = inject(Router);
+  irATienda(): void { this.router.navigateByUrl('/tienda'); }
+
   private servicio = inject(AlquilerService);
   private sesion = inject(SesionService);
   private resumen = inject(ResumenService);

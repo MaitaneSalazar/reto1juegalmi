@@ -12,9 +12,14 @@
   } @else if (cargando()) {
     <ion-skeleton-text [animated]="true" style="height: 260px; border-radius: 24px"></ion-skeleton-text>
   } @else {
-    <!-- Alquileres en curso -->
+    @if (!activos().length && !devueltos().length) {
+      <app-estado icono="time-outline" titulo="Sin alquileres" texto="Todavía no has alquilado ningún juego. Puedes hacerlo desde la tienda."
+                  boton="Ir a la tienda" (accion)="irATienda()"></app-estado>
+    }
+
+    <!-- Alquileres en curso (ion-card = CardView) -->
     @for (a of activos(); track a.id) {
-      <div class="tarjeta activo">
+      <ion-card class="tarjeta activo">
         <div class="arriba">
           @if (a.lineas[0]; as l) { <app-miniatura-producto [producto]="l.videojuego"></app-miniatura-producto> }
           <div>
@@ -31,23 +36,22 @@
         <button type="button" class="devolver pulsable" (click)="devolver(a)">
           <ion-icon name="arrow-undo-outline"></ion-icon> Devolver
         </button>
-      </div>
-    } @empty {
-      <app-estado icono="time-outline" titulo="Nada alquilado ahora" texto="Alquila un juego desde la Tienda y aquí verás los días que te quedan."></app-estado>
+      </ion-card>
     }
 
     <!-- Devueltos -->
     @if (devueltos().length) {
       <h2>Devueltos</h2>
-      <div class="cascada">
+      <!-- ion-list + ion-item = RecyclerView con filas sencillas -->
+      <ion-list class="lista devueltos cascada">
         @for (a of devueltos(); track a.id) {
-          <div class="tarjeta fila">
-            @if (a.lineas[0]; as l) { <app-miniatura-producto [producto]="l.videojuego"></app-miniatura-producto> }
-            <div class="textos"><strong>{{ titulo(a) }}</strong><small>Devuelto el {{ devueltoEl(a) | fechaCorta }}</small></div>
-            <app-precio [valor]="a.importe"></app-precio>
-          </div>
+          <ion-item lines="full">
+            @if (a.lineas[0]; as l) { <app-miniatura-producto slot="start" [producto]="l.videojuego"></app-miniatura-producto> }
+            <ion-label><strong>{{ titulo(a) }}</strong><small>Devuelto el {{ devueltoEl(a) | fechaCorta }}</small></ion-label>
+            <app-precio slot="end" [valor]="a.importe"></app-precio>
+          </ion-item>
         }
-      </div>
+      </ion-list>
     }
   }
 </ion-content>

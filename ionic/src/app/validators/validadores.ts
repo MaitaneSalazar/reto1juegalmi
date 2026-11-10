@@ -17,3 +17,9 @@ export const telefonoValido: ValidatorFn = (c: AbstractControl): ValidationError
   if (!valor) return null;
   return /^[6789]\d{8}$/.test(valor) ? null : { telefono: true };
 };
+
+// Mensajes de los formularios (los mismos que Android): genérico si está vacío, concreto si el formato está mal
+export const OBLIGATORIO = 'Este campo es obligatorio';
+export function textoError(control: AbstractControl, formato = OBLIGATORIO): string {
+  return control.hasError('required') ? OBLIGATORIO : formato;
+}

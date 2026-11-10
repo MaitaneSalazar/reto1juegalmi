@@ -67,12 +67,12 @@
   </div>
   <div class="novedades">
     @for (p of novedades(); track p.id) {
-      <a class="novedad pulsable" [routerLink]="['/producto', p.id]">
+      <ion-card class="novedad pulsable" [class.agotado]="aviso(p)?.agotado" [routerLink]="['/producto', p.id]">
         <app-miniatura-producto [producto]="p"></app-miniatura-producto>
-        @if (p.stock > 0 && p.stock <= 2) { <span class="etiqueta-mini roja">Últimas unidades</span> }
+        @if (aviso(p); as e) { <span class="stock" [class.aviso]="!e.agotado">{{ e.texto }}</span> }
         <strong>{{ p.nombre }}</strong>
         <app-precio [valor]="p.precio_venta"></app-precio>
-      </a>
+      </ion-card>
     }
   </div>
 </ion-content>
