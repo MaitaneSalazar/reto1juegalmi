@@ -128,9 +128,8 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         Context context = holder.itemView.getContext();
         int quedan = alquiler ? producto.getCopiasDisponibles() : producto.getStock();
         boolean agotado = quedan <= 0 || !producto.isDisponible();
-        //AGOTADO SE VE EN GRIS (SIN COLOR) Y NO SE PUEDE PULSAR, COMO UN BOTON DESACTIVADO.
+        //AGOTADO SE VE EN GRIS (SIN COLOR), PERO SE PUEDE ABRIR PARA PEDIR "AVISAME" EN LA FICHA.
         //LAS PLATAFORMAS NO SE TOCAN, SIGUEN CON SU COLOR
-        holder.itemView.setEnabled(!agotado);
         View[] partes = {holder.flSinFoto, holder.ivFoto, holder.tvAviso, holder.tvNombre, holder.tvPrecio, holder.tvPorDia};
         for (View parte : partes) {
             parte.setAlpha(agotado ? 0.55f : 1f);

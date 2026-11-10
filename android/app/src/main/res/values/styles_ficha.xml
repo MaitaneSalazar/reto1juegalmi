@@ -26,4 +26,9 @@
         <item name="android:textColor">@color/color_texto</item>
         <item name="android:textSize">13sp</item>
     </style>
+
+    <string name="ficha_avisame">Avísame</string>
+    <string name="ficha_avisaremos">Te avisaremos cuando vuelva a estar disponible</string>
+    <string name="ficha_devolucion">Devolución antes del %1$s</string>
+    <string name="ficha_envio_gratis">Envío gratis</string>
 </resources>

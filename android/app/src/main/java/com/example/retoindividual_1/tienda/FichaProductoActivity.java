@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.airbnb.lottie.LottieAnimationView;
@@ -22,10 +21,13 @@ import com.example.retoindividual_1.modelos.Cesta;
 import com.example.retoindividual_1.modelos.Plataforma;
 import com.example.retoindividual_1.modelos.Producto;
 import com.example.retoindividual_1.utilidades.Animaciones;
+import com.example.retoindividual_1.utilidades.FormatosReparacion;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
 
 
 import java.text.NumberFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 //FICHA DE UN PRODUCTO, SE PIDE A LA API POR SU ID
@@ -53,13 +55,15 @@ public class FichaProductoActivity extends PaginaMenuActivity {
     private LinearLayout llPie;
     private TextView tvPrecio;
     private TextView tvPrecioDetalle;
-    private Button btnFicha;
+    private MaterialButton btnFicha;
     private TextView tvCantidad;
 
     private Producto producto;
     private boolean alquilando;
     private int diasElegidos = 3;
     private int cantidad = 1;
+    //SIN STOCK NI COPIAS EL BOTON PASA A "AVISAME"
+    private boolean modoAvisame = false;
 
     //ASI SE ABRE LA FICHA DESDE CUALQUIER SITIO SIN EQUIVOCARSE CON LOS EXTRAS
     public static Intent crearIntent(Context context, int idProducto, boolean seAlquila) {
@@ -160,7 +164,11 @@ public class FichaProductoActivity extends PaginaMenuActivity {
         btnFicha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                anadirCesta();
+                if (modoAvisame) {
+                    avisame();
+                } else {
+                    anadirCesta();
+                }
             }
         });
 
@@ -251,21 +259,47 @@ public class FichaProductoActivity extends PaginaMenuActivity {
 
         double unidad = alquilando ? producto.getPrecioAlquilerDia() * diasElegidos : producto.getPrecioVenta();
         tvPrecio.setText(EUROS.format(unidad * cantidad));
-        String detalle = alquilando ? getResources().getQuantityString(R.plurals.ficha_dias, diasElegidos, diasElegidos) : "";
+        //ALQUILANDO: LOS DIAS Y CUANDO HAY QUE DEVOLVERLO. COMPRANDO: ENVIO GRATIS
+        String detalle = alquilando
+                ? getResources().getQuantityString(R.plurals.ficha_dias, diasElegidos, diasElegidos)
+                + " · " + getString(R.string.ficha_devolucion, fechaDevolucion(diasElegidos))
+                : getString(R.string.ficha_envio_gratis);
         if (cantidad > 1) {
-            detalle = getString(R.string.ficha_por_unidades, cantidad, EUROS.format(unidad)) + (detalle.isEmpty() ? "" : " · " + detalle);
+            detalle = getString(R.string.ficha_por_unidades, cantidad, EUROS.format(unidad)) + " · " + detalle;
         }
         tvPrecioDetalle.setText(detalle);
-        tvPrecioDetalle.setVisibility(detalle.isEmpty() ? View.GONE : View.VISIBLE);
+        tvPrecioDetalle.setVisibility(View.VISIBLE);
 
-        btnFicha.setEnabled(quedan > 0);
+        boolean agotado = Cesta.Linea.limite(producto, alquilando) <= 0;
+        modoAvisame = agotado;
+        btnFicha.setIcon(null);
         if (quedan > 0) {
+            btnFicha.setEnabled(true);
             btnFicha.setText(R.string.ficha_anadir);
-        } else if (Cesta.Linea.limite(producto, alquilando) > 0) {
-            btnFicha.setText(R.string.ficha_todo_en_cesta);
+        } else if (agotado) {
+            //NO QUEDA NINGUNO: SE PUEDE PEDIR QUE AVISEMOS CUANDO VUELVA
+            btnFicha.setEnabled(true);
+            btnFicha.setText(R.string.ficha_avisame);
+            btnFicha.setIconResource(R.drawable.ic_notificaciones);
+            btnFicha.setIconGravity(MaterialButton.ICON_GRAVITY_TEXT_START);
+            btnFicha.setIconTint(ContextCompat.getColorStateList(this, R.color.color_sobre_marca));
         } else {
-            btnFicha.setText(alquilando ? R.string.ficha_sin_copias : R.string.ficha_agotado);
+            //QUEDAN, PERO YA ESTAN TODAS EN LA CESTA
+            btnFicha.setEnabled(false);
+            btnFicha.setText(R.string.ficha_todo_en_cesta);
         }
+    }
+
+    //HOY + LOS DIAS DE ALQUILER, ESCRITO COMO "14 nov"
+    private String fechaDevolucion(int dias) {
+        Calendar fin = Calendar.getInstance();
+        fin.add(Calendar.DAY_OF_MONTH, dias);
+        return FormatosReparacion.fechaCorta(String.format(Locale.US, "%tF", fin));
+    }
+
+    //IGUAL QUE EN IONIC: SOLO EL AVISO, LA API NO TIENE AVISOS DE STOCK
+    private void avisame() {
+        Toast.makeText(this, R.string.ficha_avisaremos, Toast.LENGTH_LONG).show();
     }
 
     //LAS QUE SE PUEDEN AÑADIR TODAVIA: EL STOCK (O LAS COPIAS) MENOS LAS QUE YA ESTAN EN LA CESTA
