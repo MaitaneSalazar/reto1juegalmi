@@ -13,13 +13,17 @@
     @for (i of [1, 2]; track i) {
       <ion-skeleton-text [animated]="true" style="height: 190px; border-radius: 24px; margin-bottom: 14px"></ion-skeleton-text>
     }
+  } @else if (!pedidos().length) {
+    <app-estado icono="receipt-outline" titulo="Sin pedidos" texto="Todavía no has hecho ningún pedido. Puedes hacerlo desde la tienda."
+                boton="Ir a la tienda" (accion)="irATienda()"></app-estado>
   } @else {
     <div class="cascada">
-      @for (p of pedidos(); track p.id) {
-        <div class="tarjeta pedido">
+      <!-- ===== El último pedido, destacado arriba ===== -->
+      @if (ultimo(); as p) {
+        <ion-card class="tarjeta pedido">
           <div class="cabecera"><strong>Pedido #{{ p.id }}</strong><span>{{ p.fecha | fechaCorta }}</span></div>
 
-          <!-- Barra de estado (o «Cancelado») -->
+          <!-- Pasos del envío (o «Cancelado») -->
           @if (p.estado === 'cancelado') {
             <span class="cancelado">Cancelado</span>
           } @else {
@@ -32,50 +36,69 @@
             </div>
           }
 
+          <p class="nombre">{{ titulo(p) }}</p>
           <div class="pie">
-            <!-- Hasta 3 productos de izquierda a derecha -->
-            <div class="minis">
-              @for (l of primeras(p); track l.id) {
-                <span class="mini">
-                  <app-miniatura-producto [producto]="l.producto"></app-miniatura-producto>
-                  @if (l.cantidad > 1) { <b class="cantidad">×{{ l.cantidad }}</b> }
-                </span>
-              } @empty {
-                <app-miniatura-producto [producto]="mini(p)"></app-miniatura-producto>
-              }
-              @if (restantes(p) > 0) { <span class="mas">+{{ restantes(p) }}</span> }
-            </div>
+            <ng-container *ngTemplateOutlet="miniaturas; context: { $implicit: p }"></ng-container>
             <app-precio [valor]="p.total"></app-precio>
           </div>
 
-          @if (restantes(p) > 0) {
-            <button type="button" class="ver-mas pulsable" (click)="verMas(p)">
-              {{ abierto() === p.id ? 'Ver menos' : 'Ver más · ' + lineas()[p.id].length + ' artículos' }}
-              <ion-icon [name]="abierto() === p.id ? 'chevron-up' : 'chevron-down'"></ion-icon>
-            </button>
-          }
-
-          <!-- Todos los artículos del pedido -->
-          @if (abierto() === p.id) {
-            <ul class="detalle">
-              @for (l of lineas()[p.id]; track l.id) {
-                <li>
-                  <app-miniatura-producto [producto]="l.producto"></app-miniatura-producto>
-                  <span class="textos"><strong>{{ l.producto | nombreProducto }}</strong><small>{{ l.cantidad }} × {{ l.precio_unitario | euros }}</small></span>
-                  <app-precio [valor]="l.subtotal"></app-precio>
-                </li>
-              }
-            </ul>
-          }
-
-          <!-- Solo en pedidos que no han salido (pendiente / pagado) -->
           @if (p.se_puede_cancelar) {
             <button type="button" class="cancelar pulsable" (click)="cancelar(p)">Cancelar pedido</button>
           }
-        </div>
-      } @empty {
-        <app-estado icono="receipt-outline" titulo="Aún no tienes pedidos" texto="Cuando compres algo en la Tienda lo verás aquí."></app-estado>
+        </ion-card>
+      }
+
+      <!-- ===== Anteriores: tarjetas compactas con «Ver más» ===== -->
+      @if (anteriores().length) {
+        <div class="seccion"><h2>Anteriores</h2></div>
+        <ion-list class="lista">
+          @for (p of anteriores(); track p.id) {
+            <ion-card class="tarjeta anterior">
+              <p class="nombre">{{ titulo(p) }}</p>
+              <p class="resumen">#{{ p.id }} · {{ p.fecha | fechaCorta }} · {{ p.total | euros }}@if (p.estado === 'cancelado') { · Cancelado }</p>
+              <ng-container *ngTemplateOutlet="miniaturas; context: { $implicit: p }"></ng-container>
+
+              @if (p.se_puede_cancelar) {
+                <button type="button" class="cancelar pulsable" (click)="cancelar(p)">Cancelar pedido</button>
+              }
+              @if ((lineas()[p.id]?.length ?? 0) > 1) {
+                <button type="button" class="ver-mas pulsable" (click)="verMas(p)">
+                  {{ abierto() === p.id ? 'Ver menos' : 'Ver más · ' + lineas()[p.id].length + ' artículos' }}
+                  <ion-icon [name]="abierto() === p.id ? 'chevron-up' : 'chevron-down'"></ion-icon>
+                </button>
+              }
+
+              <!-- Todos los artículos del pedido -->
+              @if (abierto() === p.id) {
+                <ul class="detalle">
+                  @for (l of lineas()[p.id]; track l.id) {
+                    <li>
+                      <app-miniatura-producto [producto]="l.producto"></app-miniatura-producto>
+                      <span class="textos"><strong>{{ l.producto | nombreProducto }}</strong><small>{{ l.cantidad }} × {{ l.precio_unitario | euros }}</small></span>
+                      <app-precio [valor]="l.subtotal"></app-precio>
+                    </li>
+                  }
+                </ul>
+              }
+            </ion-card>
+          }
+        </ion-list>
       }
     </div>
   }
+
+  <!-- Hasta 3 portadas de izquierda a derecha (+N si hay más) -->
+  <ng-template #miniaturas let-p>
+    <div class="minis">
+      @for (l of primeras(p); track l.id) {
+        <span class="mini">
+          <app-miniatura-producto [producto]="l.producto"></app-miniatura-producto>
+          @if (l.cantidad > 1) { <b class="cantidad">×{{ l.cantidad }}</b> }
+        </span>
+      } @empty {
+        <app-miniatura-producto [producto]="mini(p)"></app-miniatura-producto>
+      }
+      @if (restantes(p) > 0) { <span class="mas">+{{ restantes(p) }}</span> }
+    </div>
+  </ng-template>
 </ion-content>

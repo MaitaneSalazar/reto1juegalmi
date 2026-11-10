@@ -1,12 +1,11 @@
 import { Component, ElementRef, OnDestroy, inject, signal, viewChild } from '@angular/core';
-import { IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon, IonButton, IonSkeletonText } from '@ionic/angular';
+import { IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon, IonButton, IonSkeletonText, IonCard, IonImg } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { locationOutline, timeOutline, callOutline, navigateOutline, imageOutline,
          storefrontOutline, buildOutline, phonePortraitOutline, rocketOutline } from 'ionicons/icons';
 import * as L from 'leaflet';
 import { CabeceraComponent } from '../../components/cabecera/cabecera.component';
 import { TiendaService } from '../../services/tienda.service';
-import { UbicacionService } from '../../services/ubicacion.service';
 import { FOTOS_LOCALES, FotoTienda, HISTORIA, HITOS, HORARIO, Tienda } from '../../models/tienda.model';
 
 type Vista = 'ubicacion' | 'historia' | 'galeria';
@@ -19,18 +18,15 @@ const PIN = `<span class="pin"><svg width="22" height="22" viewBox="0 0 24 24" f
   selector: 'app-nosotros',
   templateUrl: './nosotros.page.html',
   styleUrls: ['./nosotros.page.scss'],
-  imports: [IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon, IonButton, IonSkeletonText, CabeceraComponent],
+  imports: [IonCard, IonImg, IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon, IonButton, IonSkeletonText, CabeceraComponent],
 })
 export class NosotrosPage implements OnDestroy {
   private tiendaSrv = inject(TiendaService);
-  private ubicacion = inject(UbicacionService);
 
   mapaEl = viewChild<ElementRef<HTMLDivElement>>('mapa');   // <div #mapa>
 
   vista = signal<Vista>('ubicacion');
   tienda = signal<Tienda | null>(null);
-  distancia = signal<number | null>(null);    // km hasta la tienda
-  sinGps = signal(false);                     // el usuario no ha dado permiso
 
   // Horario e historia van escritos en la app (la API no los devuelve)
   horario = HORARIO;
@@ -39,7 +35,6 @@ export class NosotrosPage implements OnDestroy {
   fotos = signal<FotoTienda[]>(FOTOS_LOCALES);   // GET /api/tienda/fotos (si no hay, las locales)
 
   private mapa?: L.Map;
-  private marcaUsuario?: L.CircleMarker;
 
   constructor() {
     addIcons({ locationOutline, timeOutline, callOutline, navigateOutline, imageOutline,
@@ -57,10 +52,9 @@ export class NosotrosPage implements OnDestroy {
     });
   }
 
-  // Al entrar: recoloca el mapa y vuelve a pedir la posición
+  // Al entrar: recoloca el mapa
   ionViewDidEnter(): void {
     this.mapa?.invalidateSize();
-    this.localizar();
   }
 
   ngOnDestroy(): void {
@@ -82,45 +76,28 @@ export class NosotrosPage implements OnDestroy {
     return 'tel:' + t.telefono.replace(/\s/g, '');
   }
 
-  textoDistancia(): string {
-    const d = this.distancia();
-    if (d === null) return '';
-    return d < 1 ? `Estás a ${Math.round(d * 1000)} m de la tienda` : `Estás a ${d.toFixed(1).replace('.', ',')} km de la tienda`;
-  }
-
-  // Mapa de OpenStreetMap con la tienda (sin API key)
+  // Mapa fijo, como en Android: no se arrastra ni se hace zoom; al tocarlo se abre la ruta
   private crearMapa(): void {
     const t = this.tienda();
     const el = this.mapaEl()?.nativeElement;
     if (!t || !el || this.mapa) return;
 
-    this.mapa = L.map(el, { zoomControl: false }).setView([t.latitud, t.longitud], 16);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    this.mapa = L.map(el, {
+      zoomControl: false, dragging: false, touchZoom: false, scrollWheelZoom: false,
+      doubleClickZoom: false, boxZoom: false, keyboard: false,
+    }).setView([t.latitud, t.longitud], 17);
+
+    // Teselas de Esri (ojo: {z}/{y}/{x}, al revés que OpenStreetMap)
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
       maxZoom: 19,
-      attribution: '© OpenStreetMap',
+      attribution: 'Tiles © Esri',
     }).addTo(this.mapa);
 
     L.marker([t.latitud, t.longitud], {
       icon: L.divIcon({ className: 'pin-tienda', html: PIN, iconSize: [72, 72], iconAnchor: [36, 36] }),
-    }).addTo(this.mapa).bindPopup(t.nombre);
+      interactive: false,
+    }).addTo(this.mapa);
 
-    this.localizar();
-  }
-
-  // Punto azul con la posición del usuario + distancia
-  private async localizar(): Promise<void> {
-    const pos = await this.ubicacion.obtener();
-    const t = this.tienda();
-    this.sinGps.set(!pos);
-    if (!pos || !t || !this.mapa) return;
-
-    this.distancia.set(this.ubicacion.distanciaKm(pos, { lat: t.latitud, lon: t.longitud }));
-    if (this.marcaUsuario) {
-      this.marcaUsuario.setLatLng([pos.lat, pos.lon]);
-    } else {
-      this.marcaUsuario = L.circleMarker([pos.lat, pos.lon], {
-        radius: 8, color: '#ffffff', weight: 3, fillColor: '#1A73E8', fillOpacity: 1,
-      }).addTo(this.mapa).bindPopup('Estás aquí');
-    }
+    this.mapa.on('click', () => this.comoLlegar());
   }
 }

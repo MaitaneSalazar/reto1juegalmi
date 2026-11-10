@@ -1,12 +1,12 @@
 .perfil {
   display: flex; flex-direction: column; align-items: center; text-align: center; margin: 4px 0 26px;
-  h1 { margin: 20px 0 6px; font-size: 32px; font-weight: 800; letter-spacing: -0.05em; }
+  h1 { margin: 20px 0 6px; font-size: 32px; font-weight: 700; letter-spacing: -0.05em; }
   span { color: var(--jg-texto-sec); font-size: 16px; }
 }
 .avatar {
   width: 112px; height: 112px; border-radius: 50%; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
-  background: var(--jg-acento); color: #1f2329; font-size: 46px; font-weight: 800; letter-spacing: -0.05em;
+  background: var(--jg-acento); color: #1f2329; font-size: 46px; font-weight: 700; letter-spacing: -0.05em;
   img { width: 100%; height: 100%; object-fit: cover; }
 }
 .datos {

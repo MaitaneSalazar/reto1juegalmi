@@ -1,18 +1,19 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonFooter, IonButton, IonIcon,
-         IonSkeletonText, AlertController, ToastController } from '@ionic/angular';
+         IonSkeletonText, AlertController, ToastController, IonList, IonCard } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { locationOutline, pencilOutline, trashOutline, add, checkmarkCircle } from 'ionicons/icons';
 import { SesionService } from '../../services/sesion.service';
 import { DomicilioService } from '../../services/domicilio.service';
 import { Domicilio } from '../../models/domicilio.model';
+import { EstadoComponent } from '../../components/estado/estado.component';
 
 @Component({
   selector: 'app-direcciones',
   templateUrl: './direcciones.page.html',
-  styleUrls: ['../cuenta/subpagina.scss', './direcciones.page.scss'],
-  imports: [RouterLink, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonFooter, IonButton, IonIcon, IonSkeletonText],
+  styleUrls: ['../subpagina.scss', './direcciones.page.scss'],
+  imports: [EstadoComponent, IonList, IonCard, RouterLink, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonFooter, IonButton, IonIcon, IonSkeletonText],
 })
 export class DireccionesPage {
   domicilios = inject(DomicilioService);

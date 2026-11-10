@@ -1,5 +1,13 @@
+.pedido, .anterior { margin: 0 0 14px; }
+.nombre { margin: 14px 0 8px; font-size: 16px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.anterior {
+  padding: 16px 18px;
+  .nombre { margin: 0 0 4px; }
+  .resumen { margin: 0 0 12px; color: var(--jg-texto-sec); font-size: 14px; }
+  .cancelar { margin-top: 12px; }
+}
 .pedido {
-  padding: 20px 20px 18px; margin-bottom: 14px;
+  padding: 20px 20px 18px;
   .cabecera { display: flex; justify-content: space-between; align-items: baseline; }
   strong { font-size: 17px; font-weight: 600; }
   .cabecera span { color: var(--jg-texto-sec); font-size: 15px; }

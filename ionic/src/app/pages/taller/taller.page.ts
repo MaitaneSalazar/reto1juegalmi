@@ -2,7 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { concatMap, from, last, of, switchMap } from 'rxjs';
 import { IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon, IonInput, IonTextarea,
-         IonChip, IonButton, IonSpinner, IonSkeletonText, ToastController } from '@ionic/angular';
+         IonChip, IonButton, IonSkeletonText, ToastController, IonList, IonCard } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { gameControllerOutline, phonePortraitOutline, tabletLandscapeOutline, laptopOutline, tvOutline,
          headsetOutline, watchOutline, ellipsisHorizontal, cameraOutline, close, chevronForward, keypadOutline, checkmarkCircleOutline } from 'ionicons/icons';
@@ -19,24 +19,16 @@ interface OpcionTipo { valor: TipoDispositivo; texto: string; icono: string; }
 
 const MAX_FOTOS = 5;   // la API admite hasta 5 fotos por reparación
 
-// Componentes que se ofrecen según el dispositivo
-const COMPONENTES: Record<TipoDispositivo, string[]> = {
-  consola:     ['HDMI', 'Ventilador', 'Lector de discos', 'Placa base', 'Puerto de carga', 'Botones'],
-  movil:       ['Pantalla', 'Batería', 'Puerto de carga', 'Cámara', 'Botones', 'Altavoz'],
-  tablet:      ['Pantalla', 'Batería', 'Puerto de carga', 'Cámara', 'Botones', 'Altavoz'],
-  ordenador:   ['Pantalla', 'Batería', 'Teclado', 'Ventilador', 'Placa base', 'Disco duro'],
-  mando:       ['Joystick', 'Botones', 'Gatillos', 'Batería', 'Puerto de carga'],
-  auriculares: ['Batería', 'Altavoz', 'Micrófono', 'Puerto de carga', 'Bluetooth'],
-  reloj:       ['Pantalla', 'Batería', 'Correa', 'Botones'],
-  otro:        ['Pantalla', 'Batería', 'Puerto de carga', 'Botones', 'Otro'],
-};
+// Los 13 componentes, siempre los mismos y en este orden (igual que Android)
+const COMPONENTES = ['Pantalla', 'Batería', 'Puerto de carga', 'HDMI', 'Ventilador', 'Placa base', 'Joystick',
+                     'Botones', 'Lector de discos', 'Altavoz / micro', 'Cámara', 'Software', 'No lo sé'];
 
 @Component({
   selector: 'app-taller',
   templateUrl: './taller.page.html',
   styleUrls: ['./taller.page.scss'],
-  imports: [IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon, IonInput, IonTextarea,
-            IonChip, IonButton, IonSpinner, IonSkeletonText, CabeceraComponent, EstadoComponent, EurosPipe, FechaCortaPipe],
+  imports: [IonList, IonCard, IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonIcon, IonInput, IonTextarea,
+            IonChip, IonButton, IonSkeletonText, CabeceraComponent, EstadoComponent, EurosPipe, FechaCortaPipe],
 })
 export class TallerPage {
   private sesion = inject(SesionService);
@@ -48,9 +40,8 @@ export class TallerPage {
 
   vista = signal<'nueva' | 'mis'>('nueva');
 
-  // ----- Formulario en 3 pasos (estado con signals)
-  paso = signal(1);
-  intentado = signal(false);                 // true al pulsar Siguiente → muestra errores
+  // ----- Formulario en una sola pantalla (estado con signals)
+  intentado = signal(false);                 // true al pulsar Continuar → muestra el error
   tipo = signal<TipoDispositivo | null>(null);
   marca = signal('');                        // "Sony"
   modelo = signal('');                       // "PlayStation 5"
@@ -71,18 +62,21 @@ export class TallerPage {
     { valor: 'otro', texto: 'Otro', icono: 'ellipsis-horizontal' },
   ];
 
-  componentes = computed(() => [...COMPONENTES[this.tipo() ?? 'otro'], 'No lo sé']);
-  textoTipo = computed(() => this.tipos.find(t => t.valor === this.tipo())?.texto ?? '');
+  componentes = COMPONENTES;
 
-  // Errores de cada paso
-  errorTipo = computed(() => !this.tipo());
-  errorMarca = computed(() => this.marca().trim().length < 2);
-  errorModelo = computed(() => this.modelo().trim().length < 1);
-  errorComponente = computed(() => !this.componente());
-  errorDescripcion = computed(() => this.descripcion().trim().length < 10);
-  pasoValido = computed(() => this.paso() === 1
-    ? !this.errorTipo() && !this.errorMarca() && !this.errorModelo() && !this.errorComponente()
-    : this.paso() === 2 ? !this.errorDescripcion() : true);
+  // Barra de 3 partes: cada una se pone turquesa cuando su zona del formulario está completa
+  parte1 = computed(() => !!this.tipo());
+  parte2 = computed(() => !!this.marca().trim() && !!this.modelo().trim());
+  parte3 = computed(() => !!this.componente() && this.descripcion().trim().length >= 10);
+
+  // Un solo mensaje, en el orden de la pantalla (los mismos textos que Android)
+  error = computed(() => {
+    if (!this.parte1()) return 'Elige qué tipo de dispositivo es.';
+    if (!this.parte2()) return 'Escribe la marca y el modelo.';
+    if (!this.componente()) return 'Elige el componente afectado (o «No lo sé»).';
+    if (this.descripcion().trim().length < 10) return 'Describe el problema con al menos 10 caracteres.';
+    return '';
+  });
 
   // ----- Mis reparaciones
   mias = signal<Reparacion[]>([]);
@@ -109,19 +103,17 @@ export class TallerPage {
 
   elegirTipo(t: TipoDispositivo): void {
     this.tipo.set(t);
-    if (!COMPONENTES[t].includes(this.componente())) this.componente.set('');   // el componente depende del tipo
   }
 
-  siguiente(): void {
+  // «Continuar»: valida y envía
+  continuar(): void {
     this.intentado.set(true);
-    if (!this.pasoValido()) return;
-    this.intentado.set(false);
-    this.paso.update(p => p + 1);
+    if (this.error()) return;
+    this.enviar();
   }
 
-  atras(): void {
-    this.intentado.set(false);
-    this.paso.update(p => Math.max(1, p - 1));
+  pedirReparacion(): void {
+    this.vista.set('nueva');
   }
 
   // ----- Cámara
@@ -140,11 +132,11 @@ export class TallerPage {
   }
 
   // ----- Enviar: POST /api/reparaciones y después sube las fotos con su id
-  enviar(): void {
+  private enviar(): void {
     const tipo = this.tipo();
     if (!tipo) return;
     this.enviando.set(true);
-    const componente = this.componente() === 'No lo sé' ? undefined : this.componente();
+    const componente = this.componente() === 'No lo sé' ? undefined : this.componente();   // el texto del chip; «No lo sé» no se envía
 
     this.reparaciones.crear({
       tipo_dispositivo: tipo,
@@ -160,11 +152,12 @@ export class TallerPage {
             last())
         : of(rep)),
     ).subscribe({
-      next: rep => {
+      next: () => {
         this.enviando.set(false);
         this.reiniciar();
-        this.aviso(`Solicitud ${rep.numero} enviada. Te avisaremos con el presupuesto.`, 'dark');
-        this.router.navigate(['/taller/reparacion', rep.id]);    // directo al seguimiento
+        this.aviso('Solicitud enviada. Te avisaremos cuando la revisemos.', 'dark');
+        this.vista.set('mis');                                   // a la pestaña «Mis reparaciones»
+        this.cargarMias();
       },
       error: e => {
         this.enviando.set(false);
@@ -191,7 +184,7 @@ export class TallerPage {
   }
 
   private reiniciar(): void {
-    this.paso.set(1); this.intentado.set(false); this.tipo.set(null);
+    this.intentado.set(false); this.tipo.set(null);
     this.marca.set(''); this.modelo.set(''); this.componente.set(''); this.descripcion.set(''); this.listaFotos.set([]);
   }
 

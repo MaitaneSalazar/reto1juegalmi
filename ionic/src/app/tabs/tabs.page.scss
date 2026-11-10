@@ -2,7 +2,7 @@
 ion-tab-bar {
   --background: #1f2329;                // barra oscura (mockup final)
   --border: 0;
-  height: 64px;
+  height: 56px;                         // como Android
   margin: 0 14px calc(12px + var(--ion-safe-area-bottom, 0px));
   padding: 0 8px !important;
   border-radius: 999px;
@@ -27,7 +27,7 @@ ion-tab-button {
 ion-tab-button.tab-selected {
   flex: 0 0 auto;
   align-self: center;
-  height: 48px;
+  height: 44px;                         // como Android
   padding: 0 18px 0 14px;
   border-radius: 999px;
   background: var(--jg-acento);

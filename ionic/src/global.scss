@@ -1,9 +1,7 @@
-// Fuente Inter local (funciona sin internet)
-@import "@fontsource/inter/400.css";
-@import "@fontsource/inter/500.css";
-@import "@fontsource/inter/600.css";
-@import "@fontsource/inter/700.css";
-@import "@fontsource/inter/800.css";
+// Fuente Roboto local, la de Android (en iPhone no viene instalada)
+@import "@fontsource/roboto/400.css";
+@import "@fontsource/roboto/500.css";
+@import "@fontsource/roboto/700.css";
 
 // CSS base de Ionic
 @import "@ionic/angular/css/core.css";
@@ -24,15 +22,15 @@
 @import "leaflet/dist/leaflet.css";
 
 body { background: var(--ion-background-color); }
-ion-content { --padding-start: 22px; --padding-end: 22px; --padding-bottom: 110px; }  // hueco para la barra flotante
+ion-content { --padding-start: 20px; --padding-end: 20px; --padding-bottom: 110px; }  // hueco para la barra flotante
 
 // Títulos grandes y apretados ("Hola, Ane", "Tienda", "Cesta")
 .titulo {
   margin: 6px 0 22px;
-  font-size: 46px;
-  line-height: 1.02;
-  font-weight: 800;
-  letter-spacing: -0.055em;
+  font-size: 40px;
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.05em;
 }
 h1, h2, h3 { letter-spacing: -0.03em; }
 
@@ -40,6 +38,21 @@ h1, h2, h3 { letter-spacing: -0.03em; }
 .tarjeta {
   background: var(--jg-tarjeta);
   border-radius: var(--jg-radio);
+}
+
+// ion-card con el aspecto de .tarjeta (equivale a CardView)
+ion-card.tarjeta {
+  --background: var(--jg-tarjeta);
+  --color: inherit;
+  margin: 0;
+  box-shadow: none;
+  border-radius: var(--jg-radio);
+}
+
+// ion-list transparente (equivale a RecyclerView)
+ion-list.lista {
+  background: transparent;
+  padding: 0;
 }
 
 // Cabecera de sección: "Novedades ...... Ver todo"
@@ -54,10 +67,10 @@ h1, h2, h3 { letter-spacing: -0.03em; }
 ion-button {
   --border-radius: 999px;
   --box-shadow: none;
-  min-height: 54px;
+  min-height: 48px;
   text-transform: none;
-  font-weight: 600;
-  font-size: 17px;
+  font-weight: 500;
+  font-size: 14px;
   letter-spacing: 0;
 }
 
@@ -81,7 +94,7 @@ ion-back-button.redondo {
 ion-segment {
   --background: var(--jg-segmento);
   border-radius: 999px;
-  padding: 5px;
+  padding: 4px;
   margin-bottom: 16px;
 }
 ion-segment-button {
@@ -100,14 +113,13 @@ ion-segment-button {
 }
 ion-segment-button.segment-button-checked {
   background: var(--jg-segmento-activo);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 // Chips de filtro (fila con scroll horizontal)
 .chips {
   display: flex; gap: 8px;
   overflow-x: auto; scrollbar-width: none;
-  margin: 0 -22px 18px; padding: 0 22px;
+  margin: 0 -20px 18px; padding: 0 20px;
   &::-webkit-scrollbar { display: none; }
   &.envolver { flex-wrap: wrap; overflow: visible; margin: 0 0 18px; padding: 0; }
 }
@@ -142,12 +154,12 @@ app-datos-personales ion-input, app-direcciones ion-input, app-editar-datos ion-
   --padding-start: 16px !important;
   --padding-end: 16px !important;
   --highlight-color-focused: var(--jg-acento);
-  min-height: 52px;
+  min-height: 44px;
   border: 1px solid var(--jg-borde);
-  border-radius: 16px;
+  border-radius: 14px;
   overflow: hidden;
-  font-size: 17px;
-  &.has-focus { border-color: var(--jg-acento); }
+  font-size: 15px;
+  &.has-focus { border-color: #375e60; }
   &.mal { border-color: var(--ion-color-danger); }
 }
 .error { margin: 6px 0 0; color: var(--ion-color-danger); font-size: 13px; }
@@ -166,6 +178,21 @@ ion-toast { --border-radius: 18px; --start: 16px; --end: 16px; transform: transl
   .cascada > *:nth-child(#{$i}) { animation-delay: #{($i - 1) * 45}ms; }
 }
 
+// Igual que Animaciones.aparecer() de Android: entra subiendo 24px
+@keyframes jg-subir {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: none; }
+}
+.aparecer { animation: jg-subir .4s cubic-bezier(0, 0, .2, 1) both; }
+
+// Igual que Animaciones.latido(): crece al 108 % y vuelve con rebote
+@keyframes jg-latido {
+  0%   { transform: scale(1); }
+  33%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+.latido { animation: jg-latido .3s cubic-bezier(.34, 1.56, .64, 1); }
+
 // Respuesta táctil al pulsar
 .pulsable { transition: transform .12s ease; cursor: pointer; }
 .pulsable:active { transform: scale(.97); }
@@ -179,5 +206,5 @@ ion-toast { --border-radius: 18px; --start: 16px; --end: 16px; transform: transl
   width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0;
   background: var(--jg-acento); color: #1f2329;
   display: inline-flex; align-items: center; justify-content: center;
-  font-size: 18px; font-weight: 800; letter-spacing: 0;
+  font-size: 18px; font-weight: 700; letter-spacing: 0;
 }

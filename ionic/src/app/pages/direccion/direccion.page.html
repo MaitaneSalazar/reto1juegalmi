@@ -11,14 +11,14 @@
     <div class="campo">
       <label>Calle</label>
       <ion-input formControlName="calle" placeholder="Ej. Gran Vía" autocomplete="address-line1" aria-label="Calle" [class.mal]="invalido('calle')"></ion-input>
-      @if (invalido('calle')) { <p class="error">Escribe la calle.</p> }
+      @if (invalido('calle')) { <p class="error">Este campo es obligatorio</p> }
     </div>
 
     <div class="fila2">
       <div class="campo">
         <label>Número</label>
         <ion-input formControlName="numero" placeholder="12" aria-label="Número" [class.mal]="invalido('numero')"></ion-input>
-        @if (invalido('numero')) { <p class="error">Pon el número.</p> }
+        @if (invalido('numero')) { <p class="error">Este campo es obligatorio</p> }
       </div>
       <div class="campo">
         <label>Piso <small>(opcional)</small></label>
@@ -30,19 +30,19 @@
       <div class="campo">
         <label>Código postal</label>
         <ion-input formControlName="codigo_postal" placeholder="48001" inputmode="numeric" maxlength="5" aria-label="Código postal" [class.mal]="invalido('codigo_postal')"></ion-input>
-        @if (invalido('codigo_postal')) { <p class="error">5 cifras.</p> }
+        @if (invalido('codigo_postal')) { <p class="error">{{ errorCp() }}</p> }
       </div>
       <div class="campo">
         <label>Ciudad</label>
         <ion-input formControlName="ciudad" placeholder="Bilbao" aria-label="Ciudad" [class.mal]="invalido('ciudad')"></ion-input>
-        @if (invalido('ciudad')) { <p class="error">Escribe la ciudad.</p> }
+        @if (invalido('ciudad')) { <p class="error">Este campo es obligatorio</p> }
       </div>
     </div>
 
     <div class="campo">
       <label>Provincia</label>
       <ion-input formControlName="provincia" placeholder="Bizkaia" aria-label="Provincia" [class.mal]="invalido('provincia')"></ion-input>
-      @if (invalido('provincia')) { <p class="error">Escribe la provincia.</p> }
+      @if (invalido('provincia')) { <p class="error">Este campo es obligatorio</p> }
     </div>
   </form>
 </ion-content>

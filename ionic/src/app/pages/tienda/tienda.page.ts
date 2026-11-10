@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonSearchbar, IonChip, IonIcon,
-         IonSkeletonText, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, ToastController } from '@ionic/angular';
+         IonSkeletonText, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, ToastController, IonCard } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { searchOutline, closeOutline, micOutline } from 'ionicons/icons';
 import { CabeceraComponent } from '../../components/cabecera/cabecera.component';
@@ -11,7 +11,7 @@ import { PrecioComponent } from '../../components/precio/precio.component';
 import { PlataformasComponent } from '../../components/plataformas/plataformas.component';
 import { ProductoService } from '../../services/producto.service';
 import { VozService } from '../../services/voz.service';
-import { EtiquetaStock, Producto, TipoProducto, etiquetaStock } from '../../models/producto.model';
+import { Producto, TipoProducto, avisoStock } from '../../models/producto.model';
 import { EstadoComponent } from '../../components/estado/estado.component';
 
 type Modo = 'comprar' | 'alquilar';
@@ -23,7 +23,7 @@ const POR_PAGINA = 8;   // carga progresiva
   selector: 'app-tienda',
   templateUrl: './tienda.page.html',
   styleUrls: ['./tienda.page.scss'],
-  imports: [IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonSearchbar, IonChip, IonIcon,
+  imports: [IonCard, IonHeader, IonContent, IonSegment, IonSegmentButton, IonLabel, IonSearchbar, IonChip, IonIcon,
             IonSkeletonText, IonInfiniteScroll, IonInfiniteScrollContent,
             CabeceraComponent, MiniaturaProductoComponent, PrecioComponent, EstadoComponent, PlataformasComponent],
 })
@@ -116,10 +116,8 @@ export class TiendaPage {
   }
 
   // Comprar: unidades en stock · Alquilar: copias libres
-  stock(p: Producto): EtiquetaStock | null {
-    return this.modo() === 'alquilar'
-      ? etiquetaStock(p.copias_disponibles ?? (p.alquilado ? 0 : 3), true)
-      : etiquetaStock(p.stock);
+  stock(p: Producto) {
+    return avisoStock(p, this.modo() === 'alquilar');
   }
 
   abrir(p: Producto): void {

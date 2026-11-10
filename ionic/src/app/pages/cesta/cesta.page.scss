@@ -1,6 +1,7 @@
+ion-list.lista ion-card { margin-bottom: 14px; }
 .linea {
   display: flex; align-items: center; gap: 18px;
-  padding: 14px 14px 14px 14px; margin-bottom: 14px;
+  padding: 14px;
 
   app-miniatura-producto { --tam: 92px; --radio: 16px; --fondo: #ffffff; --ajuste: contain; }
   .datos { flex-grow: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }

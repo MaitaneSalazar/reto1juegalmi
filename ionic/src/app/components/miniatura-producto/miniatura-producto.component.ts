@@ -1,4 +1,5 @@
 import { Component, computed, input, signal } from '@angular/core';
+import { IonImg } from '@ionic/angular';
 import { COLOR_PLATAFORMA, COLOR_PORTADA, TipoProducto } from '../../models/producto.model';
 
 // Vale para un Producto de la API o para un resumen con nombre e imagen
@@ -12,6 +13,7 @@ const EXTENSIONES = ['jpg', 'png', 'webp', 'jpeg'];
 
 @Component({
   selector: 'app-miniatura-producto',
+  imports: [IonImg],
   template: `
     <!-- Portada generada: se ve mientras carga o si no hay foto (la BD manda imagen_url: null) -->
     <div class="arte" [style.background]="color()" aria-hidden="true">
@@ -19,9 +21,10 @@ const EXTENSIONES = ['jpg', 'png', 'webp', 'jpeg'];
       @if (marca() && !sinMarca()) { <span class="marca">{{ marca() }}</span> }
       <span class="titulo" [style.font-size.cqw]="tamTitulo()">{{ producto().nombre }}</span>
     </div>
+    <!-- ion-img = carga diferida de imágenes (como Glide en Android): solo se descarga al verse -->
     @if (src()) {
-      <img [src]="src()" [alt]="producto().nombre" loading="lazy"
-           [class.visible]="cargada()" (load)="cargada.set(true)" (error)="siguiente()">
+      <ion-img [src]="src()" [alt]="producto().nombre"
+               [class.visible]="cargada()" (ionImgDidLoad)="cargada.set(true)" (ionError)="siguiente()"></ion-img>
     }
   `,
   styles: [`
@@ -35,7 +38,7 @@ const EXTENSIONES = ['jpg', 'png', 'webp', 'jpeg'];
     .arte { position: absolute; inset: 0; overflow: hidden; color: #ffffff; container-type: inline-size; }
     .letra {
       position: absolute; top: -18%; right: -8%;
-      font-size: 70cqw; line-height: 1; font-weight: 900; opacity: .09; user-select: none;
+      font-size: 70cqw; line-height: 1; font-weight: 700; opacity: .09; user-select: none;
     }
     .marca {
       position: absolute; top: 7%; right: 7%;
@@ -43,21 +46,22 @@ const EXTENSIONES = ['jpg', 'png', 'webp', 'jpeg'];
     }
     .titulo {
       position: absolute; left: 7%; right: 7%; bottom: 7%;
-      font-weight: 850; line-height: .86;
+      font-weight: 700; line-height: .86;
       letter-spacing: -.055em; text-transform: uppercase; text-wrap: balance; overflow-wrap: normal;
     }
-    img {
+    ion-img {
       position: absolute; inset: 0; width: 100%; height: 100%;
-      object-fit: var(--ajuste, cover); background: var(--fondo, #ffffff);
+      background: var(--fondo, #ffffff);
       opacity: 0; transition: opacity .3s;          /* aparece suave al cargar */
     }
-    img.visible { opacity: 1; }
+    ion-img::part(image) { width: 100%; height: 100%; object-fit: var(--ajuste, cover); }
+    ion-img.visible { opacity: 1; }
   `],
 })
 export class MiniaturaProductoComponent {
   producto = input.required<ProductoMini>();
   grande = input(false);
-  sinMarca = input(false);       // true = no escribir la plataforma/marca en la portada (ya va en píldoras)         // true = usar la imagen original (ficha) en vez de la miniatura
+  sinMarca = input(false);       // true = no escribir la plataforma/marca en la portada (ya va en píldoras)
   cargada = signal(false);
   intento = signal(0);           // 0 = imagen de la API · 1.. = fotos locales de respaldo
 

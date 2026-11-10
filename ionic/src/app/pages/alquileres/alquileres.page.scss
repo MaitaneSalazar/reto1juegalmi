@@ -1,4 +1,4 @@
-.activo { padding: 22px; margin-bottom: 14px; }
+.activo { padding: 22px; margin: 0 0 14px; }
 .arriba {
   display: flex; gap: 24px;
   app-miniatura-producto { --tam: 112px; --radio: 16px; height: 150px; }
@@ -15,4 +15,15 @@
   border: 1px solid var(--jg-borde); background: var(--jg-tarjeta);
   color: var(--ion-text-color); font: inherit; font-size: 17px; font-weight: 500;
   ion-icon { font-size: 20px; }
+}
+
+// Devueltos: filas sencillas (ion-item) dentro de una tarjeta
+.devueltos {
+  border-radius: var(--jg-radio); overflow: hidden; background: var(--jg-tarjeta) !important;
+  ion-item { --background: var(--jg-tarjeta); --padding-start: 14px; --inner-padding-end: 16px; --min-height: 84px; --border-color: var(--jg-borde); }
+  app-miniatura-producto { --tam: 56px; --radio: 12px; --fondo: #ffffff; --ajuste: contain; margin: 10px 14px 10px 0; }
+  ion-label { display: flex !important; flex-direction: column; gap: 4px; white-space: normal; }
+  strong { font-size: 16px; font-weight: 500; }
+  small { color: var(--jg-texto-sec); font-size: 14px; }
+  app-precio { font-size: 20px; }
 }

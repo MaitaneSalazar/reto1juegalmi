@@ -5,7 +5,7 @@ ion-toolbar { --background: var(--ion-background-color); --min-height: 64px; pad
   padding: 24px 22px; border-radius: 30px;
   background: linear-gradient(135deg, #8ad6d8 0%, #6fc4c7 100%); color: #1f2329;
   span { font-size: 15px; opacity: .8; }
-  h1 { margin: 22px 0 18px; font-size: 44px; line-height: 1; font-weight: 800; letter-spacing: -0.055em; }
+  h1 { margin: 22px 0 18px; font-size: 44px; line-height: 1; font-weight: 700; letter-spacing: -0.055em; }
 }
 .tramos {
   display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;

@@ -11,7 +11,7 @@
     <div class="campo">
       <label>Nombre</label>
       <ion-input formControlName="nombre" autocomplete="given-name" aria-label="Nombre" [class.mal]="invalido('nombre')"></ion-input>
-      @if (invalido('nombre')) { <p class="error">{{ mensajes.nombre }}</p> }
+      @if (invalido('nombre')) { <p class="error">{{ mensajeError('nombre') }}</p> }
     </div>
 
     <!-- Dos columnas: apellidos -->
@@ -19,7 +19,7 @@
       <div class="campo">
         <label>1er apellido</label>
         <ion-input formControlName="apellido1" autocomplete="family-name" aria-label="Primer apellido" [class.mal]="invalido('apellido1')"></ion-input>
-        @if (invalido('apellido1')) { <p class="error">{{ mensajes.apellido1 }}</p> }
+        @if (invalido('apellido1')) { <p class="error">{{ mensajeError('apellido1') }}</p> }
       </div>
       <div class="campo">
         <label>2º apellido</label>
@@ -32,25 +32,25 @@
       <div class="campo">
         <label>DNI</label>
         <ion-input formControlName="dni" placeholder="12345678Z" maxlength="9" aria-label="DNI" [class.mal]="invalido('dni')"></ion-input>
-        @if (invalido('dni')) { <p class="error">{{ mensajes.dni }}</p> }
+        @if (invalido('dni')) { <p class="error">{{ mensajeError('dni') }}</p> }
       </div>
       <div class="campo">
         <label>Teléfono <small>(opcional)</small></label>
         <ion-input formControlName="telefono" type="tel" inputmode="tel" autocomplete="tel" aria-label="Teléfono" [class.mal]="invalido('telefono')"></ion-input>
-        @if (invalido('telefono')) { <p class="error">{{ mensajes.telefono }}</p> }
+        @if (invalido('telefono')) { <p class="error">{{ mensajeError('telefono') }}</p> }
       </div>
     </div>
 
     <div class="campo">
       <label>Email</label>
       <ion-input formControlName="email" type="email" inputmode="email" autocomplete="email" aria-label="Email" [class.mal]="invalido('email')"></ion-input>
-      @if (invalido('email')) { <p class="error">{{ mensajes.email }}</p> }
+      @if (invalido('email')) { <p class="error">{{ mensajeError('email') }}</p> }
     </div>
 
     <div class="campo">
       <label>Contraseña</label>
       <ion-input formControlName="password" type="password" autocomplete="new-password" aria-label="Contraseña" [class.mal]="invalido('password')"></ion-input>
-      @if (invalido('password')) { <p class="error">{{ mensajes.password }}</p> }
+      @if (invalido('password')) { <p class="error">{{ mensajeError('password') }}</p> }
     </div>
 
     @if (error()) {

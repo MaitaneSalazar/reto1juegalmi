@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { colorPlataforma, etiquetaStock, plataformasDe } from './producto.model';
+import { Producto, avisoStock, colorPlataforma, etiquetaStock, plataformasDe } from './producto.model';
 
 describe('Etiqueta de stock', () => {
   it('3 o más: sin etiqueta', () => {
@@ -43,5 +43,19 @@ describe('Color de cada plataforma', () => {
   it('Xbox en verde y Switch en rojo', () => {
     expect(colorPlataforma('Xbox Series X')).toBe('#107c10');
     expect(colorPlataforma('Nintendo Switch')).toBe('#e60012');
+  });
+});
+
+describe('avisoStock (la misma regla que Android)', () => {
+  const p = (stock: number, extra = {}) => ({ id: 1, tipo: 'videojuego', nombre: 'Zelda', stock, disponible: true, ...extra }) as unknown as Producto;
+
+  it('comprar: Agotado si no hay stock o no está disponible', () => {
+    expect(avisoStock(p(0), false)).toEqual({ texto: 'Agotado', agotado: true });
+    expect(avisoStock(p(5, { disponible: false }), false)?.agotado).toBe(true);
+  });
+
+  it('alquilar: usa las copias libres', () => {
+    expect(avisoStock(p(9, { copias_disponibles: 1 }), true)).toEqual({ texto: 'Última copia', agotado: false });
+    expect(avisoStock(p(9, { copias_disponibles: 0 }), true)?.texto).toBe('Alquilado');
   });
 });

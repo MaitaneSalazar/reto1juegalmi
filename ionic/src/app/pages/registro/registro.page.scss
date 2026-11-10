@@ -7,7 +7,7 @@ ion-content { --padding-top: calc(14px + var(--ion-safe-area-top, 0px)); --paddi
   a { color: var(--ion-text-color); font-size: 16px; font-weight: 500; text-decoration: none; }
 }
 
-h1 { margin: 0; font-size: 46px; line-height: 1.02; font-weight: 800; letter-spacing: -0.055em; }
+h1 { margin: 0; font-size: 46px; line-height: 1.02; font-weight: 700; letter-spacing: -0.055em; }
 .subtitulo { margin: 14px 0 32px; color: var(--jg-texto-sec); font-size: 18px; line-height: 1.5; max-width: 300px; }
 
 form { display: flex; flex-direction: column; gap: 18px; }

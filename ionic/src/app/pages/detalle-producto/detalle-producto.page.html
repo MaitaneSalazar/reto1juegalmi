@@ -9,6 +9,8 @@
 
   <div class="cuerpo">
     @if (producto(); as p) {
+      <!-- Datos: entran subiendo 24 px (Animaciones.aparecer() de Android) -->
+      <div class="aparecer">
       <h1>{{ p.nombre }}</h1>
       <div class="etiquetas">
         <!-- Plataformas en su color (Xbox verde, PS5 azul, Switch rojo) junto al resto -->
@@ -41,6 +43,7 @@
           <div><span>Devolución antes del</span><b>{{ devolucion() | fechaCorta }}</b></div>
         </div>
       }
+      </div>
     } @else {
       <ion-skeleton-text [animated]="true" style="width: 80%; height: 34px"></ion-skeleton-text>
       <ion-skeleton-text [animated]="true" style="width: 60%; height: 18px"></ion-skeleton-text>
@@ -51,7 +54,7 @@
 <!-- Tarjeta flotante inferior: precio + botón -->
 @if (producto(); as p) {
   <ion-footer class="ion-no-border">
-    <div class="compra">
+    <div class="compra aparecer">   <!-- entra subiendo, como en Android -->
       <div class="importe">
         <app-precio [valor]="modo() === 'alquilar' ? totalAlquiler() : p.precio_venta"></app-precio>
         <small>{{ modo() === 'alquilar' ? dias() + (dias() === 1 ? ' día de alquiler' : ' días de alquiler') : 'Envío gratis' }}</small>
@@ -62,7 +65,7 @@
           <ion-icon slot="start" name="notifications-outline"></ion-icon>Avísame
         </ion-button>
       } @else {
-        <ion-button (click)="confirmar()" [disabled]="enviando()">
+        <ion-button (click)="confirmar()" [disabled]="enviando()" [class.latido]="latiendo()">
           @if (enviando()) { <ion-spinner name="crescent"></ion-spinner> }
           @else { {{ modo() === 'alquilar' ? 'Alquilar' : 'Añadir a la cesta' }} }
         </ion-button>

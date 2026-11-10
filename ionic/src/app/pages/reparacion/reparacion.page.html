@@ -57,8 +57,8 @@
             <span class="inicial">{{ t.nombre_completo[0] }}</span>
             <span><strong>{{ t.nombre_completo }}</strong><small>{{ t.cargo }} · {{ t.departamento }}</small></span>
           } @else {
-            <span class="inicial">J</span>
-            <span><strong>Taller JuegAlmi</strong><small>Técnico pendiente de asignar</small></span>
+            <span class="inicial">?</span>
+            <span><strong>Aún sin técnico</strong><small>Te avisaremos cuando lo revisen.</small></span>
           }
         </div>
         @if (telefono()) {
@@ -80,7 +80,7 @@
 
       @if (r.se_puede_cancelar) {
         <ion-button expand="block" fill="outline" color="danger" class="cancelar" (click)="cancelar()" [disabled]="cancelando()">
-          Cancelar reparación
+          Cancelar solicitud
         </ion-button>
       }
     </div>

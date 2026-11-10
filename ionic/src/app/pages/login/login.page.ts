@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { IonContent, IonInput, IonButton, IonSpinner, MenuController } from '@ionic/angular';
 import { SesionService } from '../../services/sesion.service';
+import { textoError } from '../../validators/validadores';
 
 @Component({
   selector: 'app-login',
@@ -32,6 +33,11 @@ export class LoginPage {
   invalido(campo: 'email' | 'password'): boolean {
     const c = this.form.controls[campo];
     return c.invalid && c.touched;
+  }
+
+  // «Este campo es obligatorio» si está vacío; el mensaje del formato si está mal escrito
+  mensajeError(campo: 'email' | 'password', formato?: string): string {
+    return textoError(this.form.controls[campo], formato);
   }
 
   entrar(): void {
