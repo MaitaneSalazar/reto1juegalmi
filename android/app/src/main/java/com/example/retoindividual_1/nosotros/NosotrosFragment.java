@@ -32,6 +32,8 @@ public class NosotrosFragment extends Fragment {
         String[] pestanas = getResources().getStringArray(R.array.nosotros_pestanas);
 
         vpNosotros.setAdapter(new NosotrosPaginasAdapter(this));
+        //LAS 3 PESTAÑAS SE QUEDAN CREADAS: SI NO, AL VOLVER A UBICACION EL MAPA SE REINICIA Y SE DESCOLOCA
+        vpNosotros.setOffscreenPageLimit(2);
         new TabLayoutMediator(tlNosotros, vpNosotros, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {

@@ -16,22 +16,17 @@ import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
-import com.example.retoindividual_1.alquileres.MisAlquileresActivity;
 import com.example.retoindividual_1.datos.Repositorio;
 import com.example.retoindividual_1.modelos.Cesta;
 import com.example.retoindividual_1.modelos.Plataforma;
 import com.example.retoindividual_1.modelos.Producto;
 import com.example.retoindividual_1.principal.MainActivity;
 import com.example.retoindividual_1.utilidades.Animaciones;
-import com.example.retoindividual_1.utilidades.Exito;
 import com.example.retoindividual_1.utilidades.FormatosReparacion;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.NumberFormat;
 import java.util.Calendar;
@@ -171,14 +166,12 @@ public class FichaProductoActivity extends PaginaMenuActivity {
             }
         });
 
-        //"AVISAME" AVISA, ALQUILANDO SE ALQUILA EN EL MOMENTO, Y COMPRANDO VA A LA CESTA
+        //"AVISAME" AVISA; COMPRANDO O ALQUILANDO, VA A LA CESTA
         btnFicha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (modoAvisame) {
                     avisame();
-                } else if (alquilando) {
-                    alquilar();
                 } else {
                     anadirCesta();
                 }
@@ -350,7 +343,10 @@ public class FichaProductoActivity extends PaginaMenuActivity {
     }
 
     private void anadirCesta() {
-        boolean anadido = Cesta.anadir(producto, cantidad, false, 0);
+        //AL ALQUILAR ES SIEMPRE UNA COPIA (LA API SOLO DEJA UNA DE CADA JUEGO POR ALQUILER) CON LOS DIAS ELEGIDOS
+        boolean anadido = alquilando
+                ? Cesta.anadir(producto, 1, true, diasElegidos)
+                : Cesta.anadir(producto, cantidad, false, 0);
         if (anadido) {
             Animaciones.latido(btnFicha);
             Snackbar.make(findViewById(R.id.main), R.string.ficha_anadido, Snackbar.LENGTH_LONG)
@@ -365,34 +361,5 @@ public class FichaProductoActivity extends PaginaMenuActivity {
         }
         cantidad = 1;
         pintarModo();
-    }
-
-    //POST /api/alquileres CON {"dias", "videojuegos": [id]}. SI NO QUEDAN COPIAS (409) SALE EL MENSAJE DE LA API
-    private void alquilar() {
-        JSONObject cuerpo = new JSONObject();
-        try {
-            cuerpo.put("dias", diasElegidos);
-            cuerpo.put("videojuegos", new JSONArray().put(producto.getId()));
-        } catch (JSONException e) {
-            return;
-        }
-        //DESACTIVAMOS EL BOTON PARA NO ALQUILAR DOS VECES
-        btnFicha.setEnabled(false);
-        new Repositorio(this, this).crearAlquiler(cuerpo, new Repositorio.Resultado<JSONObject>() {
-            @Override
-            public void bien(JSONObject respuesta) {
-                Exito.mostrar(FichaProductoActivity.this, getString(R.string.cesta_alquiler_ok), () -> {
-                    startActivity(new Intent(FichaProductoActivity.this, MisAlquileresActivity.class));
-                    //LA FICHA SE CIERRA: SUS COPIAS LIBRES YA NO SON LAS QUE ENSEÑA
-                    finish();
-                });
-            }
-
-            @Override
-            public void mal(String mensaje) {
-                btnFicha.setEnabled(true);
-                Toast.makeText(FichaProductoActivity.this, mensaje, Toast.LENGTH_LONG).show();
-            }
-        });
     }
 }

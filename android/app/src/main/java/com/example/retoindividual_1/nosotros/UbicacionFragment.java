@@ -99,7 +99,8 @@ public class UbicacionFragment extends Fragment {
         mvMapa.setTileSource(ESRI_CALLES);
         mvMapa.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         mvMapa.setMultiTouchControls(false);
-        //LAS CONDICIONES DE ESRI OBLIGAN A ENSEÑAR "Tiles © Esri"mvMapa.getOverlays().add(new CopyrightOverlay(requireContext()));
+        //LAS CONDICIONES DE ESRI OBLIGAN A ENSEÑAR "Tiles © Esri"
+        mvMapa.getOverlays().add(new CopyrightOverlay(requireContext()));
         mvMapa.getController().setZoom(ZOOM);
         mvMapa.getController().setCenter(BILBAO);
     }
@@ -149,9 +150,15 @@ public class UbicacionFragment extends Fragment {
         tvTelefono.setText(telefono);
         llDatos.setVisibility(View.VISIBLE);
 
-        //EL PIN ESTA FIJO EN EL CENTRO DE LA TARJETA: CENTRANDO EL MAPA EN LA TIENDA, QUEDA ENCIMA
+        //EL PIN ESTA FIJO EN EL CENTRO DE LA TARJETA: CENTRANDO EL MAPA EN LA TIENDA, QUEDA ENCIMA.
+        //CON post SE CENTRA CUANDO EL MAPA YA TIENE TAMAÑO (SI NO, SE DESCOLOCA)
         if (!Double.isNaN(latitud) && !Double.isNaN(longitud)) {
-            mvMapa.getController().setCenter(new GeoPoint(latitud, longitud));
+            GeoPoint punto = new GeoPoint(latitud, longitud);
+            mvMapa.post(() -> {
+                mvMapa.getController().setZoom(ZOOM);
+                mvMapa.getController().setCenter(punto);
+                mvMapa.invalidate();
+            });
         }
 
         //ACTION_DIAL SOLO ABRE EL MARCADOR CON EL NUMERO, NO NECESITA PERMISO DE LLAMADAS

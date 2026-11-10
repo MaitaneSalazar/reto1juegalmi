@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-//LA CESTA SE GUARDA EN EL MOVIL CADA VEZ QUE CAMBIA. SOLO LLEVA COMPRAS: LOS ALQUILERES SE HACEN DESDE LA FICHA
+//LA CESTA SE GUARDA EN EL MOVIL CADA VEZ QUE CAMBIA. LLEVA COMPRAS Y ALQUILERES
 public class Cesta {
 
     private static final List<Linea> LINEAS = new ArrayList<>();
@@ -27,7 +27,8 @@ public class Cesta {
             JSONArray guardadas = new JSONArray(prefs.getString("lineas", "[]"));
             for (int i = 0; i < guardadas.length(); i++) {
                 JSONObject linea = guardadas.getJSONObject(i);
-                LINEAS.add(new Linea(new Producto(linea.getJSONObject("producto")), linea.getInt("cantidad"), false, 0));
+                LINEAS.add(new Linea(new Producto(linea.getJSONObject("producto")), linea.getInt("cantidad"),
+                        linea.optBoolean("alquiler"), linea.optInt("dias")));
             }
         } catch (JSONException e) {
             LINEAS.clear(); //SI LO GUARDADO ESTA ROTO, SE EMPIEZA CON LA CESTA VACIA
@@ -43,7 +44,9 @@ public class Cesta {
             for (Linea linea : LINEAS) {
                 lineas.put(new JSONObject()
                         .put("producto", new JSONObject(linea.getProducto().getJson()))
-                        .put("cantidad", linea.getCantidad()));
+                        .put("cantidad", linea.getCantidad())
+                        .put("alquiler", linea.isAlquiler())
+                        .put("dias", linea.getDias()));
             }
         } catch (JSONException e) {
             return;
@@ -115,6 +118,12 @@ public class Cesta {
             }
         }
         return total;
+    }
+
+    //QUITA LAS LINEAS QUE YA SE HAN PEDIDO (POR AQUI PARA QUE SE GUARDE Y SE REPINTE EL NUMERO)
+    public static void quitar(List<Linea> pedidas) {
+        LINEAS.removeAll(pedidas);
+        cambio();
     }
 
     public static double getTotal() {

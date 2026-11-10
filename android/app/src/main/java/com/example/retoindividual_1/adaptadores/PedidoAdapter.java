@@ -56,7 +56,7 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoView
 
         holder.tvNombre.setText(nombre(context, pedido));
         holder.tvResumen.setText(context.getString(R.string.ped_resumen, pedido.getId(),
-                FormatosReparacion.fechaCorta(pedido.getFecha()), pedido.getEstado()));
+                FormatosReparacion.fechaCorta(pedido.getFecha()), conMayuscula(pedido.getEstado())));
         holder.tvTotal.setText(FormatosReparacion.precio(pedido.getTotal()));
         pintarFotos(holder.llFotos, pedido);
 
@@ -145,6 +145,11 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoView
         if (miniaturas.size() > MAX_FOTOS) {
             llFotos.addView(inflater.inflate(R.layout.item_miniatura_mas, llFotos, false));
         }
+    }
+
+    //"cancelado" -> "Cancelado" (LA API MANDA EL ESTADO EN MINUSCULA)
+    private static String conMayuscula(String texto) {
+        return texto.isEmpty() ? texto : texto.substring(0, 1).toUpperCase() + texto.substring(1);
     }
 
     @Override

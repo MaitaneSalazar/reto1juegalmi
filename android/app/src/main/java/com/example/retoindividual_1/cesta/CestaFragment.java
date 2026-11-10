@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.retoindividual_1.R;
 import com.example.retoindividual_1.adaptadores.CestaAdapter;
+import com.example.retoindividual_1.alquileres.MisAlquileresActivity;
 import com.example.retoindividual_1.cuenta.DireccionesActivity;
 import com.example.retoindividual_1.cuenta.NuevaDireccionActivity;
 import com.example.retoindividual_1.datos.Repositorio;
@@ -49,6 +50,7 @@ public class CestaFragment extends Fragment {
 
     private final List<Domicilio> domicilios = new ArrayList<>();
     private Domicilio elegido;
+    private boolean huboPedido;
     private Repositorio datos;
 
     @Override
@@ -165,16 +167,28 @@ public class CestaFragment extends Fragment {
         startActivity(DireccionesActivity.elegirDesdeCesta(requireContext()));
     }
 
-    //TODAS LAS LINEAS SON COMPRAS: LOS ALQUILERES SE HACEN DESDE LA FICHA
+    //PRIMERO EL PEDIDO CON LO QUE SE COMPRA Y LUEGO LOS ALQUILERES. LO QUE SALE BIEN SE QUITA DE LA CESTA
     private void confirmarPedido() {
-        if (elegido == null) {
+        List<Cesta.Linea> compras = new ArrayList<>();
+        for (Cesta.Linea linea : Cesta.getLineas()) {
+            if (!linea.isAlquiler()) {
+                compras.add(linea);
+            }
+        }
+        //LA DIRECCION SOLO HACE FALTA SI HAY ALGO QUE ENVIAR
+        if (!compras.isEmpty() && elegido == null) {
             Toast.makeText(getContext(), R.string.cesta_sin_direccion, Toast.LENGTH_SHORT).show();
             return;
         }
 
         //DESACTIVAMOS EL BOTON PARA QUE NO SE MANDE DOS VECES
         btnConfirmar.setEnabled(false);
-        mandarPedido(Cesta.getLineas());
+        huboPedido = false;
+        if (compras.isEmpty()) {
+            mandarAlquiler();
+        } else {
+            mandarPedido(compras);
+        }
     }
 
     //MANDAMOS {"id_domicilio", "lineas": [{"id_producto", "cantidad"}]}
@@ -197,19 +211,61 @@ public class CestaFragment extends Fragment {
         datos.crearPedido(cuerpo, new AlEnviar() {
             @Override
             public void bien(JSONObject respuesta) {
-                Cesta.vaciar();
-                terminar();
+                Cesta.quitar(compras);
+                huboPedido = true;
+                mandarAlquiler();
             }
         });
     }
 
-    //TODO HA IDO BIEN: SE ABRE MIS PEDIDOS
+    //LA API SOLO DEJA UNA COPIA DE CADA JUEGO POR ALQUILER Y LOS MISMOS DIAS PARA TODOS,
+    //ASI QUE CADA VEZ MANDAMOS UNA COPIA DE CADA JUEGO QUE TENGA LOS MISMOS DIAS, HASTA QUE NO QUEDE NINGUNO
+    private void mandarAlquiler() {
+        List<Cesta.Linea> tanda = new ArrayList<>();
+        for (Cesta.Linea linea : Cesta.getLineas()) {
+            if (linea.isAlquiler() && (tanda.isEmpty() || linea.getDias() == tanda.get(0).getDias())) {
+                tanda.add(linea);
+            }
+        }
+        if (tanda.isEmpty()) {
+            terminar();
+            return;
+        }
+
+        JSONObject cuerpo = new JSONObject();
+        try {
+            JSONArray juegos = new JSONArray();
+            for (Cesta.Linea linea : tanda) {
+                juegos.put(linea.getProducto().getId());
+            }
+            cuerpo.put("dias", tanda.get(0).getDias());
+            cuerpo.put("videojuegos", juegos);
+        } catch (JSONException e) {
+            btnConfirmar.setEnabled(true);
+            return;
+        }
+
+        datos.crearAlquiler(cuerpo, new AlEnviar() {
+            @Override
+            public void bien(JSONObject respuesta) {
+                for (Cesta.Linea linea : tanda) {
+                    Cesta.restar(linea);
+                }
+                mandarAlquiler();
+            }
+        });
+    }
+
+    //TODO HA IDO BIEN: SE ABRE MIS PEDIDOS, O MIS ALQUILERES SI SOLO SE HA ALQUILADO
     private void terminar() {
         btnConfirmar.setEnabled(true);
         pintarCesta();
-        Exito.mostrar(requireActivity(), getString(R.string.cesta_pedido_ok), () -> {
+        boolean pedido = huboPedido;
+        String texto = getString(pedido ? R.string.cesta_pedido_ok : R.string.cesta_alquiler_ok);
+        //CUANDO TERMINA LA ANIMACION SE ABRE LA PANTALLA CORRESPONDIENTE
+        Exito.mostrar(requireActivity(), texto, () -> {
             if (isAdded()) {
-                startActivity(new Intent(requireContext(), MisPedidosActivity.class));
+                startActivity(new Intent(requireContext(), pedido ? MisPedidosActivity.class : MisAlquileresActivity.class));
             }
         });
     }
