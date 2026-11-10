@@ -1,11 +1,16 @@
 package com.example.retoindividual_1.tienda;
 
 import com.example.retoindividual_1.R;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.activity.OnBackPressedCallback;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +37,18 @@ public class TiendaFragment extends Fragment {
     //LO QUE ESPERA LA API EN ?tipo= , EN EL MISMO ORDEN QUE tienda_filtros_comprar
     private static final List<String> TIPOS = Arrays.asList("todo", "videojuego", "consola", "movil", "tablet");
 
+    private ImageView ivBuscar;
+    private View flBuscar;
+    private boolean buscando = false;
+
+    //CON EL BUSCADOR ABIERTO, EL BOTON ATRAS LO CIERRA EN VEZ DE SALIR DE LA TIENDA
+    private final OnBackPressedCallback cerrarBuscador = new OnBackPressedCallback(false) {
+        @Override
+        public void handleOnBackPressed() {
+            alternarBuscador();
+        }
+    };
+
     private TextView tvTitulo;
     private TabLayout tlModo;
     private TabLayout tlFiltros;
@@ -52,21 +69,18 @@ public class TiendaFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         //EN LA TIENDA SI SE ENSEÑA LA LUPA DE BUSCAR
-        View ivBuscar = view.findViewById(R.id.ivBarraBuscar);
+        ivBuscar = view.findViewById(R.id.ivBarraBuscar);
         ivBuscar.setVisibility(View.VISIBLE);
+        flBuscar = view.findViewById(R.id.fcvTiendaBuscar);
 
-        //LA LUPA ABRE EL BUSCADOR ENCIMA DE LA TIENDA, Y CON ATRAS SE VUELVE A ELLA
+        //LA LUPA ABRE EL BUSCADOR DENTRO DE LA TIENDA (COMO EN IONIC), Y LA EQUIS LO CIERRA
         ivBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getParentFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.entrar_derecha, R.anim.salir_izquierda,
-                                R.anim.entrar_izquierda, R.anim.salir_derecha)
-                        .replace(R.id.fcvMain, new BuscarFragment())
-                        .addToBackStack(null)
-                        .commit();
+                alternarBuscador();
             }
         });
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), cerrarBuscador);
 
         datos = new Repositorio(requireContext(), getViewLifecycleOwner());
         tvTitulo = view.findViewById(R.id.tvTiendaTitulo);
@@ -102,6 +116,32 @@ public class TiendaFragment extends Fragment {
                 }
             }
         });
+    }
+
+    //CON EL BUSCADOR ABIERTO SE ESCONDEN COMPRAR/ALQUILAR, LAS PESTAÑAS Y LA LISTA
+    private void alternarBuscador() {
+        buscando = !buscando;
+        tlModo.setVisibility(buscando ? View.GONE : View.VISIBLE);
+        tlFiltros.setVisibility(buscando ? View.GONE : View.VISIBLE);
+        vpProductos.setVisibility(buscando ? View.GONE : View.VISIBLE);
+        flBuscar.setVisibility(buscando ? View.VISIBLE : View.GONE);
+        ivBuscar.setImageResource(buscando ? R.drawable.ic_cerrar : R.drawable.ic_search);
+        ivBuscar.setContentDescription(getString(buscando ? R.string.buscar_cerrar : R.string.buscar));
+        cerrarBuscador.setEnabled(buscando);
+
+        if (buscando) {
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.fcvTiendaBuscar, new BuscarFragment())
+                    .commit();
+        } else {
+            //AL CERRARLO SE QUITA EL BUSCADOR (Y LO ESCRITO) Y SE ESCONDE EL TECLADO
+            Fragment buscador = getChildFragmentManager().findFragmentById(R.id.fcvTiendaBuscar);
+            if (buscador != null) {
+                getChildFragmentManager().beginTransaction().remove(buscador).commit();
+            }
+            InputMethodManager teclado = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            teclado.hideSoftInputFromWindow(ivBuscar.getWindowToken(), 0);
+        }
     }
 
     private void cambiarModo(boolean alquilar) {

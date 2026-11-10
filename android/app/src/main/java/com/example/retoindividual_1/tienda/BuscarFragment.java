@@ -19,7 +19,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import com.airbnb.lottie.LottieAnimationView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,7 +43,7 @@ import java.util.List;
 
 import retrofit2.Call;
 
-//BUSCADOR DE LA TIENDA (LA LUPA), SE PUEDE ESCRIBIR O BUSCAR HABLANDO. USA /productos?q= CON RETROFIT
+//BUSCADOR DENTRO DE LA TIENDA (LO ABRE LA LUPA), SE PUEDE ESCRIBIR O BUSCAR HABLANDO. USA /productos?q= CON RETROFIT
 public class BuscarFragment extends Fragment {
 
     //ESPERAMOS UN POCO DESPUES DE CADA LETRA PARA NO HACER UNA PETICION POR TECLA
@@ -52,7 +52,7 @@ public class BuscarFragment extends Fragment {
     private EditText etBuscar;
     private ImageView ivBorrar;
     private RecyclerView rvResultados;
-    private ProgressBar pbBuscar;
+    private LottieAnimationView pbBuscar;
     private LinearLayout llAviso;
     private TextView tvAvisoTitulo;
     private TextView tvAvisoTexto;
@@ -105,14 +105,6 @@ public class BuscarFragment extends Fragment {
         tvAvisoTexto = view.findViewById(R.id.tvBuscarAvisoTexto);
 
         rvResultados.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.tienda_columnas)));
-
-        //LA FLECHA VUELVE A LA TIENDA
-        view.findViewById(R.id.ivVolver).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getParentFragmentManager().popBackStack();
-            }
-        });
 
         //CADA VEZ QUE CAMBIA EL TEXTO SE VUELVE A BUSCAR, CON UN POCO DE ESPERA
         etBuscar.addTextChangedListener(new TextWatcher() {

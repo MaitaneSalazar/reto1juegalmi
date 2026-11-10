@@ -11,4 +11,5 @@
     <string name="buscar_vacio_titulo">Sin resultados</string>
     <string name="buscar_vacio_texto">No hay nada que coincida con «%1$s».</string>
     <string name="buscar_error_titulo">Algo ha fallado</string>
+    <string name="buscar_cerrar">Cerrar buscador</string>
 </resources>

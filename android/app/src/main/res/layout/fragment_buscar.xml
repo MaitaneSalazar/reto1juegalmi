@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- BUSCADOR DE LA TIENDA: CAMPO DE TEXTO CON MICROFONO Y LOS RESULTADOS EN 2 COLUMNAS -->
+<!-- BUSCADOR DENTRO DE LA TIENDA (LO ABRE LA LUPA): CAMPO DE TEXTO CON MICROFONO Y LOS RESULTADOS EN 2 COLUMNAS -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_fondo"
     android:orientation="vertical"
     tools:context=".tienda.BuscarFragment">
 
@@ -16,17 +15,11 @@
         android:paddingStart="20dp"
         android:paddingEnd="20dp">
 
-        <include layout="@layout/barra_volver" />
-
-        <TextView
-            style="@style/TituloPagina"
-            android:text="@string/buscar_titulo" />
-
         <!-- EL CAMPO: LUPA, TEXTO, EQUIS PARA BORRAR Y MICROFONO -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/bg_campo"
             android:gravity="center_vertical"
             android:orientation="horizontal"
@@ -101,14 +94,17 @@
             android:paddingBottom="120dp"
             tools:listitem="@layout/item_producto" />
 
-        <ProgressBar
+        <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/pbBuscar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="72dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="48dp"
-            android:indeterminateTint="@color/color_marca"
-            android:visibility="gone" />
+            android:contentDescription="@string/cargando"
+            android:visibility="gone"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/cargando" />
 
         <!-- AVISO: ANTES DE BUSCAR, SIN RESULTADOS O SIN CONEXION -->
         <LinearLayout
