@@ -22,7 +22,7 @@
       <p class="disponible" [class.aviso]="quedan() <= 2">{{ textoStock() }}</p>
 
       @if (alquilable()) {
-        <ion-segment [value]="modo()" (ionChange)="cambiarModo($event.detail.value)">
+        <ion-segment class="modo" [value]="modo()" (ionChange)="cambiarModo($event.detail.value)">
           <ion-segment-button value="comprar"><ion-label>Comprar · {{ p.precio_venta | euros }}</ion-label></ion-segment-button>
           <ion-segment-button value="alquilar"><ion-label>Alquilar</ion-label></ion-segment-button>
         </ion-segment>

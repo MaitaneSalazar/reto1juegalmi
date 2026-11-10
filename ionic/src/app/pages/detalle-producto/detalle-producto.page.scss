@@ -63,3 +63,16 @@ ion-footer { padding: 0 0 var(--ion-safe-area-bottom, 0px); background: var(--io
   app-selector-cantidad ::ng-deep button { width: 44px; height: 44px; }
   app-selector-cantidad ::ng-deep span { font-size: 16px; font-weight: 700; }
 }
+
+// Comprar / Alquilar: la elegida en turquesa, como la ficha de Android (solo aquí; la Tienda sigue en blanco)
+ion-segment.modo {
+  min-height: 48px; padding: 4px; background: #deeeed;
+  ion-segment-button {
+    --color: var(--jg-texto-sec);
+    --color-checked: #1f2329;
+    --indicator-color: #78cdd0;
+    --background-checked: #78cdd0;
+    font-size: 13px; font-weight: 500;
+  }
+  ion-segment-button::part(indicator-background) { background: #78cdd0; }
+}

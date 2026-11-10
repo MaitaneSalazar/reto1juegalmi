@@ -90,3 +90,38 @@ ion-list.lista ion-card { margin: 0 0 14px; }
   > ion-icon { font-size: 24px; color: var(--jg-texto-sec); flex-shrink: 0; }
   .precio { font-size: 15px; font-weight: 700; white-space: nowrap; }
 }
+
+// ===== Nueva reparación como Android (fragment_nueva_reparacion.xml) =====
+// Barra de 3 partes
+.pasos {
+  gap: 6px;
+  span { height: 4px; border-radius: 2px; }
+}
+// Botones de dispositivo: 76px de alto, gris sin elegir y turquesa el elegido
+.tipos { gap: 8px; }
+.tipo {
+  aspect-ratio: auto; height: 76px; gap: 6px; border-radius: 18px;
+  color: var(--jg-texto-sec);
+  ion-icon { font-size: 24px; }
+  span { font-size: 12px; font-weight: 500; }
+  &.activo { background: #78cdd0; color: #162525; }
+}
+// Etiquetas como el estilo Etiqueta de Android
+.etiqueta { margin: 20px 0 6px; font-size: 13px; font-weight: 500; color: var(--jg-texto-sec); }
+.etiqueta small { margin-left: 6px; font-size: 13px; font-weight: 400; color: var(--jg-texto-tenue, #9aa0a6); }
+// Chips de componente (ChipComponente en Android)
+ion-chip.componente {
+  --background: #ffffff;
+  --color: var(--jg-texto-sec);
+  height: 36px; margin: 0 8px 8px 0; padding: 0 14px; font-size: 13px;
+  border-radius: 999px;
+}
+ion-chip.componente.activo { --background: #1f2329; --color: #ffffff; }
+// Fotos y el recuadro «Añadir»
+.foto, .hacer-foto { width: 80px; height: 80px; border-radius: 18px; }
+.hacer-foto {
+  border: 1.5px dashed rgba(24, 26, 32, 0.16); background: transparent;
+  color: var(--jg-texto-sec); font-size: 12px; gap: 4px;
+  ion-icon { font-size: 24px; }
+}
+.continuar { min-height: 48px; margin-top: 24px; }

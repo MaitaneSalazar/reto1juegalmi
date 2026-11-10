@@ -42,7 +42,7 @@
     <label class="etiqueta">Componente afectado</label>
     <div class="chips envolver">
       @for (c of componentes; track c) {
-        <ion-chip class="filtro" [class.activo]="componente() === c" (click)="componente.set(c)">{{ c }}</ion-chip>
+        <ion-chip class="componente" [class.activo]="componente() === c" (click)="componente.set(c)">{{ c }}</ion-chip>
       }
     </div>
 
@@ -52,7 +52,7 @@
                   [autoGrow]="true" rows="4" placeholder="Ej.: no da imagen por HDMI desde ayer" aria-label="Descripción de la avería"></ion-textarea>
 
     <!-- 5. Fotos (opcional, hasta 5) -->
-    <label class="etiqueta">Fotos (opcional)</label>
+    <label class="etiqueta">Fotos <small>(opcional)</small></label>
     <div class="fotos">
       @for (f of listaFotos(); track $index) {
         <div class="foto">
