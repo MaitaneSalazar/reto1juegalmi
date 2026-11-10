@@ -28,13 +28,16 @@
                 android:layout_marginBottom="20dp"
                 android:text="@string/menu_mis_alquileres" />
 
-            <ProgressBar
+            <com.airbnb.lottie.LottieAnimationView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/pbAlquileres"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="72dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="32dp"
-                android:indeterminateTint="@color/color_marca" />
+                android:contentDescription="@string/cargando"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/cargando" />
 
             <!-- AVISO CUANDO NO HAY ALQUILERES O NO HAY CONEXION -->
             <LinearLayout
