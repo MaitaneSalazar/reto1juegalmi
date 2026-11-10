@@ -73,8 +73,9 @@ export function etiquetaStock(n: number, alquiler = false): EtiquetaStock | null
 
 // Etiqueta de stock de las tarjetas (la misma regla que ProductoAdapter.pintarAviso() de Android)
 export function avisoStock(p: Producto, alquiler: boolean): { texto: string; agotado: boolean } | null {
+  if (p.stock <= 0 || p.disponible === false) return { texto: 'Agotado', agotado: true };   // sin stock: tampoco se alquila
   const quedan = alquiler ? (p.copias_disponibles ?? (p.alquilado ? 0 : 3)) : p.stock;
-  if (quedan <= 0 || p.disponible === false) return { texto: alquiler ? 'Alquilado' : 'Agotado', agotado: true };
+  if (quedan <= 0) return { texto: 'Alquilado', agotado: true };
   const e = etiquetaStock(quedan, alquiler);
   return e ? { texto: e.texto, agotado: false } : null;
 }
