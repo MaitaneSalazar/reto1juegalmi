@@ -35,15 +35,15 @@
     },
     {
       "key": "email_cliente",
-      "value": "demo@juegalmi.es"
+      "value": "prueba@juegalmi.es"
     },
     {
       "key": "email_trabajador",
-      "value": "iker@juegalmi.es"
+      "value": "taller@juegalmi.es"
     },
     {
       "key": "password",
-      "value": "1234"
+      "value": "Almi123"
     },
     {
       "key": "lat",
@@ -124,7 +124,7 @@
       "name": "1 · Sesión",
       "item": [
         {
-          "name": "Login (Ane, clienta)",
+          "name": "Login (cliente de prueba)",
           "request": {
             "method": "POST",
             "header": [
@@ -193,7 +193,7 @@
             "description": "Genera un DNI con su letra y un email nuevos en cada envío. No cambia el token guardado.",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Prueba\",\n  \"apellido1\": \"Postman\",\n  \"apellido2\": \"\",\n  \"dni\": \"{{dni_nuevo}}\",\n  \"telefono\": \"600000000\",\n  \"email\": \"{{email_nuevo}}\",\n  \"password\": \"abcd1234\"\n}",
+              "raw": "{\n  \"nombre\": \"Prueba\",\n  \"apellido1\": \"Postman\",\n  \"apellido2\": \"\",\n  \"dni\": \"{{dni_nuevo}}\",\n  \"telefono\": \"600000000\",\n  \"email\": \"{{email_nuevo}}\",\n  \"password\": \"Abcd1234\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1508,7 +1508,7 @@
             "description": "",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"X\",\n  \"apellido1\": \"Y\",\n  \"dni\": \"12345678Z\",\n  \"email\": \"otro.{{$timestamp}}@juegalmi.es\",\n  \"password\": \"abcd1234\"\n}",
+              "raw": "{\n  \"nombre\": \"X\",\n  \"apellido1\": \"Y\",\n  \"dni\": \"12345678Z\",\n  \"email\": \"otro.{{$timestamp}}@juegalmi.es\",\n  \"password\": \"Abcd1234\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1646,7 +1646,7 @@
                 "pedidos"
               ]
             },
-            "description": "Hace login como Iker y usa su token solo en esta llamada.",
+            "description": "Hace login como el responsable de taller y usa su token solo en esta llamada.",
             "auth": {
               "type": "noauth"
             }
