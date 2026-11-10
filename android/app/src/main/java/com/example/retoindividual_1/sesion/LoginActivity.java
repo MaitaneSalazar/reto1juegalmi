@@ -69,8 +69,6 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(LoginActivity.this, RegistroActivity.class));
             }
         });
-
-        probarConexion();
     }
 
     private void entrar(String email, String password) {
@@ -117,22 +115,6 @@ public class LoginActivity extends AppCompatActivity {
     private void mostrarError(String texto) {
         tvError.setText(texto);
         tvError.setVisibility(View.VISIBLE);
-    }
-
-    private void probarConexion() {
-        datos().estado(new Repositorio.Resultado<JSONObject>() {
-            @Override
-            public void bien(JSONObject respuesta) {
-                Log.d("API", "Conectado: " + respuesta);
-                Toast.makeText(LoginActivity.this, "API: " + respuesta.optString("estado"), Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void mal(String mensaje) {
-                Log.e("API", "Error: " + mensaje);
-                Toast.makeText(LoginActivity.this, mensaje, Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     //CAPA DE DATOS, SE CREA LA PRIMERA VEZ QUE SE USA
