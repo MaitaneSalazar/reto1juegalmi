@@ -1,0 +1,8 @@
+[sshd]
+enabled = true
+backend = systemd
+journalmatch = _SYSTEMD_UNIT=ssh.service + _COMM=sshd
+ignoreip = 127.0.0.1/8 ::1 10.0.0.0/16 2.136.201.96
+maxretry = 5
+findtime = 10m
+bantime = 1h

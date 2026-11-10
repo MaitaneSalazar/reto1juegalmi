@@ -1,0 +1,12 @@
+[Unit]
+Description=Symfony en el puerto 8000
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/symfony
+ExecStart=/usr/bin/php -S 0.0.0.0:8000 -t public
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,13 @@
+[Unit]
+Description=JuegAlmi worker (miniaturas de imágenes)
+After=network.target docker.service
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/juegalmi/backend
+ExecStart=/usr/bin/php8.5 bin/console messenger:consume async --time-limit=3600 --memory-limit=128M
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
