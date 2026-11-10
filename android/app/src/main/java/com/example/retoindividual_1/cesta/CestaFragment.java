@@ -27,6 +27,7 @@ import com.example.retoindividual_1.adaptadores.CestaAdapter;
 import com.example.retoindividual_1.datos.Repositorio;
 import com.example.retoindividual_1.modelos.Cesta;
 import com.example.retoindividual_1.modelos.Domicilio;
+import com.example.retoindividual_1.principal.MainActivity;
 import com.example.retoindividual_1.utilidades.FormatosReparacion;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -64,6 +65,8 @@ public class CestaFragment extends Fragment {
 
         datos = new Repositorio(requireContext(), getViewLifecycleOwner());
         llVacia = view.findViewById(R.id.llCestaVacia);
+        view.findViewById(R.id.btnCestaIrTienda).setOnClickListener(v ->
+                ((MainActivity) requireActivity()).irATienda());
         llContenido = view.findViewById(R.id.llCestaContenido);
         rvCesta = view.findViewById(R.id.rvCesta);
         tvDireccion = view.findViewById(R.id.tvCestaDireccion);

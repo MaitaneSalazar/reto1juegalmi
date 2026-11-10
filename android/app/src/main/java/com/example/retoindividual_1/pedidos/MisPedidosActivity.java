@@ -1,6 +1,7 @@
 package com.example.retoindividual_1.pedidos;
 
 import com.example.retoindividual_1.R;
+import com.example.retoindividual_1.principal.MainActivity;
 import com.example.retoindividual_1.principal.PaginaMenuActivity;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
@@ -200,11 +201,19 @@ public class MisPedidosActivity extends PaginaMenuActivity {
         llUltimo.setVisibility(View.VISIBLE);
     }
 
-    //SIN PEDIDOS O SIN CONEXION. SOLO SALE REINTENTAR SI HA FALLADO LA CONEXION
+    //SIN PEDIDOS: EL BOTON LLEVA A LA TIENDA. CON ERROR: EL BOTON REINTENTA
     private void mostrarAviso(String titulo, String texto, boolean reintentar) {
         tvAvisoTitulo.setText(titulo);
         tvAvisoTexto.setText(texto);
-        btnReintentar.setVisibility(reintentar ? View.VISIBLE : View.GONE);
+        btnReintentar.setText(reintentar ? R.string.ped_reintentar : R.string.ir_a_la_tienda);
+        btnReintentar.setOnClickListener(v -> {
+            if (reintentar) {
+                cargarPedidos();
+            } else {
+                startActivity(MainActivity.irALaTienda(this));
+            }
+        });
+        btnReintentar.setVisibility(View.VISIBLE);
         llAviso.setVisibility(View.VISIBLE);
     }
 

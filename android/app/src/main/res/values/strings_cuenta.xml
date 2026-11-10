@@ -9,7 +9,7 @@
     <string name="datos_contrasena">Contraseña</string>
     <string name="datos_contrasena_oculta">••••••••</string>
     <string name="datos_foto">Foto de perfil</string>
-    <string name="datos_error_titulo">Sin conexión</string>
+    <string name="datos_error_titulo">Algo ha fallado</string>
     <string name="datos_reintentar">Reintentar</string>
     <string name="editar_titulo">Editar datos</string>
     <string name="editar_cambiar_foto">Cambiar foto</string>

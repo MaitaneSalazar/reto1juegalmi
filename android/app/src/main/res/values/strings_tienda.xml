@@ -19,6 +19,6 @@
     <string name="tienda_quedan">Quedan %1$d</string>
     <string name="tienda_vacia_titulo">No hay productos</string>
     <string name="tienda_vacia_texto">Ahora mismo no hay nada en esta categoría.</string>
-    <string name="tienda_error_titulo">Sin conexión</string>
+    <string name="tienda_error_titulo">Algo ha fallado</string>
     <string name="tienda_reintentar">Reintentar</string>
 </resources>

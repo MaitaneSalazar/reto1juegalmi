@@ -48,4 +48,5 @@
         <item quantity="other">Alquiler · %1$d días</item>
     </plurals>
     <string name="cesta_alquiler_ok">Alquiler hecho</string>
+    <string name="ir_a_la_tienda">Ir a la tienda</string>
 </resources>

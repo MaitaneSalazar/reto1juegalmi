@@ -50,6 +50,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.example.retoindividual_1.network.Localizador;
 
+import android.content.Context;
+
 //CONTENEDOR DE LA APP, CADA PESTAÑA DE LA BARRA CARGA SU FRAGMENT EN fcvMain
 
 public class MainActivity extends AppCompatActivity {
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int TALLER = 2;
     private static final int CESTA = 3;
     private static final int NOSOTROS = 4;
+    private static final String EXTRA_PESTANA = "pestana";
 
     private LinearLayout[] llPestanas;
     private ImageView[] ivPestanas;
@@ -122,6 +125,28 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(PESTANA_ACTUAL, pestanaActual);
+    }
+
+    //VUELVE A LA PANTALLA PRINCIPAL (CERRANDO LAS QUE HAYA ENCIMA) Y ABRE LA TIENDA
+    public static Intent irALaTienda(Context context) {
+        return new Intent(context, MainActivity.class)
+                .putExtra(EXTRA_PESTANA, TIENDA)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    }
+
+    //LA RECIBE LA PANTALLA PRINCIPAL QUE YA EXISTIA, GRACIAS A SINGLE_TOP
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        int pestana = intent.getIntExtra(EXTRA_PESTANA, -1);
+        if (pestana != -1) {
+            abrir(pestana);
+        }
+    }
+
+    //PARA LAS PESTAÑAS, QUE YA ESTAN DENTRO DE ESTA PANTALLA
+    public void irATienda() {
+        abrir(TIENDA);
     }
 
     private void abrir(int pestana) {

@@ -1,6 +1,7 @@
 package com.example.retoindividual_1.alquileres;
 
 import com.example.retoindividual_1.R;
+import com.example.retoindividual_1.principal.MainActivity;
 import com.example.retoindividual_1.principal.PaginaMenuActivity;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -129,11 +130,19 @@ public class MisAlquileresActivity extends PaginaMenuActivity {
         tvDevueltos.setVisibility(devueltos.isEmpty() ? View.GONE : View.VISIBLE);
     }
 
-    //SIN ALQUILERES O SIN CONEXION. SOLO SALE REINTENTAR SI HA FALLADO LA CONEXION
+    //SIN ALQUILERES: EL BOTON LLEVA A LA TIENDA. CON ERROR: EL BOTON REINTENTA
     private void mostrarAviso(String titulo, String texto, boolean reintentar) {
         tvAvisoTitulo.setText(titulo);
         tvAvisoTexto.setText(texto);
-        btnReintentar.setVisibility(reintentar ? View.VISIBLE : View.GONE);
+        btnReintentar.setText(reintentar ? R.string.alq_reintentar : R.string.ir_a_la_tienda);
+        btnReintentar.setOnClickListener(v -> {
+            if (reintentar) {
+                cargarAlquileres();
+            } else {
+                startActivity(MainActivity.irALaTienda(this));
+            }
+        });
+        btnReintentar.setVisibility(View.VISIBLE);
         llAviso.setVisibility(View.VISIBLE);
     }
 

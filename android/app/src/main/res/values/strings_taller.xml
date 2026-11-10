@@ -80,7 +80,7 @@
     <string name="mis_rep_vacia_titulo">Aún no tienes reparaciones</string>
     <string name="mis_rep_vacia_texto">Cuando nos traigas algo a reparar, podrás seguirlo desde aquí.</string>
     <string name="mis_rep_pedir">Pedir una reparación</string>
-    <string name="mis_rep_error_titulo">Sin conexión</string>
+    <string name="mis_rep_error_titulo">Algo ha fallado</string>
     <string name="mis_rep_reintentar">Reintentar</string>
     <string name="seg_averia">Avería</string>
     <string name="seg_sin_tecnico">Aún sin técnico</string>

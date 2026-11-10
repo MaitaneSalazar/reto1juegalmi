@@ -55,6 +55,15 @@
                 android:text="@string/cesta_vacia_texto"
                 android:textColor="@color/color_texto_suave"
                 android:textSize="14sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCestaIrTienda"
+                style="@style/BotonPrincipal"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="20dp"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp"
+                android:text="@string/ir_a_la_tienda" />
         </LinearLayout>
 
         <LinearLayout
