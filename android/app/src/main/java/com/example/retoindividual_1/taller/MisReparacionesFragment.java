@@ -106,6 +106,8 @@ public class MisReparacionesFragment extends Fragment {
 
         rvReparaciones.setAdapter(new ReparacionAdapter(filas,
                 reparacion -> ((MainActivity) requireActivity()).abrirSeguimiento(reparacion.getId())));
+        //LA ANIMACION SOLO SALE SOLA LA PRIMERA VEZ: AL RECARGAR HAY QUE PEDIRLA
+        rvReparaciones.scheduleLayoutAnimation();
         rvReparaciones.setVisibility(View.VISIBLE);
     }
 

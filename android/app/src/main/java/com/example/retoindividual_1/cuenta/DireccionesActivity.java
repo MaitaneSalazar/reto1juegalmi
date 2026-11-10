@@ -91,6 +91,8 @@ public class DireccionesActivity extends PaginaMenuActivity {
                 domicilios.clear();
                 domicilios.addAll(lista);
                 mostrar();
+                //AQUI Y NO EN mostrar(): AL ELEGIR UNA DIRECCION NO QUEREMOS QUE TODA LA LISTA SE ANIME OTRA VEZ
+                rvDomicilios.scheduleLayoutAnimation();
             }
 
             @Override

@@ -232,6 +232,8 @@ public class SeguimientoReparacionFragment extends Fragment {
 
             llPasos.addView(fila);
         }
+        //LOS PASOS ENTRAN UNO DETRAS DE OTRO, TAMBIEN AL DESLIZAR PARA RECARGAR
+        llPasos.scheduleLayoutAnimation();
     }
 
     private void pintarTecnico(JSONObject trabajador) {

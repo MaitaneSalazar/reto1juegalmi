@@ -148,6 +148,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:background="@drawable/bg_tarjeta_hoja"
+                        android:layoutAnimation="@anim/lista_entra"
                         android:orientation="vertical"
                         android:paddingStart="20dp"
                         android:paddingTop="20dp"

@@ -66,6 +66,7 @@ public class GaleriaFragment extends Fragment {
                     tvAviso.setVisibility(View.VISIBLE);
                 } else {
                     rvGaleria.setAdapter(new FotoTiendaAdapter(fotos));
+                    rvGaleria.scheduleLayoutAnimation();
                 }
             }
 
