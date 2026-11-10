@@ -24,9 +24,10 @@
     <string name="dni_aleatorio">Generar un DNI aleatorio</string>
     <string name="telefono">Teléfono</string>
     <string name="registrarme">Registrarme</string>
-    <string name="error_registro_vacio">Rellena nombre, primer apellido, DNI, teléfono, email y contraseña.</string>
-    <string name="error_dni">El DNI no es válido (8 números y la letra correcta).</string>
-    <string name="error_telefono">El teléfono debe tener 9 números.</string>
+    <string name="error_registro_vacio">Rellena nombre, primer apellido, DNI, email y contraseña.</string>
+    <string name="error_dni">El DNI o NIE no es válido.</string>
+    <string name="error_telefono">El teléfono debe tener 9 números y empezar por 6, 7, 8 o 9.</string>
+    <string name="error_password_registro">La contraseña debe tener al menos 6 caracteres.</string>
 
     <string name="menu">Menú</string>
     <string name="cat_consolas">Consolas</string>

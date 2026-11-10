@@ -102,18 +102,18 @@ public class RegistroActivity extends AppCompatActivity {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString();
 
-        //EL SEGUNDO APELLIDO NO ES OBLIGATORIO
+        //EL SEGUNDO APELLIDO Y EL TELEFONO NO SON OBLIGATORIOS
         if (nombre.isEmpty() || apellido1.isEmpty() || dni.isEmpty()
-                || telefono.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                || email.isEmpty() || password.isEmpty()) {
             mostrarError(R.string.error_registro_vacio);
         } else if (!dniValido(dni)) {
             mostrarError(R.string.error_dni);
-        } else if (!telefono.matches("\\d{9}")) {
+        } else if (!telefono.isEmpty() && !telefono.matches("[6-9]\\d{8}")) {
             mostrarError(R.string.error_telefono);
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             mostrarError(R.string.error_email);
-        } else if (password.length() < 4) {
-            mostrarError(R.string.error_password);
+        } else if (password.length() < 6) {
+            mostrarError(R.string.error_password_registro);
         } else {
             tvError.setVisibility(View.GONE);
             enviarRegistro(nombre, apellido1, etApellido2.getText().toString().trim(), dni, telefono, email, password);
@@ -129,7 +129,8 @@ public class RegistroActivity extends AppCompatActivity {
             cuerpo.put("apellido1", apellido1);
             cuerpo.put("apellido2", apellido2);
             cuerpo.put("dni", dni);
-            cuerpo.put("telefono", telefono);
+            //SI NO LO HA ESCRITO SE MANDA null, LA API LO TIENE COMO OPCIONAL
+            cuerpo.put("telefono", telefono.isEmpty() ? JSONObject.NULL : telefono);
             cuerpo.put("email", email);
             cuerpo.put("password", password);
         } catch (JSONException e) {
@@ -165,13 +166,13 @@ public class RegistroActivity extends AppCompatActivity {
         return String.format(Locale.ROOT, "%08d", numero) + LETRAS_DNI.charAt(numero % 23);
     }
 
-    //LA LETRA DEL DNI ES EL RESTO DE DIVIDIR EL NUMERO ENTRE 23
+    //LA LETRA ES EL RESTO DE DIVIDIR EL NUMERO ENTRE 23. EN EL NIE, LA X, Y, Z CUENTAN COMO 0, 1, 2
     private boolean dniValido(String dni) {
-        if (!dni.matches("\\d{8}[A-Z]")) {
+        if (!dni.matches("[0-9XYZ]\\d{7}[A-Z]")) {
             return false;
         }
-        int numero = Integer.parseInt(dni.substring(0, 8));
-        return dni.charAt(8) == LETRAS_DNI.charAt(numero % 23);
+        String numero = dni.substring(0, 8).replace('X', '0').replace('Y', '1').replace('Z', '2');
+        return dni.charAt(8) == LETRAS_DNI.charAt(Integer.parseInt(numero) % 23);
     }
 
     private void mostrarError(int texto) {
