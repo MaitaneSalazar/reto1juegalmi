@@ -30,6 +30,7 @@ import com.example.retoindividual_1.utilidades.Animaciones;
 import com.example.retoindividual_1.utilidades.FormatosReparacion;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.List;
 
@@ -50,6 +51,9 @@ public class InicioFragment extends Fragment {
     private LinearLayout llNovedadesTitulo;
     private RecyclerView rvNovedades;
     private Repositorio datos;
+    private SwipeRefreshLayout srlInicio;
+    //CUANTAS DE LAS 4 CARGAS FALTAN POR RESPONDER (PARA QUITAR LA RUEDA AL TERMINAR)
+    private int pendientes = 0;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -113,10 +117,27 @@ public class InicioFragment extends Fragment {
             }
         });
 
+        srlInicio = view.findViewById(R.id.srlInicio);
+        srlInicio.setColorSchemeResources(R.color.color_marca_intenso);
+        srlInicio.setOnRefreshListener(this::cargarTodo);
+
+        cargarTodo();
+    }
+
+    private void cargarTodo() {
+        pendientes = 4;
         cargarUsuario();
         cargarReparacion();
         cargarAlquiler();
         cargarNovedades();
+    }
+
+    //CADA CARGA LO LLAMA AL RESPONDER. CUANDO HAN RESPONDIDO LAS 4, SE QUITA LA RUEDA
+    private void unaMenos() {
+        pendientes--;
+        if (pendientes <= 0 && srlInicio != null) {
+            srlInicio.setRefreshing(false);
+        }
     }
 
     private void irAPestana(int idPestana) {
@@ -128,6 +149,7 @@ public class InicioFragment extends Fragment {
         datos.nombreUsuario(new SiSaleBien<String>() {
             @Override
             public void bien(String nombre) {
+                unaMenos();
                 tvHola.setText(getString(R.string.inicio_hola, nombre));
             }
         });
@@ -138,6 +160,7 @@ public class InicioFragment extends Fragment {
         datos.reparaciones(20, new SiSaleBien<List<Reparacion>>() {
             @Override
             public void bien(List<Reparacion> reparaciones) {
+                unaMenos();
                 for (Reparacion reparacion : reparaciones) {
                     if (reparacion.estaEnCurso()) {
                         pintarReparacion(reparacion);
@@ -172,6 +195,7 @@ public class InicioFragment extends Fragment {
         datos.alquileres(20, new SiSaleBien<List<Alquiler>>() {
             @Override
             public void bien(List<Alquiler> alquileres) {
+                unaMenos();
                 for (Alquiler alquiler : alquileres) {
                     if (!alquiler.estaDevuelto() && !alquiler.getLineas().isEmpty()) {
                         pintarAlquiler(alquiler);
@@ -204,6 +228,7 @@ public class InicioFragment extends Fragment {
         datos.productos(null, null, 1, 8, new SiSaleBien<Repositorio.Pagina<Producto>>() {
             @Override
             public void bien(Repositorio.Pagina<Producto> pagina) {
+                unaMenos();
                 if (!pagina.getLista().isEmpty()) {
                     rvNovedades.setAdapter(new ProductoAdapter(pagina.getLista(), false));
                     rvNovedades.scheduleLayoutAnimation();
@@ -214,9 +239,10 @@ public class InicioFragment extends Fragment {
     }
 
     //SI FALLA ALGO NO SE ENSEÑA ESA PARTE Y YA, EL INICIO NO SE LLENA DE AVISOS
-    private abstract static class SiSaleBien<T> implements Repositorio.Resultado<T> {
+    private abstract class SiSaleBien<T> implements Repositorio.Resultado<T> {
         @Override
         public void mal(String mensaje) {
+            unaMenos();
         }
     }
 }

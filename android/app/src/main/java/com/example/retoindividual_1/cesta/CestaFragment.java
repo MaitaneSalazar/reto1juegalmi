@@ -1,12 +1,5 @@
 package com.example.retoindividual_1.cesta;
 
-import com.example.retoindividual_1.R;
-import com.example.retoindividual_1.alquileres.MisAlquileresActivity;
-import com.example.retoindividual_1.cuenta.DireccionesActivity;
-import com.example.retoindividual_1.cuenta.NuevaDireccionActivity;
-import com.example.retoindividual_1.network.SessionManager;
-import com.example.retoindividual_1.pedidos.MisPedidosActivity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,13 +16,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.retoindividual_1.R;
 import com.example.retoindividual_1.adaptadores.CestaAdapter;
+import com.example.retoindividual_1.alquileres.MisAlquileresActivity;
+import com.example.retoindividual_1.cuenta.DireccionesActivity;
+import com.example.retoindividual_1.cuenta.NuevaDireccionActivity;
 import com.example.retoindividual_1.datos.Repositorio;
 import com.example.retoindividual_1.modelos.Cesta;
 import com.example.retoindividual_1.modelos.Domicilio;
+import com.example.retoindividual_1.network.SessionManager;
+import com.example.retoindividual_1.pedidos.MisPedidosActivity;
 import com.example.retoindividual_1.principal.MainActivity;
 import com.example.retoindividual_1.utilidades.FormatosReparacion;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;

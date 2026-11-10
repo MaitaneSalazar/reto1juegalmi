@@ -25,6 +25,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 // SEGUIMIENTO DE REPARACIÓN (09 del mockup): GET /api/reparaciones/{id}
@@ -35,6 +36,7 @@ public class SeguimientoReparacionFragment extends Fragment {
     private static final String ARG_ID_REPARACION = "id_reparacion";
 
     private View svContenido;
+    private SwipeRefreshLayout srlSeguimiento;
     private ProgressBar pbCargando;
     private LinearLayout llAviso;
     private TextView tvAvisoTexto;
@@ -73,6 +75,9 @@ public class SeguimientoReparacionFragment extends Fragment {
         datos = new Repositorio(requireContext(), getViewLifecycleOwner());
 
         svContenido = view.findViewById(R.id.svSeguimiento);
+        srlSeguimiento = view.findViewById(R.id.srlSeguimiento);
+        srlSeguimiento.setColorSchemeResources(R.color.color_marca_intenso);
+        srlSeguimiento.setOnRefreshListener(() -> cargar(true));
         pbCargando = view.findViewById(R.id.pbSeguimiento);
         llAviso = view.findViewById(R.id.llSeguimientoAviso);
         tvAvisoTexto = view.findViewById(R.id.tvSeguimientoAvisoTexto);
@@ -103,27 +108,37 @@ public class SeguimientoReparacionFragment extends Fragment {
     }
 
     private void cargar() {
-        svContenido.setVisibility(View.GONE);
-        llAviso.setVisibility(View.GONE);
-        pbCargando.setVisibility(View.VISIBLE);
+        cargar(false);
+    }
+
+    //DESLIZANDO YA SE VE LA RUEDA DE ARRIBA, ASI QUE NO SE ESCONDE EL CONTENIDO
+    private void cargar(boolean deslizando) {
+        if (!deslizando) {
+            svContenido.setVisibility(View.GONE);
+            llAviso.setVisibility(View.GONE);
+            pbCargando.setVisibility(View.VISIBLE);
+        }
 
         datos.reparacion(idReparacion(), new Repositorio.Resultado<JSONObject>() {
             @Override
             public void bien(JSONObject reparacion) {
+                srlSeguimiento.setRefreshing(false);
                 pbCargando.setVisibility(View.GONE);
+                llAviso.setVisibility(View.GONE);
                 pintar(reparacion);
                 svContenido.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void mal(String mensaje) {
+                srlSeguimiento.setRefreshing(false);
                 pbCargando.setVisibility(View.GONE);
+                svContenido.setVisibility(View.GONE);
                 tvAvisoTexto.setText(mensaje);
                 llAviso.setVisibility(View.VISIBLE);
             }
         });
     }
-
     private void pintar(JSONObject reparacion) {
         String titulo = FormatosReparacion.titulo(requireContext(), reparacion.optString("tipo_dispositivo"),
                 reparacion.optString("marca"), reparacion.optString("modelo"));

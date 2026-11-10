@@ -1,244 +1,305 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- PANTALLA DE INICIO (03 DEL MOCKUP): SALUDO, TALLER, COMPRAR Y ALQUILAR, LO QUE ESTA EN CURSO Y NOVEDADES -->
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!-- PANTALLA DE INICIO (03 DEL MOCKUP): SALUDO, TALLER, COMPRAR Y ALQUILAR, LO QUE ESTA EN CURSO Y NOVEDADES -->
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/srlInicio"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".inicio.InicioFragment">
 
-    <!-- EL PADDING DE ABAJO ES PARA QUE LA BARRA FLOTANTE NO TAPE LAS NOVEDADES -->
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="120dp">
+        android:layout_height="match_parent">
 
+        <!-- EL PADDING DE ABAJO ES PARA QUE LA BARRA FLOTANTE NO TAPE LAS NOVEDADES -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp">
+            android:paddingBottom="120dp">
 
-            <include layout="@layout/barra_superior" />
-
-            <!-- EL NOMBRE SALE DE /yo -->
-            <TextView
-                android:id="@+id/tvInicioHola"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:letterSpacing="-0.05"
-                android:text="@string/inicio_hola_sin_nombre"
-                android:textColor="@color/color_texto"
-                android:textSize="44sp"
-                android:textStyle="bold"
-                tools:text="Hola, Ane" />
-
-            <!-- TARJETA DE REPARACIONES CON SU BOTON -->
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/bg_hero"
-                android:clipToOutline="true"
-                android:clipToPadding="false"
-                android:padding="24dp">
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
 
-                <!-- LA HERRAMIENTA DEL FONDO, CASI TRANSPARENTE -->
-                <ImageView
-                    android:layout_width="170dp"
-                    android:layout_height="170dp"
-                    android:layout_gravity="top|end"
-                    android:layout_marginTop="-48dp"
-                    android:layout_marginEnd="-48dp"
-                    android:alpha="0.12"
-                    android:importantForAccessibility="no"
-                    android:rotation="12"
-                    android:src="@drawable/ic_handyman"
-                    app:tint="@color/color_sobre_marca" />
+                <include layout="@layout/barra_superior" />
 
-                <LinearLayout
+                <!-- EL NOMBRE SALE DE /yo -->
+                <TextView
+                    android:id="@+id/tvInicioHola"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:letterSpacing="-0.05"
+                    android:text="@string/inicio_hola_sin_nombre"
+                    android:textColor="@color/color_texto"
+                    android:textSize="44sp"
+                    android:textStyle="bold"
+                    tools:text="Hola, Ane" />
+
+                <!-- TARJETA DE REPARACIONES CON SU BOTON -->
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginTop="24dp"
+                    android:background="@drawable/bg_hero"
+                    android:clipToOutline="true"
+                    android:clipToPadding="false"
+                    android:padding="24dp">
 
-                    <com.google.android.material.chip.ChipGroup
+                    <!-- LA HERRAMIENTA DEL FONDO, CASI TRANSPARENTE -->
+                    <ImageView
+                        android:layout_width="170dp"
+                        android:layout_height="170dp"
+                        android:layout_gravity="top|end"
+                        android:layout_marginTop="-48dp"
+                        android:layout_marginEnd="-48dp"
+                        android:alpha="0.12"
+                        android:importantForAccessibility="no"
+                        android:rotation="12"
+                        android:src="@drawable/ic_handyman"
+                        app:tint="@color/color_sobre_marca" />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:chipSpacingHorizontal="6dp"
-                        app:chipSpacingVertical="6dp">
+                        android:orientation="vertical">
 
-                        <com.google.android.material.chip.Chip
-                            style="@style/ChipCristal"
-                            android:text="@string/cat_consolas" />
+                        <com.google.android.material.chip.ChipGroup
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:chipSpacingHorizontal="6dp"
+                            app:chipSpacingVertical="6dp">
 
-                        <com.google.android.material.chip.Chip
-                            style="@style/ChipCristal"
-                            android:text="@string/cat_moviles" />
+                            <com.google.android.material.chip.Chip
+                                style="@style/ChipCristal"
+                                android:text="@string/cat_consolas" />
 
-                        <com.google.android.material.chip.Chip
-                            style="@style/ChipCristal"
-                            android:text="@string/cat_mandos" />
+                            <com.google.android.material.chip.Chip
+                                style="@style/ChipCristal"
+                                android:text="@string/cat_moviles" />
 
-                        <com.google.android.material.chip.Chip
-                            style="@style/ChipCristal"
-                            android:text="@string/cat_tablets" />
-                    </com.google.android.material.chip.ChipGroup>
+                            <com.google.android.material.chip.Chip
+                                style="@style/ChipCristal"
+                                android:text="@string/cat_mandos" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="48dp"
-                        android:letterSpacing="-0.05"
-                        android:text="@string/lo_reparamos"
-                        android:textColor="@color/color_sobre_marca"
-                        android:textSize="40sp"
-                        android:textStyle="bold" />
+                            <com.google.android.material.chip.Chip
+                                style="@style/ChipCristal"
+                                android:text="@string/cat_tablets" />
+                        </com.google.android.material.chip.ChipGroup>
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnInicioPedirReparacion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="16dp"
-                        android:fontFamily="sans-serif-medium"
-                        android:paddingStart="20dp"
-                        android:paddingEnd="16dp"
-                        android:text="@string/pedir_reparacion"
-                        android:textAllCaps="false"
-                        android:textColor="@color/color_marca"
-                        android:textSize="14sp"
-                        app:backgroundTint="@color/color_sobre_marca"
-                        app:cornerRadius="999dp"
-                        app:icon="@drawable/ic_arrow_forward"
-                        app:iconGravity="end"
-                        app:iconSize="18dp"
-                        app:iconTint="@color/color_marca" />
-                </LinearLayout>
-            </FrameLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="48dp"
+                            android:letterSpacing="-0.05"
+                            android:text="@string/lo_reparamos"
+                            android:textColor="@color/color_sobre_marca"
+                            android:textSize="40sp"
+                            android:textStyle="bold" />
 
-            <!-- COMPRAR Y ALQUILAR, LLEVAN A LA TIENDA -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="128dp"
-                android:layout_marginTop="12dp"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/llInicioComprar"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="6dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_tarjeta_hoja"
-                    android:backgroundTint="@color/color_oscuro"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/ic_storefront"
-                        app:tint="@color/color_fondo" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/tienda_comprar"
-                        android:textColor="@color/color_fondo"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/llInicioAlquilar"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="6dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_tarjeta_hoja"
-                    android:backgroundTint="@color/color_marca_claro"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/ic_schedule"
-                        app:tint="@color/color_texto_suave" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/tienda_alquilar"
-                        android:textColor="@color/color_texto"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- REPARACION EN CURSO, SOLO SI HAY ALGUNA -->
-            <LinearLayout
-                android:id="@+id/llInicioReparacion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_tarjeta_hoja"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:visibility="gone">
-
-                <FrameLayout
-                    android:layout_width="56dp"
-                    android:layout_height="56dp">
-
-                    <com.google.android.material.progressindicator.CircularProgressIndicator
-                        android:id="@+id/cpiInicioReparacion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        app:indicatorColor="@color/color_marca_intenso"
-                        app:indicatorSize="56dp"
-                        app:trackColor="@color/color_pozo"
-                        app:trackCornerRadius="3dp"
-                        app:trackThickness="6dp" />
-
-                    <TextView
-                        android:id="@+id/tvInicioReparacionPaso"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:textColor="@color/color_texto"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnInicioPedirReparacion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:layout_marginTop="16dp"
+                            android:fontFamily="sans-serif-medium"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="16dp"
+                            android:text="@string/pedir_reparacion"
+                            android:textAllCaps="false"
+                            android:textColor="@color/color_marca"
+                            android:textSize="14sp"
+                            app:backgroundTint="@color/color_sobre_marca"
+                            app:cornerRadius="999dp"
+                            app:icon="@drawable/ic_arrow_forward"
+                            app:iconGravity="end"
+                            app:iconSize="18dp"
+                            app:iconTint="@color/color_marca" />
+                    </LinearLayout>
                 </FrameLayout>
 
+                <!-- COMPRAR Y ALQUILAR, LLEVAN A LA TIENDA -->
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="128dp"
+                    android:layout_marginTop="12dp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/llInicioComprar"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_tarjeta_hoja"
+                        android:backgroundTint="@color/color_oscuro"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_storefront"
+                            app:tint="@color/color_fondo" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tienda_comprar"
+                            android:textColor="@color/color_fondo"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llInicioAlquilar"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_tarjeta_hoja"
+                        android:backgroundTint="@color/color_marca_claro"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_schedule"
+                            app:tint="@color/color_texto_suave" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tienda_alquilar"
+                            android:textColor="@color/color_texto"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- REPARACION EN CURSO, SOLO SI HAY ALGUNA -->
+                <LinearLayout
+                    android:id="@+id/llInicioReparacion"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_tarjeta_hoja"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:visibility="gone">
+
+                    <FrameLayout
+                        android:layout_width="56dp"
+                        android:layout_height="56dp">
+
+                        <com.google.android.material.progressindicator.CircularProgressIndicator
+                            android:id="@+id/cpiInicioReparacion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            app:indicatorColor="@color/color_marca_intenso"
+                            app:indicatorSize="56dp"
+                            app:trackColor="@color/color_pozo"
+                            app:trackCornerRadius="3dp"
+                            app:trackThickness="6dp" />
+
+                        <TextView
+                            android:id="@+id/tvInicioReparacionPaso"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textColor="@color/color_texto"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvInicioReparacionTitulo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textColor="@color/color_texto"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvInicioReparacionEstado"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/color_texto_suave"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_flecha_derecha"
+                        app:tint="@color/color_texto_tenue" />
+                </LinearLayout>
+
+                <!-- ALQUILER SIN DEVOLVER, SOLO SI HAY ALGUNO -->
+                <LinearLayout
+                    android:id="@+id/llInicioAlquiler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_tarjeta_hoja"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="12dp"
+                    android:paddingEnd="20dp"
+                    android:visibility="gone">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="56dp"
+                        android:layout_height="72dp"
+                        app:cardBackgroundColor="@color/color_pozo"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp">
+
+                        <ImageView
+                            android:id="@+id/ivInicioAlquiler"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@null"
+                            android:scaleType="centerCrop" />
+                    </androidx.cardview.widget.CardView>
 
                     <TextView
-                        android:id="@+id/tvInicioReparacionTitulo"
-                        android:layout_width="match_parent"
+                        android:id="@+id/tvInicioAlquilerNombre"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_weight="1"
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textColor="@color/color_texto"
@@ -246,121 +307,65 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tvInicioReparacionEstado"
+                        android:id="@+id/tvInicioAlquilerDias"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:letterSpacing="-0.04"
+                        android:textColor="@color/color_texto"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvInicioAlquilerDiasTexto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:textColor="@color/color_texto_suave"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <!-- NOVEDADES, CON "VER TODO" QUE LLEVA A LA TIENDA -->
+                <LinearLayout
+                    android:id="@+id/llInicioNovedadesTitulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="28dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/inicio_novedades"
+                        android:textColor="@color/color_texto"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvInicioVerTodo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:padding="4dp"
+                        android:text="@string/inicio_ver_todo"
                         android:textColor="@color/color_texto_suave"
                         android:textSize="13sp" />
                 </LinearLayout>
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ic_flecha_derecha"
-                    app:tint="@color/color_texto_tenue" />
             </LinearLayout>
 
-            <!-- ALQUILER SIN DEVOLVER, SOLO SI HAY ALGUNO -->
-            <LinearLayout
-                android:id="@+id/llInicioAlquiler"
+            <!-- VA FUERA DEL PADDING PARA QUE LAS TARJETAS LLEGUEN AL BORDE AL DESLIZAR -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvInicioNovedades"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_tarjeta_hoja"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="12dp"
-                android:paddingEnd="20dp"
-                android:visibility="gone">
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="56dp"
-                    android:layout_height="72dp"
-                    app:cardBackgroundColor="@color/color_pozo"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp">
-
-                    <ImageView
-                        android:id="@+id/ivInicioAlquiler"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:contentDescription="@null"
-                        android:scaleType="centerCrop" />
-                </androidx.cardview.widget.CardView>
-
-                <TextView
-                    android:id="@+id/tvInicioAlquilerNombre"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="12dp"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textColor="@color/color_texto"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvInicioAlquilerDias"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:letterSpacing="-0.04"
-                    android:textColor="@color/color_texto"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvInicioAlquilerDiasTexto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:textColor="@color/color_texto_suave"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <!-- NOVEDADES, CON "VER TODO" QUE LLEVA A LA TIENDA -->
-            <LinearLayout
-                android:id="@+id/llInicioNovedadesTitulo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/inicio_novedades"
-                    android:textColor="@color/color_texto"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvInicioVerTodo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:padding="4dp"
-                    android:text="@string/inicio_ver_todo"
-                    android:textColor="@color/color_texto_suave"
-                    android:textSize="13sp" />
-            </LinearLayout>
+                android:layout_marginTop="8dp"
+                android:clipToPadding="false"
+                android:layoutAnimation="@anim/lista_entra"
+                android:nestedScrollingEnabled="false"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp" />
         </LinearLayout>
-
-        <!-- VA FUERA DEL PADDING PARA QUE LAS TARJETAS LLEGUEN AL BORDE AL DESLIZAR -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvInicioNovedades"
-            android:layoutAnimation="@anim/lista_entra"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:clipToPadding="false"
-            android:nestedScrollingEnabled="false"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp" />
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
