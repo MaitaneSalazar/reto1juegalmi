@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         Localizador.getInstance(this).detener();
-        agitar.iniciar();
+        agitar.detener();
     }
 
     private void cargarUsuarioMenu() {
