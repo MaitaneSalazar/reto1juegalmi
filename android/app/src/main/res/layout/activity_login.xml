@@ -126,36 +126,6 @@
                 style="@style/BotonPrincipal"
                 android:layout_marginTop="28dp"
                 android:text="@string/entrar" />
-
-            <!-- SEPARADOR -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="@color/color_borde" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="12dp"
-                    android:text="@string/demo"
-                    android:textColor="@color/color_texto_tenue"
-                    android:textSize="11sp" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="@color/color_borde" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

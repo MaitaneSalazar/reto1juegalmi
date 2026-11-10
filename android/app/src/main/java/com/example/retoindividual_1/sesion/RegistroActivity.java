@@ -1,7 +1,5 @@
 package com.example.retoindividual_1.sesion;
 
-import com.example.retoindividual_1.R;
-import com.example.retoindividual_1.principal.MainActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +7,6 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -18,14 +15,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.retoindividual_1.R;
 import com.example.retoindividual_1.datos.Repositorio;
 import com.example.retoindividual_1.network.SessionManager;
+import com.example.retoindividual_1.principal.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Locale;
-import java.util.Random;
 
 public class RegistroActivity extends AppCompatActivity {
 
@@ -41,7 +37,6 @@ public class RegistroActivity extends AppCompatActivity {
     private EditText etEmail;
     private EditText etPassword;
     private TextView tvError;
-    private ImageButton btnDniAleatorio;
     private Button btnRegistrarme;
     private TextView tvTengoCuenta;
 
@@ -65,18 +60,8 @@ public class RegistroActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etRegistroEmail);
         etPassword = findViewById(R.id.etRegistroPassword);
         tvError = findViewById(R.id.tvRegistroError);
-        btnDniAleatorio = findViewById(R.id.btnRegistroDniAleatorio);
         btnRegistrarme = findViewById(R.id.btnRegistrarme);
         tvTengoCuenta = findViewById(R.id.tvRegistroTengoCuenta);
-
-        //AL PULSAR EL DADO SE RELLENA EL DNI CON UNO NUEVO
-        btnDniAleatorio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                etDni.setText(dniAleatorio());
-                etDni.setSelection(etDni.length());
-            }
-        });
 
         btnRegistrarme.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,12 +143,6 @@ public class RegistroActivity extends AppCompatActivity {
                 tvError.setVisibility(View.VISIBLE);
             }
         });
-    }
-
-    //SACAMOS 8 NUMEROS AL AZAR Y LE PONEMOS SU LETRA PARA QUE SEA VALIDO
-    private String dniAleatorio() {
-        int numero = new Random().nextInt(100000000);
-        return String.format(Locale.ROOT, "%08d", numero) + LETRAS_DNI.charAt(numero % 23);
     }
 
     //LA LETRA ES EL RESTO DE DIVIDIR EL NUMERO ENTRE 23. EN EL NIE, LA X, Y, Z CUENTAN COMO 0, 1, 2

@@ -7,7 +7,6 @@
     <string name="email">Email</string>
     <string name="password">Contraseña</string>
     <string name="entrar">Entrar</string>
-    <string name="demo">demo@juegalmi.es · 1234</string>
     <string name="pie">JuegAlmi · Bilbao</string>
     <string name="error_vacio">Rellena el email y la contraseña.</string>
     <string name="error_email">El email no es válido.</string>
@@ -21,7 +20,6 @@
     <string name="apellido2">2º apellido</string>
     <string name="dni">DNI</string>
     <string name="dni_ejemplo">12345678Z</string>
-    <string name="dni_aleatorio">Generar un DNI aleatorio</string>
     <string name="telefono">Teléfono</string>
     <string name="registrarme">Registrarme</string>
     <string name="error_registro_vacio">Rellena nombre, primer apellido, DNI, email y contraseña.</string>
