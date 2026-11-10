@@ -308,6 +308,11 @@ public class EditarDatosActivity extends PaginaMenuActivity {
             marcarError(etApellido1, getString(R.string.editar_obligatorio));
             return;
         }
+        String telefono = texto(etTelefono);
+        if (!telefono.isEmpty() && !telefono.matches("[6-9]\\d{8}")) {
+            marcarError(etTelefono, getString(R.string.error_telefono));
+            return;
+        }
         String contrasenaActual = etContrasenaActual.getText().toString();
         String contrasenaNueva = etContrasenaNueva.getText().toString();
         boolean cambiaContrasena = !contrasenaActual.isEmpty() || !contrasenaNueva.isEmpty();
