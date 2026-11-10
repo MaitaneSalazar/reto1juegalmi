@@ -67,4 +67,5 @@
     <string name="prueba_ver_ficha_juego">Ficha de un videojuego (prueba)</string>
     <string name="prueba_ver_ficha_producto">Ficha de una consola (prueba)</string>
     <string name="prueba_ver_seguimiento">Ver seguimiento (prueba)</string>
+    <string name="agitar_recargando">Has agitado el móvil: recargando…</string>
 </resources>

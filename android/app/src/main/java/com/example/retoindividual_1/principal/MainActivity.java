@@ -52,6 +52,10 @@ import com.example.retoindividual_1.network.Localizador;
 
 import android.content.Context;
 
+import android.widget.Toast;
+
+import com.example.retoindividual_1.utilidades.DetectorAgitar;
+
 //CONTENEDOR DE LA APP, CADA PESTAÑA DE LA BARRA CARGA SU FRAGMENT EN fcvMain
 
 public class MainActivity extends AppCompatActivity {
@@ -72,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
     private int pestanaActual = INICIO;
 
     private DrawerLayout dlMain;
+
+    private DetectorAgitar agitar;
 
     // Al responder al permiso (sí o no) se intenta empezar; sin permiso, Localizador no hace nada
     private final ActivityResultLauncher<String[]> pedirUbicacion = registerForActivityResult(
@@ -115,6 +121,11 @@ public class MainActivity extends AppCompatActivity {
         }
         marcar(pestanaActual);
         configurarMenuLateral();
+        //AL AGITAR EL MOVIL SE RECARGA LA PESTAÑA (recreate VUELVE A PEDIR LOS DATOS)
+        agitar = new DetectorAgitar(this, () -> {
+            Toast.makeText(this, R.string.agitar_recargando, Toast.LENGTH_SHORT).show();
+            recreate();
+        });
         if (!Localizador.tienePermiso(this)) {
             pedirUbicacion.launch(new String[]{
                     Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION});
@@ -218,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         cargarUsuarioMenu();
         Localizador.getInstance(this).iniciar();
+        agitar.iniciar();
     }
 
     // Mientras la app no se ve, no se pide la ubicación (ahorra batería). Se sigue enviando la última conocida
@@ -225,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         Localizador.getInstance(this).detener();
+        agitar.iniciar();
     }
 
     private void cargarUsuarioMenu() {
