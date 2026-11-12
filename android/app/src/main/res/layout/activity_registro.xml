@@ -18,15 +18,12 @@
         android:paddingStart="24dp"
         android:paddingEnd="24dp">
 
-        <TextView
+        <!-- LOGO DE JUEGALMI -->
+        <ImageView
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:background="@drawable/bg_logo"
-            android:gravity="center"
-            android:text="J"
-            android:textColor="@color/color_sobre_marca"
-            android:textSize="17sp"
-            android:textStyle="bold" />
+            android:importantForAccessibility="no"
+            android:src="@drawable/logo_juegalmi" />
 
         <TextView
             android:layout_width="0dp"

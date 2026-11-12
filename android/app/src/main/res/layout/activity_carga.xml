@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- PANTALLA DE CARGA: EL LOGO CON LAS LETRAS EN EL CENTRO -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_fondo">
+
+    <ImageView
+        android:layout_width="@dimen/carga_logo"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/marca"
+        android:src="@drawable/splash_juegalmi" />
+
+</FrameLayout>
