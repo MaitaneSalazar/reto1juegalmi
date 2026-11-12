@@ -221,8 +221,3 @@ ion-toast {
   transform: translateY(-80px);                  // por encima de la barra inferior
 }
 
-// Aviso de «Has agitado el móvil» con el logo de la J a la izquierda (como el Toast de Android)
-ion-toast.toast-agitar::part(message) {
-  padding-left: 28px;
-  background: url('/assets/logo-j.png') left center / 20px 20px no-repeat;
-}

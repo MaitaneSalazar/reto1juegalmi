@@ -2,15 +2,13 @@ import { ElementRef, Injectable, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject } from 'rxjs';
 import { Motion } from '@capacitor/motion';
-import { ToastController } from '@ionic/angular';
 
-const UMBRAL = 7;          // m/s² de sacudida (sin contar la gravedad) para considerar que se agita
+const UMBRAL = 7;           // m/s² de sacudida (sin contar la gravedad) para considerar que se agita
 const GRAVEDAD = 9.81;
 const ESPERA_MS = 2500;     // evita que una misma sacudida recargue varias veces
 
 @Injectable({ providedIn: 'root' })
 export class AgitarService {
-  private toast = inject(ToastController);
   readonly agitado$ = new Subject<void>();   // las pantallas se suscriben (alAgitar) y recargan sus datos
   private ultimo = 0;
   private activo = false;
@@ -39,11 +37,9 @@ export class AgitarService {
     return 0;
   }
 
-  // Como Android: aviso abajo con el logo y la pantalla actual recarga sus datos (sin recargar toda la app)
-  private async agitado(): Promise<void> {
-    this.agitado$.next();
-    const t = await this.toast.create({ message: 'Has agitado el móvil: recargando…', duration: 2000, position: 'bottom', cssClass: 'toast-agitar' });
-    await t.present();
+  // La pantalla que se está viendo recarga sus datos (sin recargar toda la app)
+  private agitado(): void {
+    this.agitado$.next();                      // sin aviso: solo se recarga la pantalla (salen los tres puntos)
   }
 }
 
