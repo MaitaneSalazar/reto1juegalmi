@@ -24,7 +24,7 @@ import com.example.retoindividual_1.network.SessionManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-//PANTALLA DE LOGIN, ES LA PRIMERA QUE SE ABRE (LAUNCHER EN EL MANIFEST)
+//PANTALLA DE LOGIN, SE ABRE DESPUES DE LA PANTALLA DE CARGA
 
 public class LoginActivity extends AppCompatActivity {
 

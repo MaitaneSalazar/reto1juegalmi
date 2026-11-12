@@ -97,6 +97,9 @@ public class UbicacionFragment extends Fragment {
 
     private void configurarMapa() {
         mvMapa.setTileSource(ESRI_CALLES);
+        //EL VIEWPAGER QUITA LA PESTAÑA DE LA PANTALLA AL DESLIZAR Y POR DEFECTO EL MAPA SE DESTRUYE.
+        //ASI AL VOLVER SIGUE CARGANDO. SE DESTRUYE A MANO EN onDestroyView
+        mvMapa.setDestroyMode(false);
         mvMapa.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         mvMapa.setMultiTouchControls(false);
         //LAS CONDICIONES DE ESRI OBLIGAN A ENSEÑAR "Tiles © Esri"

@@ -30,17 +30,20 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- EL LOGIN ES LA PRIMERA PANTALLA QUE SE ABRE -->
+        <!-- LA PANTALLA DE CARGA ES LA PRIMERA QUE SE ABRE, LUEGO VA AL LOGIN -->
         <activity
-            android:name=".sesion.LoginActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize">
+            android:name=".principal.CargaActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".sesion.LoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".pedidos.MisPedidosActivity"
             android:exported="false"

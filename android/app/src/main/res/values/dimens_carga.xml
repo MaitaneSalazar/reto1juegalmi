@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- PANTALLA DE CARGA -->
+<resources>
+    <dimen name="carga_logo">180dp</dimen>
+    <!-- MILISEGUNDOS QUE SE VE ANTES DE PASAR AL LOGIN -->
+    <integer name="carga_duracion">1500</integer>
+</resources>
