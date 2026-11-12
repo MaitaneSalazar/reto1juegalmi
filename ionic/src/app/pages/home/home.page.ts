@@ -16,6 +16,7 @@ import { NOMBRE_DISPOSITIVO, Reparacion } from '../../models/reparacion.model';
 import { Alquiler } from '../../models/alquiler.model';
 import { Producto } from '../../models/producto.model';
 import { avisoStock } from '../../models/producto.model';
+import { alAgitar } from '../../services/agitar.service';
 
 const VUELTA = 2 * Math.PI * 26;   // perímetro del círculo de progreso (radio 26)
 
@@ -27,6 +28,7 @@ const VUELTA = 2 * Math.PI * 26;   // perímetro del círculo de progreso (radio
             CabeceraComponent, MiniaturaProductoComponent, PrecioComponent, NombreProductoPipe],
 })
 export class HomePage {
+  private agitar = alAgitar(() => { this.cargando.set(true); this.cargar(); });   // agitar el móvil = recargar esta pantalla (como Android)
   // Etiqueta de stock de las novedades (la misma regla que la Tienda y Android)
   aviso = (p: Producto) => avisoStock(p, false);
 

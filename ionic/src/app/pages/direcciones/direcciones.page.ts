@@ -9,6 +9,7 @@ import { DomicilioService } from '../../services/domicilio.service';
 import { Domicilio } from '../../models/domicilio.model';
 import { EstadoComponent } from '../../components/estado/estado.component';
 import { LottieComponent } from '../../components/lottie/lottie.component';
+import { alAgitar } from '../../services/agitar.service';
 
 @Component({
   selector: 'app-direcciones',
@@ -17,6 +18,7 @@ import { LottieComponent } from '../../components/lottie/lottie.component';
   imports: [LottieComponent, EstadoComponent, IonList, IonCard, RouterLink, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonFooter, IonButton, IonIcon],
 })
 export class DireccionesPage {
+  private agitar = alAgitar(() => { this.cargando.set(true); this.ionViewWillEnter(); });   // agitar el móvil = recargar esta pantalla (como Android)
   domicilios = inject(DomicilioService);
   private sesion = inject(SesionService);
   private router = inject(Router);

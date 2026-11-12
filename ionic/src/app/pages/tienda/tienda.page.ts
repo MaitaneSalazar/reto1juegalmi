@@ -14,6 +14,7 @@ import { VozService } from '../../services/voz.service';
 import { Producto, TipoProducto, avisoStock, colorPlataforma, nombrePlataforma } from '../../models/producto.model';
 import { EstadoComponent } from '../../components/estado/estado.component';
 import { LottieComponent } from '../../components/lottie/lottie.component';
+import { alAgitar } from '../../services/agitar.service';
 
 type Modo = 'comprar' | 'alquilar';
 interface Filtro { etiqueta: string; valor: string; }   // valor '' = todos
@@ -29,6 +30,7 @@ const POR_PAGINA = 8;   // carga progresiva
             CabeceraComponent, MiniaturaProductoComponent, PrecioComponent, EstadoComponent, PlataformasComponent],
 })
 export class TiendaPage {
+  private agitar = alAgitar(() => this.cargar());   // agitar el móvil = recargar esta pantalla (como Android)
   private servicio = inject(ProductoService);
   private router = inject(Router);
   voz = inject(VozService);

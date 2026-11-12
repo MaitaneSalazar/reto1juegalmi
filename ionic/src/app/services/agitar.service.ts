@@ -1,14 +1,17 @@
-import { Injectable, inject } from '@angular/core';
+import { ElementRef, Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject } from 'rxjs';
 import { Motion } from '@capacitor/motion';
 import { ToastController } from '@ionic/angular';
 
-const UMBRAL = 15;          // m/s² de sacudida (sin contar la gravedad) para considerar que se agita
+const UMBRAL = 7;          // m/s² de sacudida (sin contar la gravedad) para considerar que se agita
 const GRAVEDAD = 9.81;
 const ESPERA_MS = 2500;     // evita que una misma sacudida recargue varias veces
 
 @Injectable({ providedIn: 'root' })
 export class AgitarService {
   private toast = inject(ToastController);
+  readonly agitado$ = new Subject<void>();   // las pantallas se suscriben (alAgitar) y recargan sus datos
   private ultimo = 0;
   private activo = false;
 
@@ -36,10 +39,18 @@ export class AgitarService {
     return 0;
   }
 
-  // Aviso y recarga de la pantalla actual (la sesión y la cesta se conservan)
+  // Como Android: aviso abajo con el logo y la pantalla actual recarga sus datos (sin recargar toda la app)
   private async agitado(): Promise<void> {
-    const t = await this.toast.create({ message: 'Has agitado el móvil: recargando…', duration: 900, position: 'top' });
+    this.agitado$.next();
+    const t = await this.toast.create({ message: 'Has agitado el móvil: recargando…', duration: 2000, position: 'bottom', cssClass: 'toast-agitar' });
     await t.present();
-    setTimeout(() => window.location.reload(), 700);
   }
+}
+
+// Para usar en una pantalla: al agitar, si es la que se está viendo, ejecuta «recargar»
+export function alAgitar(recargar: () => void): void {
+  const el = inject(ElementRef).nativeElement as HTMLElement;
+  inject(AgitarService).agitado$.pipe(takeUntilDestroyed()).subscribe(() => {
+    if (el.offsetParent !== null && !el.classList.contains('ion-page-hidden')) recargar();   // solo la pantalla visible
+  });
 }

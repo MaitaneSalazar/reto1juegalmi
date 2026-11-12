@@ -23,7 +23,7 @@ export const apiInterceptor: HttpInterceptorFn = (req, next) => {
       const token = sesion.token();
       if (token) cabeceras['Authorization'] = `Bearer ${token}`;
 
-      // Ubicación del usuario en cualquier consulta (también sin sesión)
+      // Ubicacion del usuario en cualquier consulta y tmbn sin sesion inicidada
       if (pos) {
         cabeceras['X-Lat'] = pos.lat.toFixed(6);
         cabeceras['X-Lon'] = pos.lon.toFixed(6);

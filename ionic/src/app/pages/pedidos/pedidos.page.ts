@@ -16,6 +16,7 @@ import { catchError, forkJoin, map, of } from 'rxjs';
 import { addIcons } from 'ionicons';
 import { chevronForward, chevronUp } from 'ionicons/icons';
 import { LottieComponent } from '../../components/lottie/lottie.component';
+import { alAgitar } from '../../services/agitar.service';
 
 // Pasos de la barra del pedido en curso
 const PASOS: { estado: EstadoPedido; texto: string }[] = [
@@ -33,6 +34,7 @@ const PASOS: { estado: EstadoPedido; texto: string }[] = [
             EstadoComponent, MiniaturaProductoComponent, NombreProductoPipe, EurosPipe, PrecioComponent, FechaCortaPipe],
 })
 export class PedidosPage {
+  private agitar = alAgitar(() => { this.cargando.set(true); this.cargar(); });   // agitar el móvil = recargar esta pantalla (como Android)
   private servicio = inject(PedidoService);
   private router = inject(Router);
   private sesion = inject(SesionService);

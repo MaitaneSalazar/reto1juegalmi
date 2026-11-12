@@ -16,6 +16,7 @@ import { ReparacionService } from '../../services/reparacion.service';
 import { FotoService } from '../../services/foto.service';
 import { NOMBRE_DISPOSITIVO, Reparacion, TipoDispositivo } from '../../models/reparacion.model';
 import { LottieComponent } from '../../components/lottie/lottie.component';
+import { alAgitar } from '../../services/agitar.service';
 
 interface OpcionTipo { valor: TipoDispositivo; texto: string; icono: string; }
 
@@ -33,6 +34,7 @@ const COMPONENTES = ['Pantalla', 'Batería', 'Puerto de carga', 'HDMI', 'Ventila
             IonChip, IonButton, CabeceraComponent, EstadoComponent, EurosPipe, FechaCortaPipe],
 })
 export class TallerPage {
+  private agitar = alAgitar(() => { this.cargandoMias.set(true); this.cargarMias(); });   // agitar el móvil = recargar esta pantalla (como Android)
   private sesion = inject(SesionService);
   private reparaciones = inject(ReparacionService);
   private fotos = inject(FotoService);

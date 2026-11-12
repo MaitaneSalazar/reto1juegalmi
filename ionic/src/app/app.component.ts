@@ -37,7 +37,7 @@ export class AppComponent {
   ]);
 
   constructor() {
-    inject(UbicacionService).obtener();   // pide el GPS al abrir (lo usa el interceptor)
+    inject(UbicacionService).obtener();   // pide el GPS al abrir 
     inject(AgitarService).iniciar();      // acelerómetro: agitar el móvil = recargar
     addIcons({ receiptOutline, timeOutline, buildOutline, personOutline, locationOutline, logOutOutline });
   }

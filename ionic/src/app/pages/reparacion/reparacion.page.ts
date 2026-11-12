@@ -10,6 +10,7 @@ import { ReparacionService } from '../../services/reparacion.service';
 import { SesionService } from '../../services/sesion.service';
 import { NOMBRE_DISPOSITIVO, Reparacion } from '../../models/reparacion.model';
 import { LottieComponent } from '../../components/lottie/lottie.component';
+import { alAgitar } from '../../services/agitar.service';
 
 @Component({
   selector: 'app-reparacion',
@@ -19,6 +20,7 @@ import { LottieComponent } from '../../components/lottie/lottie.component';
             IonRefresher, IonRefresherContent],
 })
 export class ReparacionPage {
+  private agitar = alAgitar(() => this.cargar());   // agitar el móvil = recargar esta pantalla (como Android)
   private servicio = inject(ReparacionService);
   private sesion = inject(SesionService);
   private alerta = inject(AlertController);

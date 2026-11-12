@@ -10,6 +10,7 @@ import { SesionService } from '../../services/sesion.service';
 import { ResumenService } from '../../services/resumen.service';
 import { Alquiler } from '../../models/alquiler.model';
 import { LottieComponent } from '../../components/lottie/lottie.component';
+import { alAgitar } from '../../services/agitar.service';
 
 const DIA = 86400000;
 
@@ -20,6 +21,7 @@ const DIA = 86400000;
   imports: [LottieComponent, IonList, IonCard, IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, EstadoComponent, MiniaturaProductoComponent, PrecioComponent, FechaCortaPipe],
 })
 export class AlquileresPage {
+  private agitar = alAgitar(() => { this.cargando.set(true); this.cargar(); });   // agitar el móvil = recargar esta pantalla (como Android)
   private router = inject(Router);
   irATienda(): void { this.router.navigateByUrl('/tienda'); }
 
