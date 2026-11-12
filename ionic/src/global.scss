@@ -199,13 +199,8 @@ app-datos-personales ion-input, app-direcciones ion-input, app-editar-datos ion-
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 
-// Cuadrado turquesa con la "J"
-.logo {
-  width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0;
-  background: var(--jg-acento); color: #1f2329;
-  display: inline-flex; align-items: center; justify-content: center;
-  font-size: 18px; font-weight: 700; letter-spacing: 0;
-}
+// Logo de la J (el mismo del icono de la app)
+.logo { width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0; display: block; object-fit: contain; }
 
 // Lottie: tres puntos mientras carga (mismo tamaño y margen que en Android)
 app-lottie.cargando { width: 72px; height: 30px; margin: 64px auto 0; }

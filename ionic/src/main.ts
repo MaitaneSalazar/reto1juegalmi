@@ -14,7 +14,7 @@ function quitarArranque(): void {
   setTimeout(() => {
     capa.style.opacity = '0';
     setTimeout(() => capa.remove(), 300);
-  }, 700);                                   // se ve un momento, como el arranque de Android
+  }, 1500);                                  // se ve un par de segundos, como el arranque de Android
 }
 
 bootstrapApplication(AppComponent, {
