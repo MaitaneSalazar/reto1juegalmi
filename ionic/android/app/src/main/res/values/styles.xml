@@ -15,8 +15,11 @@
         <item name="android:background">@null</item>
     </style>
 
-
+    <!-- Arranque como Android: fondo claro y la J oscura en el centro -->
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
         <item name="android:background">@drawable/splash</item>
+        <item name="windowSplashScreenBackground">#ECF2F1</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icono</item>
+        <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
     </style>
 </resources>

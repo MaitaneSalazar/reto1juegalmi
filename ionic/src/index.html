@@ -2,7 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <title>Ionic App</title>
+    <title>JuegAlmi</title>
 
     <base href="/" />
 
@@ -27,6 +27,10 @@
 </head>
 
   <body>
+    <!-- Pantalla de carga con el logo (como la de Android). main.ts la quita al arrancar -->
+    <div id="arranque" style="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#ecf2f1;transition:opacity .3s">
+      <img src="assets/logo-arranque.png" alt="JuegAlmi" style="width:150px">
+    </div>
     <app-root></app-root>
   </body>
 </html>
